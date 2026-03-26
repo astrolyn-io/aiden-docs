@@ -1,0 +1,142 @@
+@import 'tailwindcss';
+@import '../styles/tokens.css';
+
+@layer base {
+  body {
+    background-color: var(--cta-bg-primary);
+    color: var(--cta-text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code,
+  pre {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  ::selection {
+    background-color: var(--cta-accent-blue);
+    color: white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--cta-bg-secondary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--cta-text-muted);
+    border-radius: 3px;
+  }
+
+  a {
+    color: var(--cta-accent-blue);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  a:hover {
+    color: #60a5fa;
+  }
+}
+
+@layer components {
+  .prose-cta h1 {
+    color: var(--cta-text-primary);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .prose-cta h2 {
+    color: var(--cta-text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--cta-border);
+  }
+
+  .prose-cta h3 {
+    color: var(--cta-text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose-cta p {
+    color: var(--cta-text-secondary);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+
+  .prose-cta code:not(pre code) {
+    background: var(--cta-code-bg);
+    color: var(--cta-accent-green);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-size: 0.875em;
+  }
+
+  .prose-cta ul,
+  .prose-cta ol {
+    color: var(--cta-text-secondary);
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose-cta li {
+    margin-bottom: 0.25rem;
+  }
+
+  .prose-cta table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose-cta th {
+    background: var(--cta-bg-card);
+    color: var(--cta-accent-blue);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--cta-border);
+  }
+
+  .prose-cta td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--cta-border);
+    color: var(--cta-text-secondary);
+  }
+
+  .prose-cta blockquote {
+    border-left: 3px solid var(--cta-accent-blue);
+    padding-left: 1rem;
+    margin-left: 0;
+    color: var(--cta-text-secondary);
+    font-style: italic;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
