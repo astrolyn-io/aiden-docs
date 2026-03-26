@@ -1,3 +1,44 @@
-# Equipe
+# CTA en equipe
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Configurer CTA pour une equipe de 5+ devs
+> - Partager les regles et conventions
+> - Onboarding d'un nouveau membre
+
+## Configuration equipe
+
+### Regles partagees
+
+Commitez `.cta/rules/` dans Git. Toute l'equipe utilise les memes standards.
+
+### Config enterprise
+
+Installez `~/.cta/enterprise.config.yaml` sur chaque poste pour les regles globales.
+
+### Conventions features
+
+- Nommez les features clairement : `cta standard "Ajouter filtre par date sur /orders"`
+- Utilisez le mode standard par defaut
+- Reservez flash aux bug fixes urgents
+
+## Workflow Git avec CTA
+
+1. Creer une branche : `git checkout -b feature/export-csv`
+2. Lancer CTA : `cta standard "Export CSV des rapports"`
+3. CTA genere code + tests + artefacts
+4. Commiter les artefacts `.cta/features/` avec le code
+5. PR review : le `review.md` genere aide le reviewer humain
+
+## Onboarding checklist
+
+- Installer Node 20+ et pnpm
+- Installer CTA : `pnpm add -g @edf/cta`
+- Cloner le repo (les regles sont incluses)
+- Configurer le provider : `cta config set provider claude-code`
+- Lancer `cta flash "Hello world"` pour valider l'installation
+
+> **Astuce** : Les artefacts CTA dans `.cta/features/` sont d'excellents documents d'onboarding — ils expliquent pourquoi chaque feature a ete implementee ainsi.
+
+## Prochaine etape
+
+Integrez CTA dans vos [pipelines CI/CD](/cookbook/ci-cd).

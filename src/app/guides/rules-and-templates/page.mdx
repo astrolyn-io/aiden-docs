@@ -1,3 +1,69 @@
 # Regles et Templates
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Ecrire et ajouter des regles d'entreprise
+> - Personnaliser les templates d'artefacts
+> - Comment les regles sont injectees dans les agents
+
+## Regles d'entreprise
+
+Les regles sont des fichiers `.md` dans `.cta/rules/`. Elles sont automatiquement injectees dans le contexte de chaque agent.
+
+### Ajouter une regle
+
+```bash
+$ cta rules add coding-standards.md
+Rule added: coding-standards.md
+```
+
+### Exemple de regle
+
+```markdown
+# Standards de code
+
+## TypeScript
+- Strict mode obligatoire
+- Pas de `any` sans justification
+- Interfaces pour tous les types publics
+
+## Tests
+- Couverture minimale : 80%
+- Tests unitaires pour toute logique metier
+
+## Git
+- Conventional Commits
+- PR : max 400 lignes
+```
+
+### Lister les regles
+
+```bash
+$ cta rules list
+  coding-standards (.cta/rules/coding-standards.md)
+  security-policy (.cta/rules/security-policy.md)
+```
+
+## Injection des regles
+
+Les regles sont filtrees par agent :
+- **Dev** recoit : coding-standards, security-policy
+- **QA** recoit : coding-standards, security-policy
+- **Planner** recoit : coding-standards, architecture-principles
+- Les regles custom sont toujours envoyees a tous les agents
+
+## Templates
+
+CTA fournit 7 templates par defaut (brief, spec, story, review, change-summary, architecture-decision, quality-report).
+
+### Personnaliser un template
+
+```bash
+$ cta template customize spec
+Template "spec" copied to .cta/templates/ for customization.
+```
+
+Le template copie utilise Handlebars. Variables disponibles : `feature_name`, `provider`, `mode`, `date`, etc.
+
+## Prochaine etape
+
+Consultez le guide de [troubleshooting](/guides/troubleshooting).

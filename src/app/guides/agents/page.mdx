@@ -1,3 +1,62 @@
 # Agents
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Les 6 agents CTA et leurs roles
+> - Quels agents sont actifs par mode
+> - Invoquer un agent manuellement
+
+## Les 6 agents
+
+### Lead (Orchestrateur)
+
+Toujours actif. Analyse la demande, choisit le mode, orchestre les agents, applique les quality gates et circuit breakers.
+
+### Analyst
+
+Actif en standard et enterprise. Scanne le code, pose 3-5 questions, cree le brief, estime la complexite.
+
+### Planner
+
+Actif en standard et enterprise. Cree la spec allegee (1-2 pages), decompose en stories, ecrit les ADR si necessaire.
+
+### Dev
+
+Toujours actif. Implemente le code, ecrit les tests, fait un self-review. Guardrails : rappel objectif toutes les 5 etapes, max 10 fichiers, circuit breaker.
+
+### QA
+
+Actif en standard et enterprise. Review du code, verification des criteres d'acceptation, scan securite OWASP basique, rapport qualite.
+
+### DocOps
+
+Actif en enterprise uniquement. Genere la documentation, changelog, verifie la conformite, cree les runbooks.
+
+## Activation par mode
+
+| Agent | Flash | Standard | Enterprise |
+|---|---|---|---|
+| Lead | Oui | Oui | Oui |
+| Analyst | — | Oui | Oui |
+| Planner | — | Oui | Oui |
+| Dev | Oui | Oui | Oui |
+| QA | — | Oui | Oui |
+| DocOps | — | — | Oui |
+
+## Invocation manuelle
+
+Vous pouvez invoquer un agent en dehors d'un workflow :
+
+```bash
+$ cta agent analyst "Analyser le module billing"
+Invoking agent "analyst" with: "Analyser le module billing"
+```
+
+```bash
+$ cta agent qa "Reviewer les changements du dernier commit"
+```
+
+> **Astuce** : L'invocation manuelle est utile pour des analyses ponctuelles sans creer de feature.
+
+## Prochaine etape
+
+Configurez vos [providers IA](/guides/providers).

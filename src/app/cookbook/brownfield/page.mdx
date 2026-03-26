@@ -1,3 +1,47 @@
-# Brownfield
+# Brownfield : ajouter CTA a un projet existant
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Initialiser CTA dans un projet Express, React ou monorepo
+> - Configurer les regles du projet existant
+> - Les bonnes pratiques brownfield
+
+## Projet Express existant
+
+### 1. Initialiser
+
+```bash
+$ cd mon-api-express
+$ cta init
+CTA initialized in .cta/
+```
+
+### 2. Configurer
+
+```bash
+$ cta config set provider claude-code
+$ cta config set mode standard
+```
+
+### 3. Ajouter vos regles
+
+Creez `.cta/rules/coding-standards.md` avec les conventions de votre projet.
+
+### 4. Premiere feature
+
+```bash
+$ cta standard "Ajouter pagination sur GET /users"
+```
+
+## Projet React existant
+
+Meme demarche. CTA s'adapte a la tech stack detectee.
+
+## Monorepo
+
+Initialisez CTA dans chaque package ou a la racine selon votre preference.
+
+> **Astuce** : En brownfield, utilisez le mode standard plutot que flash. L'Analyst scannera le code existant et evitera les conflits.
+
+## Prochaine etape
+
+Decouvrez comment utiliser [CTA en equipe](/cookbook/team).

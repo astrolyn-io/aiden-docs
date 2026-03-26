@@ -1,3 +1,71 @@
 # Glossaire
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - La terminologie CTA
+> - Les acronymes et concepts cles
+
+## A
+
+**ADR** — Architecture Decision Record. Document qui trace une decision architecturale significative.
+
+**Agent** — Composant IA specialise dans un role (Lead, Analyst, Planner, Dev, QA, DocOps).
+
+**Artefact** — Fichier Markdown avec frontmatter YAML genere par un agent (brief, spec, story, review, etc.).
+
+## B
+
+**Brief** — Document de decouverte cree par l'Analyst. Resume la demande et le contexte.
+
+**Bus de contexte** — Memoire partagee entre tous les agents (`.cta/memory/context.yaml`).
+
+## C
+
+**Circuit breaker** — Mecanisme qui arrete un agent apres N echecs consecutifs et escalade a l'humain.
+
+**CTA** — Core Team AI. Le framework lui-meme.
+
+## D
+
+**Decisions log** — Fichier JSONL append-only qui trace toutes les decisions des agents.
+
+## E
+
+**Enterprise** — Mode le plus complet avec documentation, conformite et approbation humaine.
+
+## F
+
+**Feature** — Unite de travail dans CTA. Chaque feature a son propre cycle de vie et dossier d'artefacts.
+
+**Flash** — Mode le plus rapide. Lead + Dev uniquement, pas de spec ni review.
+
+## L
+
+**Lead** — Agent orchestrateur qui coordonne tous les autres agents.
+
+## M
+
+**Mode** — Niveau de complexite du workflow : flash, standard ou enterprise.
+
+## P
+
+**Provider** — Service IA externe (Claude Code, Gemini, Copilot) utilise par les agents.
+
+## Q
+
+**Quality gate** — Verification automatique entre deux phases du workflow.
+
+## R
+
+**Routage** — Selection automatique du provider optimal selon la tache.
+
+## S
+
+**Spec** — Specification technique allegee creee par le Planner.
+
+**Standard** — Mode intermediaire avec analyse, planification et review.
+
+**Story** — User story decomposee par le Planner avec criteres d'acceptation.
+
+## T
+
+**Token budget** — Limite de tokens par feature et par mois pour controler les couts.

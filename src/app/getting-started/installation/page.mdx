@@ -1,3 +1,70 @@
 # Installation
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Installer CTA et ses prerequis
+> - Initialiser un projet avec `cta init`
+> - Lancer votre premiere commande
+
+## Prerequis
+
+- **Node.js 20+** — verifiez avec `node --version`
+- **pnpm** — installez avec `npm install -g pnpm`
+- Au moins un provider IA : Claude Code, Gemini CLI ou GitHub Copilot
+
+## Installer CTA
+
+```bash
+pnpm add -g @edf/cta
+```
+
+Verifiez :
+
+```bash
+$ cta --version
+0.1.0
+```
+
+> **Astuce** : Si `command not found`, ajoutez le dossier global pnpm a votre PATH.
+
+## Initialiser un projet
+
+Dans le repertoire de votre projet :
+
+```bash
+$ cta init
+CTA initialized in .cta/
+```
+
+Structure creee :
+
+```
+.cta/
+  cta.config.yaml    # Configuration projet
+  memory/            # Contexte et decisions
+  rules/             # Regles entreprise (vide)
+  templates/         # Templates personnalises (vide)
+  features/          # Features en cours (vide)
+```
+
+## Configurer le provider
+
+```bash
+$ cta config set provider claude-code
+Set provider = claude-code
+```
+
+Providers disponibles : `claude-code`, `gemini`, `copilot`.
+
+## Premier test
+
+```bash
+$ cta flash "Ajouter hello.ts" --dry-run
+[DRY RUN] Flash workflow: "Ajouter hello.ts"
+Mode: flash | Agents: lead, dev
+```
+
+> **Attention** : Sans `--dry-run`, CTA appelle le provider IA configure. Assurez-vous qu'il est accessible.
+
+## Prochaine etape
+
+Passez au [Quickstart](/getting-started/quickstart) pour un scenario complet en 5 minutes.

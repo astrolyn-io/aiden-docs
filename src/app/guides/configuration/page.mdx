@@ -1,3 +1,74 @@
 # Configuration
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Les 5 niveaux de configuration
+> - Les options disponibles
+> - La configuration entreprise
+
+## Les 5 niveaux
+
+Chaque niveau surcharge le precedent :
+
+1. **Defauts CTA** (built-in)
+2. **Enterprise** (`~/.cta/enterprise.config.yaml`)
+3. **Projet** (`.cta/cta.config.yaml`)
+4. **Feature** (`.cta/features/<slug>/.override.yaml`)
+5. **CLI flags** (`--mode`, `--provider`, etc.)
+
+## Configuration minimale
+
+```yaml
+# .cta/cta.config.yaml
+project: mon-projet
+provider: claude-code
+mode: standard
+lang: fr
+```
+
+4 lignes suffisent pour demarrer.
+
+## Options completes
+
+| Cle | Type | Defaut | Description |
+|---|---|---|---|
+| `project` | string | (requis) | Nom du projet |
+| `provider` | string | `claude-code` | Provider par defaut |
+| `mode` | enum | `standard` | flash, standard, enterprise |
+| `lang` | string | `fr` | Langue des artefacts |
+| `providers` | object | (built-in) | Config par provider |
+| `routing` | object | prefer | Strategie de routage |
+| `budget` | object | (built-in) | Budget tokens |
+| `hooks` | object | {} | Hooks d'evenements |
+| `rules` | array | [] | Liste des fichiers de regles |
+
+## Configuration entreprise
+
+```yaml
+# ~/.cta/enterprise.config.yaml
+company: EDF
+defaults:
+  mode: standard
+  lang: fr
+  provider: claude-code
+  require_approval: true
+security:
+  no_secrets_in_artefacts: true
+  scan_dependencies: true
+coding:
+  test_coverage_min: 80
+  commit_convention: conventional
+```
+
+## Modifier via CLI
+
+```bash
+$ cta config set mode flash
+Set mode = flash
+
+$ cta config show
+{ "project": "mon-projet", "mode": "flash", ... }
+```
+
+## Prochaine etape
+
+Apprenez a gerer les [regles et templates](/guides/rules-and-templates).

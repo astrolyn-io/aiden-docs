@@ -1,3 +1,81 @@
 # Troubleshooting
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Resoudre les problemes courants
+> - Lire les logs CTA
+> - Resetrer une feature bloquee
+
+## Problemes courants
+
+### "command not found: cta"
+
+Le binaire n'est pas dans le PATH. Verifiez :
+```bash
+$ pnpm bin -g
+```
+Ajoutez ce chemin a votre PATH.
+
+### "No CTA config found"
+
+Vous n'avez pas initialise CTA. Lancez `cta init`.
+
+### "No provider available"
+
+Aucun provider n'est accessible. Verifiez :
+```bash
+$ claude --version   # ou gemini --version
+$ cta provider status
+```
+
+### "Budget exceeded"
+
+Le budget tokens de la feature est depasse. Options :
+- Augmenter le budget dans `cta.config.yaml`
+- Passer en mode flash (budget plus petit mais suffisant)
+
+### Circuit breaker declenche
+
+Un agent a echoue 3 fois. CTA arrete et escalade :
+```
+CTA Lead > Circuit breaker OPEN for dev: escalating to human
+```
+Solution : verifiez l'erreur, corrigez le contexte, puis `cta resume <slug>`.
+
+### Feature bloquee
+
+```bash
+$ cta status
+ma-feature [blocked] (standard) - ...
+```
+
+Pour debloquer :
+```bash
+$ cta resume ma-feature
+Resuming feature: ma-feature
+```
+
+Pour abandonner :
+```bash
+$ cta abort ma-feature
+Aborting feature: ma-feature
+```
+
+### Les artefacts ne sont pas generes
+
+Verifiez que le dossier `.cta/features/` existe et que le provider repond.
+
+## Logs
+
+Les decisions sont dans `.cta/memory/decisions.jsonl` (JSONL, une ligne par decision).
+Les metriques sont dans `.cta/memory/metrics.jsonl`.
+
+```bash
+$ cta metrics
+export-csv: 3000 tokens, $0.0090, 2 operations
+```
+
+> **Danger** : Ne modifiez jamais `decisions.jsonl` manuellement. C'est un log append-only.
+
+## Prochaine etape
+
+Consultez la [reference CLI](/reference/cli) pour la documentation complete.

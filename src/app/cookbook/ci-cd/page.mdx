@@ -1,3 +1,56 @@
 # CI/CD
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Utiliser CTA en mode non-interactif
+> - Integrer le QA dans une pipeline PR
+> - Exporter les metriques
+
+## Mode non-interactif
+
+CTA peut fonctionner sans interaction utilisateur :
+
+```bash
+cta flash "Fix lint errors" --non-interactive --auto-approve
+```
+
+## GitHub Actions : QA sur PR
+
+```yaml
+# .github/workflows/cta-qa.yml
+name: CTA QA Review
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - run: pnpm add -g @edf/cta
+      - run: cta agent qa "Reviewer les changements de cette PR"
+```
+
+## Export metriques
+
+```bash
+$ cta metrics --export csv > metrics.csv
+```
+
+Colonnes : feature, tokens, cost, duration_ms, entries.
+
+Integrez dans votre dashboard de suivi projet.
+
+## Rapport de couts
+
+```bash
+$ cta provider cost
+Cost report: No usage data yet.
+```
+
+> **Astuce** : Collectez les metriques CTA dans votre pipeline CI pour suivre l'adoption et les couts par equipe.
+
+## Prochaine etape
+
+Si vous venez de BMAD, consultez la [migration BMAD](/cookbook/migration-bmad).

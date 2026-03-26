@@ -1,3 +1,129 @@
 # Reference CLI
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Toutes les commandes CTA
+> - Arguments et options de chaque commande
+> - Exemples d'utilisation
+
+## Commandes
+
+### `cta init`
+
+Initialise CTA dans le projet courant.
+
+```bash
+cta init [--enterprise]
+```
+
+- `--enterprise` : inclut les templates et regles enterprise
+
+### `cta flash <description>`
+
+Lance un workflow flash (rapide).
+
+```bash
+cta flash "Fix bug #123" [--dry-run] [--provider <name>]
+```
+
+### `cta standard <description>`
+
+Lance un workflow standard.
+
+```bash
+cta standard "Nouvelle API users" [--dry-run] [--provider <name>]
+```
+
+### `cta enterprise <description>`
+
+Lance un workflow enterprise.
+
+```bash
+cta enterprise "Migration auth" [--dry-run] [--provider <name>]
+```
+
+### `cta status [feature-slug]`
+
+Affiche le statut des features.
+
+```bash
+cta status                    # Toutes les features
+cta status export-csv         # Une feature specifique
+```
+
+### `cta resume <feature-slug>`
+
+Reprend une feature en pause ou bloquee.
+
+```bash
+cta resume export-csv
+```
+
+### `cta abort <feature-slug>`
+
+Abandonne une feature (sauvegarde l'etat avant suppression).
+
+```bash
+cta abort export-csv
+```
+
+### `cta agent <name> <prompt>`
+
+Invoque un agent directement.
+
+```bash
+cta agent analyst "Analyser le module billing"
+cta agent qa "Reviewer les changements recents"
+```
+
+Agents : `analyst`, `planner`, `dev`, `qa`, `docops`.
+
+### `cta provider`
+
+Gere les providers IA.
+
+```bash
+cta provider status           # Etat des providers
+cta provider switch gemini    # Changer de provider
+cta provider cost             # Rapport de couts
+```
+
+### `cta metrics`
+
+Affiche les metriques d'utilisation.
+
+```bash
+cta metrics                   # Affichage texte
+cta metrics --export csv      # Export CSV
+```
+
+### `cta config`
+
+Gere la configuration.
+
+```bash
+cta config show               # Afficher
+cta config set mode flash     # Modifier
+```
+
+### `cta rules`
+
+Gere les regles d'entreprise.
+
+```bash
+cta rules list                # Lister
+cta rules add security.md     # Ajouter
+cta rules remove security     # Supprimer
+```
+
+### `cta template`
+
+Gere les templates.
+
+```bash
+cta template list             # Lister
+cta template customize spec   # Personnaliser
+```
+
+## Prochaine etape
+
+Consultez la [reference configuration](/reference/config).

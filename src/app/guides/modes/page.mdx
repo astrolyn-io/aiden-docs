@@ -1,3 +1,72 @@
 # Modes
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Les 3 modes : flash, standard, enterprise
+> - Quand utiliser chaque mode
+> - Le passage dynamique entre modes
+
+## Comparaison
+
+| Fonctionnalite | Flash | Standard | Enterprise |
+|---|---|---|---|
+| Temps | < 30 min | 2h - 1 jour | 1 jour - 1 semaine |
+| Agents | Lead, Dev | +Analyst, Planner, QA | +DocOps |
+| Brief | Non | Oui | Oui |
+| Spec | Non | Oui | Oui + ADR |
+| Review | Non | Oui | Oui + rapport qualite |
+| Approbation humaine | Non | Non | Oui |
+
+## Mode Flash
+
+Pour les changements simples : bug fix, petite feature, refactoring cible.
+
+```bash
+$ cta flash "Fix le bug #123"
+```
+
+Quand l'utiliser :
+- Moins de 3 fichiers impactes
+- Pas de nouvelle API
+- Complexite faible (1-2/5)
+
+## Mode Standard
+
+Pour les features moyennes necessitant planification.
+
+```bash
+$ cta standard "Nouvelle API users"
+```
+
+Quand l'utiliser :
+- 3 a 15 fichiers impactes
+- Nouvelle API ou integration
+- Complexite moyenne (3-4/5)
+
+## Mode Enterprise
+
+Pour les projets critiques avec compliance.
+
+```bash
+$ cta enterprise "Migration authentification"
+```
+
+Quand l'utiliser :
+- Plus de 15 fichiers
+- Nouvelle architecture
+- Compliance requise (RGPD, securite)
+
+## Passage dynamique
+
+CTA peut changer de mode en cours de route sans perdre le travail :
+
+```bash
+# Demarre en flash, bascule en standard si complexite detectee
+$ cta flash "Export CSV"
+CTA Lead > Complexite detectee (5 fichiers). Passer en standard ? [Y/n]
+```
+
+> **Attention** : Le passage de standard a flash n'est pas recommande — vous perdriez les phases d'analyse.
+
+## Prochaine etape
+
+Decouvrez les [agents CTA](/guides/agents) et leurs roles.

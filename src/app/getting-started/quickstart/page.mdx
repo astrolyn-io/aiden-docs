@@ -1,3 +1,67 @@
 # Quickstart
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Creer un projet CTA de zero en 5 minutes
+> - Lancer un workflow flash
+> - Verifier les artefacts generes
+
+## De zero a une feature
+
+### 1. Creer un projet
+
+```bash
+$ mkdir mon-api && cd mon-api
+$ npm init -y && npm install express
+```
+
+### 2. Initialiser CTA
+
+```bash
+$ cta init
+CTA initialized in .cta/
+```
+
+### 3. Verifier la config
+
+```bash
+$ cta config show
+{
+  "project": "mon-api",
+  "provider": "claude-code",
+  "mode": "standard",
+  "lang": "fr"
+}
+```
+
+### 4. Lancer un flash
+
+```bash
+$ cta flash "Ajouter GET /health retournant {status: ok}"
+Starting flash workflow...
+```
+
+### 5. Verifier le statut
+
+```bash
+$ cta status
+ajouter-get-health [completed] (flash) - Ajouter GET /health
+```
+
+### 6. Explorer les artefacts
+
+```bash
+$ ls .cta/features/ajouter-get-health/
+change-summary.md
+```
+
+## Checklist de reussite
+
+- Le dossier `.cta/` existe
+- `cta status` montre la feature completee
+- Un `change-summary.md` a ete genere
+
+> **Astuce** : Pour plus de controle (brief, spec, review), utilisez `cta standard`.
+
+## Prochaine etape
+
+Suivez le tutoriel [Premiere feature](/getting-started/first-feature) pour le mode standard complet.

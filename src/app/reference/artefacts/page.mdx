@@ -1,3 +1,64 @@
 # Reference Artefacts
 
-Contenu a venir dans l'Epic 16.
+> **Ce que vous allez apprendre**
+> - Les 7 types d'artefacts CTA
+> - Le format frontmatter YAML
+> - Un exemple reel de chaque artefact
+
+## Format commun
+
+Chaque artefact est un fichier Markdown avec frontmatter YAML :
+
+```yaml
+---
+type: spec
+feature: export-csv
+version: 1
+created: 2026-03-26
+author: planner
+status: draft
+provider: claude-code
+tokensUsed: 3421
+mode: standard
+---
+```
+
+Statuts possibles : `draft`, `review`, `approved`, `implemented`.
+
+## Les 7 artefacts
+
+### brief.md
+
+Genere par l'**Analyst**. Resume la demande, contexte, objectif, contraintes et risques.
+
+### spec.md
+
+Genere par le **Planner**. Specification allegee (1-2 pages) avec exigences et criteres d'acceptation.
+
+### story.md (dans stories/)
+
+Genere par le **Planner**. User stories numerotees (001-*, 002-*) avec criteres d'acceptation.
+
+### review.md
+
+Genere par le **QA**. Resultat du code review avec score, issues et suggestions.
+
+### change-summary.md
+
+Genere par le **Dev** (mode flash). Resume des changements effectues.
+
+### architecture-decision.md
+
+Genere par le **Planner** (mode enterprise). ADR : contexte, decision, alternatives, consequences.
+
+### quality-report.md
+
+Genere par le **QA** (mode enterprise). Rapport complet avec metriques, securite et recommandations.
+
+## Emplacement
+
+Tous les artefacts sont dans `.cta/features/<feature-slug>/`.
+
+## Prochaine etape
+
+Consultez le [glossaire](/reference/glossary).
