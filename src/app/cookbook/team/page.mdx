@@ -1,44 +1,205 @@
 # CTA en equipe
 
 > **Ce que vous allez apprendre**
-> - Configurer CTA pour une equipe de 5+ devs
-> - Partager les regles et conventions
-> - Onboarding d'un nouveau membre
+> - Configurer CTA pour une equipe de 5 a 50+ developpeurs
+> - Partager les regles, conventions et templates
+> - Workflow Git avec CTA
+> - Onboarding d'un nouveau membre en 30 minutes
 
 ## Configuration equipe
 
-### Regles partagees
+### Regles partagees dans Git
 
-Commitez `.cta/rules/` dans Git. Toute l'equipe utilise les memes standards.
+Commitez `.cta/rules/` dans votre repo. Toute l'equipe utilise les memes standards automatiquement.
 
-### Config enterprise
+```
+.cta/
+  rules/
+    coding-standards.md         # Standards de code communs
+    security-policy.md          # Politique de securite
+    architecture-principles.md  # Principes d'architecture
+    api-guidelines.md           # Standards API REST
+```
 
-Installez `~/.cta/enterprise.config.yaml` sur chaque poste pour les regles globales.
+Chaque regle est un fichier Markdown injecte automatiquement dans les prompts des agents.
 
-### Conventions features
+### Config globale (multi-projets)
 
-- Nommez les features clairement : `cta standard "Ajouter filtre par date sur /orders"`
-- Utilisez le mode standard par defaut
-- Reservez flash aux bug fixes urgents
+Pour les regles qui s'appliquent a **tous les projets** de l'organisation, utilisez la config globale :
+
+```yaml
+# ~/.cta/enterprise.config.yaml (sur chaque poste)
+company: MonEntreprise
+defaults:
+  mode: standard
+  lang: fr
+  provider: claude-code
+
+security:
+  no_secrets_in_artefacts: true
+  scan_dependencies: true
+  require_security_review: true
+
+compliance:
+  enabled: true
+  frameworks: [RGPD, ISO27001]
+  audit_log: true
+
+coding:
+  test_coverage_min: 80
+  max_pr_size: 400
+  commit_convention: conventional
+```
+
+Distribuez ce fichier via le script de provisioning des postes developpeurs.
+
+### Profiles par equipe
+
+Si votre organisation a plusieurs equipes avec des stacks differentes :
+
+```yaml
+# .cta/cta.config.yaml
+profiles:
+  backend:
+    rules: [coding-standards.md, api-guidelines.md, database-rules.md]
+    provider: claude-code
+    mode: standard
+
+  frontend:
+    rules: [coding-standards-front.md, accessibility.md, ui-guidelines.md]
+    provider: gemini
+    mode: standard
+
+  data:
+    rules: [coding-standards-python.md, data-pipeline-rules.md]
+    provider: gemini
+    mode: standard
+```
 
 ## Workflow Git avec CTA
 
-1. Creer une branche : `git checkout -b feature/export-csv`
-2. Lancer CTA : `cta standard "Export CSV des rapports"`
-3. CTA genere code + tests + artefacts
-4. Commiter les artefacts `.cta/features/` avec le code
-5. PR review : le `review.md` genere aide le reviewer humain
+### Workflow recommande
 
-## Onboarding checklist
+```
+1. Creer une branche       git checkout -b feature/export-csv
+2. Lancer CTA              cta standard "Ajouter export CSV des rapports"
+3. CTA genere              code + tests + artefacts dans .cta/features/
+4. Review humaine          Le reviewer lit review.md + spec.md + le diff
+5. Commiter                git add -A && git commit -m "feat: export CSV"
+6. Push + PR               Les artefacts aident le reviewer
+7. Merge + clean           La feature reste archivee dans .cta/features/
+```
 
-- Installer Node 20+ et pnpm
-- Installer CTA : `pnpm add -g @edf/cta`
-- Cloner le repo (les regles sont incluses)
-- Configurer le provider : `cta config set provider claude-code`
-- Lancer `cta flash "Hello world"` pour valider l'installation
+### Convention de branches
 
-> **Astuce** : Les artefacts CTA dans `.cta/features/` sont d'excellents documents d'onboarding — ils expliquent pourquoi chaque feature a ete implementee ainsi.
+| Type de branche | Mode CTA recommande |
+|----------------|---------------------|
+| `fix/<slug>` | `cta flash` |
+| `feature/<slug>` | `cta standard` |
+| `refactor/<slug>` | `cta standard` |
+| `release/<slug>` | `cta enterprise` |
+| `hotfix/<slug>` | `cta flash` |
+
+### Que commiter dans Git ?
+
+| Repertoire | Commiter ? | Raison |
+|-----------|------------|--------|
+| `.cta/cta.config.yaml` | **Oui** | Configuration partagee |
+| `.cta/rules/` | **Oui** | Standards d'equipe |
+| `.cta/templates/` | **Oui** | Templates personnalises |
+| `.cta/features/` | **Oui** | Artefacts = documentation vivante |
+| `.cta/memory/context.yaml` | **Optionnel** | Etat courant (utile pour la reprise) |
+| `.cta/memory/decisions.jsonl` | **Oui** | Audit trail |
+| `.cta/memory/metrics.jsonl` | **Optionnel** | Metriques (utile pour le suivi) |
+
+### .gitignore recommande
+
+```gitignore
+# CTA — garder les artefacts, ignorer les fichiers temporaires
+.cta/memory/*.lock
+```
+
+## Politique de review avec CTA
+
+### Review basee sur les artefacts
+
+Quand un developpeur ouvre une PR apres un `cta standard`, le reviewer dispose de :
+
+| Artefact | Ce que le reviewer verifie |
+|----------|---------------------------|
+| `brief.md` | L'analyse est-elle correcte ? Les risques identifies ? |
+| `spec.md` | La spec correspond-elle au besoin ? |
+| `stories/*.md` | Les criteres d'acceptation sont-ils complets ? |
+| `review.md` | Le QA a-t-il identifie des problemes ? Tous les criteres PASS ? |
+| `decisions.jsonl` | Les decisions IA sont-elles raisonnables ? |
+
+Le reviewer humain se concentre sur la **coherence metier** et les **choix d'architecture**, pas sur le style ou les tests (deja verifies par le QA).
+
+### Niveaux de review par mode
+
+| Mode | Review requise |
+|------|---------------|
+| Flash | Self-review du dev (le QA est skip) |
+| Standard | review.md du QA + review humaine sur la PR |
+| Enterprise | review.md + review humaine + approbation tech lead |
+
+## Onboarding d'un nouveau membre
+
+### Checklist (30 minutes)
+
+```
+5 min   Installer Node 20+ et pnpm
+2 min   pnpm add -g @edf/cta
+1 min   Copier ~/.cta/enterprise.config.yaml (via provisioning)
+2 min   Cloner le repo (les regles sont incluses dans .cta/rules/)
+1 min   cta provider status  — verifier le provider
+5 min   cta flash "Ajouter un log info au demarrage"  — premier flash
+5 min   cta status + explorer les artefacts generes
+10 min  Lire les artefacts d'une feature existante dans .cta/features/
+```
+
+### Valeur onboarding des artefacts
+
+Les artefacts CTA dans `.cta/features/` sont des **documents d'onboarding vivants**. Un nouveau membre peut lire :
+
+- Le `brief.md` pour comprendre **pourquoi** une feature existe
+- Le `spec.md` pour comprendre **comment** elle a ete concue
+- Le `review.md` pour comprendre **quels problemes** ont ete identifies
+- Le `decisions.jsonl` pour comprendre **quelles decisions IA** ont ete prises
+
+C'est plus rapide que lire le code et deviner l'intention.
+
+## Metriques d'equipe
+
+### Suivi d'adoption
+
+```bash
+# Metriques globales
+cta metrics
+
+# Export CSV pour dashboard
+cta metrics --export csv > metriques-equipe-mars.csv
+```
+
+### KPI equipe
+
+| Metrique | Cible | Comment |
+|----------|-------|---------|
+| % devs actifs sur CTA | > 70% | metrics.jsonl par agent unique |
+| Features standard vs flash | > 30% standard | decisions.jsonl type=mode_selection |
+| Cout moyen par dev/mois | < $80 | metrics.jsonl agrege |
+| Taux circuit breaker | < 10% | decisions.jsonl type=circuit_breaker |
+
+## Anti-patterns a eviter
+
+| Anti-pattern | Pourquoi c'est un probleme | Solution |
+|-------------|---------------------------|----------|
+| Forcer CTA sur toute l'equipe d'un coup | Rejet et frustration | Adopter progressivement : pilote → equipes → general |
+| Utiliser enterprise pour tout | Sur-ingenierie, lenteur | Flash pour les fix, standard pour les features, enterprise pour les projets critiques |
+| Ne pas commiter les artefacts | Perte de tracabilite et d'onboarding | Toujours commiter `.cta/features/` avec le code |
+| Ignorer le review.md | Perdre la valeur du QA automatique | Le reviewer humain doit lire le review.md en premier |
+| Des regles trop strictes au debut | Friction, contournement | Commencer avec des regles legeres, durcir progressivement |
 
 ## Prochaine etape
 
-Integrez CTA dans vos [pipelines CI/CD](/cookbook/ci-cd).
+Integrez CTA dans vos [pipelines CI/CD](/cookbook/ci-cd) pour automatiser les verifications.
