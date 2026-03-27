@@ -40,6 +40,16 @@ lang: fr
 | `budget` | object | (built-in) | Budget tokens |
 | `hooks` | object | {} | Hooks d'evenements |
 | `rules` | array | [] | Liste des fichiers de regles |
+| `pipeline` | object | (voir ci-dessous) | Configuration du pipeline inter-agents |
+
+### Pipeline
+
+```yaml
+pipeline:
+  maxOutputCharsPerAgent: 8000  # Troncature des outputs agents (defaut: 8000)
+```
+
+Cette option controle la quantite de texte d'un agent precedent qui est injectee dans le prompt du suivant. Avec un LLM a grand contexte (200k+), vous pouvez augmenter cette valeur. Reduisez-la si vous atteignez les limites de tokens.
 
 ## Configuration entreprise
 

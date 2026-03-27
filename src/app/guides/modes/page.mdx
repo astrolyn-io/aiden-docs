@@ -55,6 +55,27 @@ Quand l'utiliser :
 - Nouvelle architecture
 - Compliance requise (RGPD, securite)
 
+### Approbation humaine
+
+En mode enterprise, **chaque phase requiert une approbation humaine** avant de passer a la suivante. A la fin de chaque phase, le CLI affiche :
+
+```
+[APPROVAL] Phase "discovery" for "migration-auth" completed.
+  Agent: analyst | Tokens: 2340
+  Preview: COMPLEXITY: 4 RISKS: - Data loss during migration...
+  Approve? (y/n):
+```
+
+Si vous repondez `n`, le workflow est avorte avec le statut `aborted`.
+
+Pour bypasser les approbations (par exemple en CI/CD) :
+
+```bash
+$ cta enterprise "Migration auth" --auto-approve
+```
+
+> **Attention** : `--auto-approve` desactive toute validation humaine. A utiliser uniquement dans les pipelines automatises.
+
 ## Passage dynamique
 
 CTA peut changer de mode en cours de route sans perdre le travail :

@@ -48,7 +48,16 @@ budget:                          # Budget tokens
 
 hooks: {}                        # Hooks par evenement
 rules: []                        # Fichiers de regles
+
+pipeline:                        # Configuration du pipeline inter-agents
+  maxOutputCharsPerAgent: 8000   # Troncature outputs (defaut: 8000)
 ```
+
+### Options pipeline
+
+| Cle | Type | Defaut | Description |
+|---|---|---|---|
+| `pipeline.maxOutputCharsPerAgent` | number | 8000 | Nombre max de caracteres par output d'agent injecte dans le prompt du suivant. Augmentez pour les LLMs a grand contexte, reduisez si vous atteignez les limites de tokens. |
 
 ## Niveaux de surcharge
 

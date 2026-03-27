@@ -35,11 +35,16 @@ cta standard "Nouvelle API users" [--dry-run] [--provider <name>]
 
 ### `cta enterprise <description>`
 
-Lance un workflow enterprise.
+Lance un workflow enterprise avec approbation humaine entre chaque phase.
 
 ```bash
-cta enterprise "Migration auth" [--dry-run] [--provider <name>]
+cta enterprise "Migration auth" [--dry-run] [--provider <name>] [--auto-approve]
 ```
+
+Options :
+- `--dry-run` : affiche ce qui serait fait sans executer
+- `--provider <name>` : force un provider specifique
+- `--auto-approve` : bypasse les gates d'approbation humaine (utile en CI/CD)
 
 ### `cta status [feature-slug]`
 

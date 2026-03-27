@@ -75,6 +75,14 @@ budget:
 
 > **Information** : L'alerte se declenche a 80% du budget. CTA bloque les appels si le budget est depasse.
 
+## Communication avec les providers
+
+CTA envoie les prompts aux providers via **stdin pipe** (pas comme argument de commande). Cela permet d'envoyer des prompts de taille illimitee sans etre contraint par les limites shell.
+
+- **Timeout** : 120 secondes par defaut. Si un provider ne repond pas dans ce delai, `ProviderTimeoutError` est leve et le circuit breaker est notifie.
+- **Format de review** : CTA demande aux providers de repondre dans un format structure (`SCORE: N / PASSED: yes|no / ISSUES: ...`). Si le provider ne respecte pas le format, un fallback heuristique est utilise.
+- **Module partage** : Les 3 adapters utilisent `src/providers/subprocess.ts` — pas de duplication de code entre providers.
+
 ## Prochaine etape
 
 Approfondissez la [configuration](/guides/configuration).

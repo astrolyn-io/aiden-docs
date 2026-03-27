@@ -42,6 +42,52 @@ Actif en enterprise uniquement. Genere la documentation, changelog, verifie la c
 | QA | — | Oui | Oui |
 | DocOps | — | — | Oui |
 
+## Comment les agents communiquent (Pipeline)
+
+Les agents ne travaillent pas en isolation. Chaque agent recoit un `PipelineContext` contenant :
+- La **feature request** originale
+- Les **outputs de tous les agents precedents** (tronques a 8000 chars par agent, configurable)
+- Le **contexte projet** reel (tech stack, architecture, CI — detectes par `cta init`)
+
+Flux concret en mode standard :
+
+```
+Analyst execute() → output.content + output.structured
+    ↓
+Planner recoit [ANALYST]: dans son prompt → output.content + structured.stories
+    ↓
+Dev recoit [ANALYST]: + [PLANNER]: → implemente selon les stories
+    ↓
+QA recoit [ANALYST]: + [PLANNER]: + [DEV]: → review le code du Dev
+```
+
+### Outputs structures
+
+Chaque agent retourne des donnees typees dans `output.structured` :
+
+| Agent | Champs structures |
+|-------|------------------|
+| Analyst | `complexity` (1-5), `risks` (string[]), `questions` (string[]) |
+| Planner | `stories` (array of id/title/description), `estimatedTokens` (number) |
+| Dev | `filesChanged` (string[]), `testsGenerated` (string[]) |
+| QA | `passed` (boolean), `score` (1-10), `issues` (array of severity/message) |
+| DocOps | `docsGenerated` (string[]) |
+
+L'orchestrateur utilise ces champs pour les quality gates et le feedback loop.
+
+### Feedback loop QA → Dev
+
+Si le QA echoue (`structured.passed = false`), l'orchestrateur :
+1. Relance le Dev avec le feedback du QA dans `previousOutputs`
+2. Relance le QA sur le nouveau code
+3. Repete max 2 fois. Si toujours en echec, le workflow continue.
+
+### Quality gates
+
+Apres la phase **discovery** : le gate verifie que l'output de l'Analyst contient du contenu et une complexite detectee. Sinon, la feature est bloquee.
+
+Apres la phase **planning** : le gate verifie que la spec contient du contenu et au moins une story. Sinon, blocage.
+
 ## Invocation manuelle
 
 Vous pouvez invoquer un agent en dehors d'un workflow :
