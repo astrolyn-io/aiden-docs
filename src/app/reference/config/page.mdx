@@ -66,6 +66,22 @@ pipeline:                        # Configuration du pipeline inter-agents
 | `routing.strategy` | string | `prefer` | Strategie de routage : `fixed` (un seul provider), `prefer` (prefere + fallback), `auto` (choix par type de tache), `cost-optimized` (minimise les couts). En mode `auto`, chaque agent recoit le provider optimal : Analyst → claude-code, Dev → gemini, etc. |
 | `routing.fallback` | string[] | `[claude-code, gemini, copilot]` | Chaine de fallback si le provider prefere est indisponible. |
 
+### Schema projet (context.yaml)
+
+Le scan de `cta init` genere `.cta/memory/context.yaml` avec ce schema :
+
+| Cle | Type | Description |
+|---|---|---|
+| `project.name` | string | Nom du projet (depuis le dossier) |
+| `project.techStack` | string[] | Technologies detectees (node, typescript, react, nestjs, prisma, python...) |
+| `project.architecture` | string[] | Infrastructure (docker, docker-compose, kubernetes) |
+| `project.ci` | string[] | Systemes CI/CD (github-actions, gitlab-ci, jenkins, circleci) |
+| `project.packageManager` | string? | Gestionnaire de paquets (pnpm, yarn, npm, bun) |
+| `project.databases` | string[]? | Bases de donnees (postgres, mysql, redis, mongodb) |
+| `project.monorepo` | string? | Outil monorepo (turborepo, nx, lerna, pnpm-workspaces) |
+
+Ces donnees sont injectees dans le prompt de chaque agent via la section `--- Project Context ---`.
+
 ## Niveaux de surcharge
 
 | Niveau | Fichier | Portee |
