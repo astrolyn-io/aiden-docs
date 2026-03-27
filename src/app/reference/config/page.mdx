@@ -59,6 +59,13 @@ pipeline:                        # Configuration du pipeline inter-agents
 |---|---|---|---|
 | `pipeline.maxOutputCharsPerAgent` | number | 8000 | Nombre max de caracteres par output d'agent injecte dans le prompt du suivant. Augmentez pour les LLMs a grand contexte, reduisez si vous atteignez les limites de tokens. |
 
+### Options routing
+
+| Cle | Type | Defaut | Description |
+|---|---|---|---|
+| `routing.strategy` | string | `prefer` | Strategie de routage : `fixed` (un seul provider), `prefer` (prefere + fallback), `auto` (choix par type de tache), `cost-optimized` (minimise les couts). En mode `auto`, chaque agent recoit le provider optimal : Analyst → claude-code, Dev → gemini, etc. |
+| `routing.fallback` | string[] | `[claude-code, gemini, copilot]` | Chaine de fallback si le provider prefere est indisponible. |
+
 ## Niveaux de surcharge
 
 | Niveau | Fichier | Portee |

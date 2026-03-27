@@ -76,9 +76,19 @@ $ cta enterprise "Migration auth" --auto-approve
 
 > **Attention** : `--auto-approve` desactive toute validation humaine. A utiliser uniquement dans les pipelines automatises.
 
-## Passage dynamique
+## Detection automatique du mode
 
-CTA peut changer de mode en cours de route sans perdre le travail :
+Le Lead analyse la description de la feature avec des heuristiques pour suggerer le mode optimal :
+
+- `"Fix typo in README"` → **flash** (faible complexite, 1 fichier)
+- `"Add new REST API with OAuth"` → **standard** (nouvelle API, dependance externe)
+- `"Migrate monolith to microservices with RGPD compliance"` → **enterprise** (nouvelle architecture, compliance)
+
+La detection prend aussi en compte le contexte projet (nombre de technologies, architecture).
+
+## Passage dynamique avec re-routing
+
+CTA peut changer de mode en cours de route **sans perdre le travail** et en executant les phases manquantes :
 
 ```bash
 # Demarre en flash, bascule en standard si complexite detectee
@@ -86,7 +96,12 @@ $ cta flash "Export CSV"
 CTA Lead > Complexite detectee (5 fichiers). Passer en standard ? [Y/n]
 ```
 
-> **Attention** : Le passage de standard a flash n'est pas recommande — vous perdriez les phases d'analyse.
+Quand vous passez de flash a standard, `switchMode()` :
+1. Identifie les phases deja completees (implementation)
+2. Execute les phases manquantes (discovery, planning)
+3. Continue le workflow avec les nouveaux artefacts
+
+Le passage de standard a flash est un no-op — les phases flash sont un sous-ensemble de standard.
 
 ## Prochaine etape
 

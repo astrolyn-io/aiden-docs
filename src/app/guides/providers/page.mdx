@@ -75,6 +75,18 @@ budget:
 
 > **Information** : L'alerte se declenche a 80% du budget. CTA bloque les appels si le budget est depasse.
 
+## Routage dans l'orchestrateur
+
+Le router est directement branche dans l'orchestrateur. Chaque agent recoit son provider via `router.route(taskType)` — pas un provider unique pour tout le workflow. En mode `auto`, l'Analyst utilise Claude Code (meilleur en analyse) tandis que le Dev utilise Gemini (meilleur en generation de code).
+
+```yaml
+routing:
+  strategy: auto
+  fallback: [claude-code, gemini, copilot]
+```
+
+Si un provider tombe pendant un workflow, le fallback est automatique — l'agent suivant recoit un provider fonctionnel.
+
 ## Communication avec les providers
 
 CTA envoie les prompts aux providers via **stdin pipe** (pas comme argument de commande). Cela permet d'envoyer des prompts de taille illimitee sans etre contraint par les limites shell.

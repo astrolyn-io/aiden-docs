@@ -70,10 +70,39 @@ Chaque agent retourne des donnees typees dans `output.structured` :
 | Analyst | `complexity` (1-5), `risks` (string[]), `questions` (string[]) |
 | Planner | `stories` (array of id/title/description), `estimatedTokens` (number) |
 | Dev | `filesChanged` (string[]), `testsGenerated` (string[]) |
-| QA | `passed` (boolean), `score` (1-10), `issues` (array of severity/message) |
+| QA | `passed` (boolean), `score` (1-10), `issues` (array of severity/message), `criteriaResults` (array of story/criterion/passed/reason) |
 | DocOps | `docsGenerated` (string[]) |
 
 L'orchestrateur utilise ces champs pour les quality gates et le feedback loop.
+
+### Verification croisee QA ↔ Planner
+
+Le QA ne fait pas une review generique. Il extrait les stories et criteres d'acceptation de l'output du Planner (`structured.stories`) et les inclut explicitement dans sa review :
+
+```
+--- ACCEPTANCE CRITERIA TO VERIFY ---
+Story: Setup Database
+  - Tables are created
+  - Migrations run successfully
+
+For each criterion: PASS or FAIL with reason.
+```
+
+Le QA retourne `structured.criteriaResults` avec le resultat de chaque critere, permettant un suivi precis de la couverture fonctionnelle.
+
+### Routage multi-provider par agent
+
+Chaque agent recoit le provider optimal pour sa tache via le router :
+
+| Agent | TaskType | Provider par defaut (auto) |
+|-------|----------|---------------------------|
+| Analyst | analysis | claude-code |
+| Planner | planning | claude-code |
+| Dev | code_gen | gemini |
+| QA | code_review | claude-code |
+| DocOps | documentation | claude-code |
+
+L'orchestrateur appelle `router.route(taskType)` avant chaque execution. Si le provider prefere est indisponible, le fallback prend le relais.
 
 ### Feedback loop QA → Dev
 
