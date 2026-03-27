@@ -1,62 +1,169 @@
 # Premiere feature en mode standard
 
 > **Ce que vous allez apprendre**
-> - Le workflow standard : Analyst, Planner, Dev, QA
+> - Le workflow standard complet : Analyst, Planner, Dev, QA
 > - Les artefacts generes a chaque phase
-> - Suivre l'avancement d'une feature
+> - Que faire si le QA echoue
 
-## Scenario : ajouter GET /health
+## Scenario : ajouter GET /health a une API Express
 
 ```bash
-$ cta standard "Ajouter un endpoint GET /health"
-Starting standard workflow...
+$ cta standard "Ajouter un endpoint GET /health avec verification connexion DB"
 ```
 
 ## Phase 1 — Decouverte (Analyst)
 
-L'Analyst scanne le code et pose 3-5 questions :
+L'Analyst scanne le code existant et produit une analyse structuree :
 
 ```
-CTA Analyst > Question 1/3 : Format de reponse JSON ?
-CTA Analyst > Question 2/3 : Verifier la connexion DB ?
-CTA Analyst > Question 3/3 : Endpoint public ou protege ?
+Phase: discovery, Agent: analyst, Provider: claude-code
 ```
 
-Artefact : `.cta/features/ajouter-endpoint-get-health/brief.md`
+Output structure :
+- **Complexite** : 2/5 (endpoint simple avec une verification)
+- **Risques** : dependance DB non mocke dans les tests
+- **Questions** : format de reponse ? verifier la connexion DB ou juste le serveur ?
+
+Artefact genere : `.cta/features/ajouter-un-endpoint-get-health/brief.md`
+
+```markdown
+---
+type: brief
+feature: ajouter-un-endpoint-get-health
+version: 1
+author: analyst
+status: draft
+---
+## Analyse
+Endpoint simple retournant le statut du serveur et de la connexion DB.
+Complexite: 2/5. Risques: mock DB pour tests.
+```
+
+> **Quality gate** : Si l'Analyst ne detecte pas de complexite ou retourne un contenu vide, le workflow est bloque.
 
 ## Phase 2 — Planification (Planner)
 
-Le Planner cree spec et stories :
+Le Planner recoit le brief de l'Analyst et cree une spec avec des stories :
 
 ```
-CTA Planner > Spec creee (1 page)
-CTA Planner > 2 stories : endpoint + tests
+Phase: planning, Agent: planner, Provider: claude-code
 ```
 
-Artefacts : `spec.md`, `stories/001-*.md`, `stories/002-*.md`
+Artefacts generes :
+- `spec.md` — specification en 1-2 pages
+- `stories/001-endpoint-health.md` — story avec criteres d'acceptation
+- `stories/002-tests-health.md` — story pour les tests
+
+Exemple de story :
+
+```markdown
+### Story 1: Endpoint /health
+Implementer GET /health retournant {status: "healthy", db: "connected"}.
+
+Acceptance criteria:
+- GET /health retourne 200 avec JSON
+- Si la DB est down, retourne {status: "degraded", db: "disconnected"}
+- Le endpoint est accessible sans authentification
+```
+
+> **Quality gate** : Si le Planner ne decompose pas en stories, le workflow est bloque.
 
 ## Phase 3 — Implementation (Dev)
 
-Le Dev implemente chaque story avec tests et self-review.
+Le Dev recoit le brief, la spec et les stories. Il implemente chaque story :
+
+```
+Phase: implementation, Agent: dev, Provider: gemini
+```
+
+Le Dev :
+1. Lit les stories et le code existant
+2. Implemente le code
+3. Ecrit les tests
+4. Fait un self-review
+
+Output structure : `filesChanged`, `testsGenerated`.
+
+> **Guardrails** : Si plus de 10 fichiers sont modifies, le circuit breaker intervient. Toutes les 5 etapes, un rappel d'objectif est injecte.
 
 ## Phase 4 — Validation (QA)
 
-Le QA revoit le code, verifie les criteres, scan securite.
+Le QA recoit TOUT le contexte : brief, spec, stories, code du Dev :
 
-Artefact : `review.md`
-
-## Resultat
-
-```bash
-$ cta status ajouter-endpoint-get-health
-Feature: Ajouter un endpoint GET /health
-  State: completed
-  Mode: standard
-  Tokens: 450
+```
+Phase: validation, Agent: qa, Provider: claude-code
 ```
 
-> **Information** : Tous les artefacts dans `.cta/features/<slug>/` servent de trace pour reprendre le contexte.
+Le QA verifie explicitement chaque critere d'acceptation :
+
+```
+--- ACCEPTANCE CRITERIA TO VERIFY ---
+Story: Endpoint /health
+  - GET /health retourne 200 avec JSON
+  - Si la DB est down, retourne {status: "degraded"}
+  - Accessible sans authentification
+
+CRITERIA_RESULTS:
+Endpoint /health / GET retourne 200: PASS
+Endpoint /health / DB down: PASS
+Endpoint /health / Sans auth: PASS
+
+SCORE: 8/10
+PASSED: yes
+```
+
+Output structure : `passed`, `score`, `issues`, `criteriaResults`.
+
+### Si le QA echoue
+
+Si `passed = false`, l'orchestrateur lance un **feedback loop** :
+
+1. Le Dev recoit le feedback du QA et corrige
+2. Le QA re-review le nouveau code
+3. Maximum 2 retries. Si toujours en echec, le workflow continue avec un warning.
+
+## Resultat final
+
+```bash
+$ cta status ajouter-un-endpoint-get-health
+Feature: Ajouter un endpoint GET /health avec verification connexion DB
+  State: completed
+  Mode: standard
+  Tokens: 4500
+  Agents: analyst → planner → dev → qa
+```
+
+Artefacts dans `.cta/features/ajouter-un-endpoint-get-health/` :
+
+```
+brief.md              # Analyse de l'Analyst
+spec.md               # Specification du Planner
+stories/001-*.md      # Stories avec criteres
+stories/002-*.md
+review.md             # Rapport du QA
+change-summary.md     # Resume des changements
+```
+
+Decisions tracees dans `.cta/memory/decisions.jsonl` :
+
+```json
+{"ts":"2026-03-27T10:15:00Z","feature":"ajouter-un-endpoint-get-health","agent":"analyst","type":"complexity","value":2}
+{"ts":"2026-03-27T10:15:05Z","feature":"ajouter-un-endpoint-get-health","agent":"qa","type":"review","value":"passed"}
+```
+
+## Passer en enterprise
+
+Pour les projets critiques, le mode enterprise ajoute :
+- **Approbation humaine** entre chaque phase
+- **DocOps** qui genere la documentation et verifie la conformite
+- **Quality report** complet
+
+```bash
+$ cta enterprise "Migration authentification" --auto-approve
+```
+
+Sans `--auto-approve`, chaque phase demande votre validation avant de continuer.
 
 ## Prochaine etape
 
-Decouvrez les [3 modes de CTA](/guides/modes).
+Decouvrez les [3 modes de CTA](/guides/modes) et quand utiliser chacun.

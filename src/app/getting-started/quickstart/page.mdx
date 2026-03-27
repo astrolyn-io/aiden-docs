@@ -2,66 +2,115 @@
 
 > **Ce que vous allez apprendre**
 > - Creer un projet CTA de zero en 5 minutes
-> - Lancer un workflow flash
-> - Verifier les artefacts generes
+> - Lancer un workflow flash et voir le resultat
+> - Comprendre ce que CTA a fait
 
-## De zero a une feature
-
-### 1. Creer un projet
+## Etape 1 : Creer un projet
 
 ```bash
 $ mkdir mon-api && cd mon-api
-$ npm init -y && npm install express
+$ npm init -y
+$ npm install express
 ```
 
-### 2. Initialiser CTA
+Creez un fichier `index.js` minimal :
+
+```js
+const express = require('express');
+const app = express();
+app.get('/', (req, res) => res.json({ status: 'ok' }));
+module.exports = app;
+```
+
+## Etape 2 : Initialiser CTA
 
 ```bash
 $ cta init
 CTA initialized in .cta/
+  Config: .cta/cta.config.yaml
+  Rules:  .cta/rules/coding-standards.md
+  Memory: .cta/memory/
+  Stack:  node, express
+  PM:     npm
 ```
 
-### 3. Verifier la config
+CTA a detecte que c'est un projet Node.js avec Express.
+
+## Etape 3 : Lancer un flash
 
 ```bash
-$ cta config show
-{
-  "project": "mon-api",
-  "provider": "claude-code",
-  "mode": "standard",
-  "lang": "fr"
-}
+$ cta flash "Ajouter un endpoint GET /health retournant {status: healthy}"
 ```
 
-### 4. Lancer un flash
+Output :
 
-```bash
-$ cta flash "Ajouter GET /health retournant {status: ok}"
-Starting flash workflow...
+```
+Starting flash workflow for: Ajouter un endpoint GET /health...
+  Phase: implementation, Agent: dev, Provider: claude-code
+  Dev: Implementing feature...
+  Dev: Writing tests...
+  Feature completed: ajouter-un-endpoint-get-health
+  Tokens: 1250 | Duration: 12s
 ```
 
-### 5. Verifier le statut
+## Etape 4 : Verifier le resultat
 
 ```bash
 $ cta status
-ajouter-get-health [completed] (flash) - Ajouter GET /health
+ajouter-un-endpoint-get-health [completed] (flash)
+  Tokens: 1250 | Created: 2026-03-27
 ```
 
-### 6. Explorer les artefacts
+Explorez les artefacts :
 
 ```bash
-$ ls .cta/features/ajouter-get-health/
+$ ls .cta/features/ajouter-un-endpoint-get-health/
 change-summary.md
 ```
 
+Le `change-summary.md` contient un resume de ce que le Dev a fait : fichiers modifies, tests crees, decisions prises.
+
+## Etape 5 : Verifier le code
+
+Le Dev a modifie `index.js` pour ajouter la route et cree un fichier de test. Verifiez :
+
+```bash
+$ cat index.js
+# Devrait contenir: app.get('/health', ...)
+
+$ ls *.test.* *.spec.*
+# Un fichier de test devrait exister
+```
+
+## Etape 6 : Voir les metriques
+
+```bash
+$ cta metrics
+Features: 1 completed
+Tokens:   1250 used
+Cost:     $0.004
+```
+
+## Ce que CTA a fait
+
+1. **Detection** : Le Lead a analyse la demande et choisi le mode flash (simple, < 3 fichiers)
+2. **Implementation** : Le Dev a lu le code existant, ajoute la route `/health`, ecrit un test
+3. **Tracabilite** : La decision est logguee dans `.cta/memory/decisions.jsonl`, le contexte est mis a jour
+
 ## Checklist de reussite
 
-- Le dossier `.cta/` existe
+- `.cta/` existe avec la config et la memoire
 - `cta status` montre la feature completee
 - Un `change-summary.md` a ete genere
+- Le code contient la route `/health`
 
-> **Astuce** : Pour plus de controle (brief, spec, review), utilisez `cta standard`.
+## Si ca ne marche pas
+
+- **"CTA not initialized"** — Lancez `cta init` d'abord
+- **"No provider available"** — Verifiez que `claude --version` fonctionne
+- **Le provider timeout** — La premiere requete peut etre lente, reessayez
+- **Le code n'est pas ce que vous attendiez** — Essayez `cta standard` pour plus de controle (analyse + planning + review)
 
 ## Prochaine etape
 
-Suivez le tutoriel [Premiere feature](/getting-started/first-feature) pour le mode standard complet.
+Suivez le tutoriel [Premiere feature](/getting-started/first-feature) pour le mode standard complet avec Analyst, Planner, Dev et QA.

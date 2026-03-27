@@ -3,7 +3,7 @@
 > **Ce que vous allez apprendre**
 > - Installer CTA et ses prerequis
 > - Initialiser un projet avec `cta init`
-> - Lancer votre premiere commande
+> - Verifier que tout fonctionne
 
 ## Prerequis
 
@@ -21,10 +21,10 @@ Verifiez :
 
 ```bash
 $ cta --version
-0.1.0
+0.5.0
 ```
 
-> **Astuce** : Si `command not found`, ajoutez le dossier global pnpm a votre PATH.
+> **Astuce** : Si `command not found`, ajoutez le dossier global pnpm a votre PATH : `export PATH="$(pnpm store path)/../../.pnpm:$PATH"`
 
 ## Initialiser un projet
 
@@ -33,27 +33,56 @@ Dans le repertoire de votre projet :
 ```bash
 $ cta init
 CTA initialized in .cta/
+  Config: .cta/cta.config.yaml
+  Rules:  .cta/rules/coding-standards.md
+  Memory: .cta/memory/
+  Stack:  node, typescript, express
+  Arch:   docker
+  CI:     github-actions
+  PM:     pnpm
 ```
+
+CTA scanne automatiquement votre projet et detecte :
+- **Tech stack** : Node.js, TypeScript, React, Express, NestJS, Vue, Angular, Python, Go, Rust...
+- **Architecture** : Docker, Docker Compose, Kubernetes
+- **CI/CD** : GitHub Actions, GitLab CI, Jenkins, CircleCI
+- **Package manager** : pnpm, yarn, npm, bun
+- **Databases** : PostgreSQL, MySQL, Redis, MongoDB (depuis les deps et docker-compose)
+- **Monorepo** : Turborepo, Nx, Lerna, pnpm workspaces
+
+Ces informations sont injectees dans le contexte de chaque agent pour des resultats plus pertinents.
 
 Structure creee :
 
 ```
 .cta/
   cta.config.yaml    # Configuration projet
-  memory/            # Contexte et decisions
-  rules/             # Regles entreprise (vide)
-  templates/         # Templates personnalises (vide)
-  features/          # Features en cours (vide)
+  memory/            # Contexte, decisions, metriques
+  rules/             # Regles entreprise
+  templates/         # Templates personnalises
+  features/          # Features en cours
 ```
 
 ## Configurer le provider
 
+Par defaut, CTA utilise Claude Code. Pour changer :
+
 ```bash
-$ cta config set provider claude-code
-Set provider = claude-code
+$ cta config set provider gemini
+Set provider = gemini
 ```
 
 Providers disponibles : `claude-code`, `gemini`, `copilot`.
+
+Verifiez que votre provider est accessible :
+
+```bash
+$ cta provider status
+Provider status:
+  claude-code: configured
+  gemini: not found
+  copilot: configured
+```
 
 ## Premier test
 
@@ -63,7 +92,7 @@ $ cta flash "Ajouter hello.ts" --dry-run
 Mode: flash | Agents: lead, dev
 ```
 
-> **Attention** : Sans `--dry-run`, CTA appelle le provider IA configure. Assurez-vous qu'il est accessible.
+Le `--dry-run` montre ce qui serait fait sans appeler le provider.
 
 ## Mode slash (Claude Code)
 
@@ -75,6 +104,16 @@ Si vous utilisez Claude Code, CTA est aussi disponible en slash commands sans in
 - `/cta-enterprise` — mode enterprise
 
 Les deux modes (CLI et slash) ecrivent dans les memes fichiers `.cta/`.
+
+## Troubleshooting
+
+**`command not found: cta`** — Assurez-vous que le dossier global pnpm est dans votre PATH.
+
+**`CTA not initialized`** — Lancez `cta init` dans le repertoire du projet.
+
+**`No provider available`** — Installez Claude Code (`npm install -g @anthropic-ai/claude-code`) ou un autre provider.
+
+**Timeout sur le provider** — Le timeout par defaut est 120s. Si votre LLM est lent, augmentez-le dans `.cta/cta.config.yaml`.
 
 ## Prochaine etape
 
