@@ -29,6 +29,7 @@ export const navigation: NavSection[] = [
       { title: 'Providers', href: '/guides/providers' },
       { title: 'Configuration', href: '/guides/configuration' },
       { title: 'Regles & Templates', href: '/guides/rules-and-templates' },
+      { title: 'Skills', href: '/guides/skills' },
       { title: 'Troubleshooting', href: '/guides/troubleshooting' },
     ],
   },

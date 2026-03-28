@@ -13,6 +13,7 @@ export default function GuidesPage() {
         <Card href="/guides/providers" title="Providers" description="Claude Code, Gemini, Copilot: configuration et routage." icon="🔌" />
         <Card href="/guides/configuration" title="Configuration" description="Les 5 niveaux de configuration." icon="⚙️" />
         <Card href="/guides/rules-and-templates" title="Regles & Templates" description="Personnaliser les regles et templates." icon="📐" />
+        <Card href="/guides/skills" title="Skills" description="Extensibilite enterprise : instructions, regles et hooks par package." icon="🧩" />
         <Card href="/guides/troubleshooting" title="Troubleshooting" description="Problemes courants et solutions." icon="🔧" />
       </div>
     </div>

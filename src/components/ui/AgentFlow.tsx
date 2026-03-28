@@ -12,21 +12,21 @@ interface Agent {
 }
 
 const agents: Agent[] = [
-  { name: 'lead', label: 'Lead', color: '#f59e0b', modes: ['flash', 'standard', 'enterprise'] },
-  { name: 'analyst', label: 'Analyst', color: '#22d3ee', modes: ['standard', 'enterprise'] },
-  { name: 'planner', label: 'Planner', color: '#3b82f6', modes: ['standard', 'enterprise'] },
-  { name: 'dev', label: 'Dev', color: '#10b981', modes: ['flash', 'standard', 'enterprise'] },
-  { name: 'qa', label: 'QA', color: '#ef4444', modes: ['standard', 'enterprise'] },
-  { name: 'docops', label: 'DocOps', color: '#94a3b8', modes: ['enterprise'] },
+  { name: 'lead', label: 'Lead', color: '#d97706', modes: ['flash', 'standard', 'enterprise'] },
+  { name: 'analyst', label: 'Analyst', color: '#004a9c', modes: ['standard', 'enterprise'] },
+  { name: 'planner', label: 'Planner', color: '#2563eb', modes: ['standard', 'enterprise'] },
+  { name: 'dev', label: 'Dev', color: '#059669', modes: ['flash', 'standard', 'enterprise'] },
+  { name: 'qa', label: 'QA', color: '#dc2626', modes: ['standard', 'enterprise'] },
+  { name: 'docops', label: 'DocOps', color: '#6b7280', modes: ['enterprise'] },
 ];
 
 export function AgentFlow() {
   const [mode, setMode] = useState<FlowMode>('standard');
 
   const modeColors: Record<FlowMode, string> = {
-    flash: '#f59e0b',
-    standard: '#3b82f6',
-    enterprise: '#8b5cf6',
+    flash: '#d97706',
+    standard: '#e85d04',
+    enterprise: '#7c3aed',
   };
 
   return (
@@ -36,9 +36,9 @@ export function AgentFlow() {
           <button
             key={m}
             onClick={() => setMode(m)}
-            className="px-4 py-1.5 rounded-full text-xs font-medium transition-all"
+            className="px-4 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer"
             style={{
-              background: mode === m ? modeColors[m] : 'var(--cta-bg-card)',
+              background: mode === m ? modeColors[m] : 'var(--cta-bg-secondary)',
               color: mode === m ? 'white' : 'var(--cta-text-muted)',
               border: `1px solid ${mode === m ? modeColors[m] : 'var(--cta-border)'}`,
             }}
@@ -47,7 +47,6 @@ export function AgentFlow() {
           </button>
         ))}
       </div>
-
       <div className="flex items-center justify-center gap-2 flex-wrap">
         {agents.map((agent, i) => {
           const active = agent.modes.includes(mode);
@@ -56,7 +55,7 @@ export function AgentFlow() {
               <div
                 className="flex items-center justify-center w-16 h-16 rounded-full text-xs font-bold transition-all"
                 style={{
-                  background: active ? `${agent.color}20` : 'var(--cta-bg-card)',
+                  background: active ? `${agent.color}15` : 'var(--cta-bg-secondary)',
                   border: `2px solid ${active ? agent.color : 'var(--cta-border)'}`,
                   color: active ? agent.color : 'var(--cta-text-muted)',
                   opacity: active ? 1 : 0.3,
@@ -68,7 +67,7 @@ export function AgentFlow() {
                 <svg width="24" height="12" viewBox="0 0 24 12" className="shrink-0">
                   <path
                     d="M0 6h18M14 1l6 5-6 5"
-                    stroke={active && agents[i + 1]?.modes.includes(mode) ? 'var(--cta-text-secondary)' : 'var(--cta-border)'}
+                    stroke={active && agents[i + 1]?.modes.includes(mode) ? 'var(--cta-text-muted)' : 'var(--cta-border)'}
                     strokeWidth="1.5"
                     fill="none"
                   />

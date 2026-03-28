@@ -26,23 +26,22 @@ export function CodeBlock({ children, language: _language, filename, highlight }
 
   return (
     <div
-      className="rounded-cta overflow-hidden my-4"
-      style={{ background: 'var(--cta-code-bg)', border: '1px solid var(--cta-border)' }}
+      className="rounded-xl overflow-hidden my-4"
+      style={{ background: 'var(--cta-terminal-bg)', border: '1px solid var(--cta-border)' }}
     >
       {filename && (
         <div
           className="flex items-center justify-between px-4 py-2 text-xs"
           style={{
-            background: 'var(--cta-bg-card)',
-            borderBottom: '1px solid var(--cta-border)',
-            color: 'var(--cta-text-muted)',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            color: '#7f8ea3',
           }}
         >
           <span>{filename}</span>
           <button
             onClick={handleCopy}
-            className="px-2 py-0.5 rounded text-xs transition-colors"
-            style={{ color: 'var(--cta-text-muted)' }}
+            className="px-2 py-0.5 rounded text-xs transition-colors cursor-pointer"
+            style={{ color: '#7f8ea3' }}
           >
             {copied ? '✓ Copie' : 'Copier'}
           </button>
@@ -52,8 +51,8 @@ export function CodeBlock({ children, language: _language, filename, highlight }
         <div className="flex justify-end px-3 pt-2">
           <button
             onClick={handleCopy}
-            className="text-xs transition-colors"
-            style={{ color: 'var(--cta-text-muted)' }}
+            className="text-xs transition-colors cursor-pointer"
+            style={{ color: '#7f8ea3' }}
           >
             {copied ? '✓' : '📋'}
           </button>
@@ -67,12 +66,13 @@ export function CodeBlock({ children, language: _language, filename, highlight }
               className="block"
               style={{
                 background: highlightLines.includes(i + 1)
-                  ? 'rgba(59, 130, 246, 0.1)'
+                  ? 'rgba(232, 93, 4, 0.08)'
                   : 'transparent',
                 borderLeft: highlightLines.includes(i + 1)
-                  ? '2px solid var(--cta-accent-blue)'
+                  ? '2px solid var(--cta-accent-primary)'
                   : '2px solid transparent',
                 paddingLeft: '0.75rem',
+                color: '#e2e8f0',
               }}
             >
               {line || ' '}

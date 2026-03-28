@@ -18,7 +18,7 @@ export function StepList({ steps }: StepListProps) {
             <div
               className="flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold shrink-0"
               style={{
-                background: 'var(--cta-accent-blue)',
+                background: 'var(--cta-accent-primary)',
                 color: 'white',
               }}
             >

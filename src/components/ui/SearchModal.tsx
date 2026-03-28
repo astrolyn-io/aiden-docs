@@ -32,7 +32,6 @@ export function SearchModal() {
         setOpen((o) => !o);
       }
       if (!open) return;
-
       if (e.key === 'Escape') {
         setOpen(false);
       } else if (e.key === 'ArrowDown') {
@@ -64,28 +63,31 @@ export function SearchModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh]">
       <div
-        className="fixed inset-0 bg-black/60"
+        className="fixed inset-0 bg-black/30"
         onClick={() => setOpen(false)}
       />
       <div
-        className="relative w-full max-w-lg rounded-cta overflow-hidden"
+        className="relative w-full max-w-lg rounded-xl overflow-hidden"
         style={{
-          background: 'var(--cta-bg-secondary)',
+          background: 'var(--cta-bg-card)',
           border: '1px solid var(--cta-border)',
           boxShadow: 'var(--cta-shadow-lg)',
         }}
       >
-        <input
-          autoFocus
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher dans la documentation..."
-          className="w-full px-4 py-3 text-sm bg-transparent outline-none"
-          style={{
-            color: 'var(--cta-text-primary)',
-            borderBottom: '1px solid var(--cta-border)',
-          }}
-        />
+        <div className="flex items-center px-4" style={{ borderBottom: '1px solid var(--cta-border)' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cta-text-muted)" strokeWidth="2" strokeLinecap="round" className="shrink-0">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <input
+            autoFocus
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Rechercher dans la documentation..."
+            className="w-full px-3 py-3.5 text-sm bg-transparent outline-none"
+            style={{ color: 'var(--cta-text-primary)' }}
+          />
+        </div>
         <div className="max-h-72 overflow-y-auto">
           {filtered.map((item, i) => (
             <button
@@ -95,14 +97,16 @@ export function SearchModal() {
                 setOpen(false);
                 setQuery('');
               }}
-              className="w-full text-left px-4 py-2.5 text-sm flex items-center justify-between transition-colors"
+              className="w-full text-left px-4 py-2.5 text-sm flex items-center justify-between transition-colors cursor-pointer"
               style={{
                 background:
-                  i === selectedIndex ? 'var(--cta-bg-card)' : 'transparent',
+                  i === selectedIndex ? 'var(--cta-bg-hover)' : 'transparent',
                 color: 'var(--cta-text-secondary)',
               }}
             >
-              <span>{item.title}</span>
+              <span style={{ color: i === selectedIndex ? 'var(--cta-text-primary)' : 'var(--cta-text-secondary)' }}>
+                {item.title}
+              </span>
               <span className="text-xs" style={{ color: 'var(--cta-text-muted)' }}>
                 {item.section}
               </span>

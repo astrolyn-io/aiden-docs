@@ -9,10 +9,10 @@ interface CalloutProps {
 }
 
 const calloutStyles: Record<CalloutType, { color: string; bg: string; icon: string }> = {
-  info: { color: 'var(--cta-accent-blue)', bg: 'rgba(59,130,246,0.08)', icon: 'ℹ️' },
-  tip: { color: 'var(--cta-accent-green)', bg: 'rgba(16,185,129,0.08)', icon: '💡' },
-  warning: { color: 'var(--cta-accent-yellow)', bg: 'rgba(245,158,11,0.08)', icon: '⚠️' },
-  danger: { color: 'var(--cta-accent-red)', bg: 'rgba(239,68,68,0.08)', icon: '🚨' },
+  info: { color: 'var(--cta-accent-blue)', bg: 'var(--cta-accent-blue-light)', icon: 'ℹ️' },
+  tip: { color: 'var(--cta-accent-green)', bg: 'var(--cta-accent-green-light)', icon: '💡' },
+  warning: { color: 'var(--cta-accent-yellow)', bg: 'var(--cta-accent-yellow-light)', icon: '⚠️' },
+  danger: { color: 'var(--cta-accent-red)', bg: 'var(--cta-accent-red-light)', icon: '🚨' },
 };
 
 const defaultTitles: Record<CalloutType, string> = {
@@ -27,7 +27,7 @@ export function Callout({ type = 'info', title, children }: CalloutProps) {
 
   return (
     <div
-      className="my-4 rounded-cta p-4"
+      className="my-4 rounded-xl p-4"
       style={{
         background: style.bg,
         borderLeft: `3px solid ${style.color}`,

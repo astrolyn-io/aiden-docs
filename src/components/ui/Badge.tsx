@@ -9,18 +9,18 @@ interface BadgeProps {
 }
 
 const badgeColors: Record<BadgeVariant, { bg: string; color: string }> = {
-  flash: { bg: 'rgba(245,158,11,0.15)', color: '#f59e0b' },
-  standard: { bg: 'rgba(59,130,246,0.15)', color: '#3b82f6' },
-  enterprise: { bg: 'rgba(139,92,246,0.15)', color: '#8b5cf6' },
-  lead: { bg: 'rgba(245,158,11,0.15)', color: '#f59e0b' },
-  analyst: { bg: 'rgba(34,211,238,0.15)', color: '#22d3ee' },
-  planner: { bg: 'rgba(59,130,246,0.15)', color: '#3b82f6' },
-  dev: { bg: 'rgba(16,185,129,0.15)', color: '#10b981' },
-  qa: { bg: 'rgba(239,68,68,0.15)', color: '#ef4444' },
-  docops: { bg: 'rgba(148,163,184,0.15)', color: '#94a3b8' },
-  claude: { bg: 'rgba(249,115,22,0.15)', color: '#f97316' },
-  gemini: { bg: 'rgba(59,130,246,0.15)', color: '#3b82f6' },
-  copilot: { bg: 'rgba(148,163,184,0.15)', color: '#94a3b8' },
+  flash: { bg: 'var(--cta-accent-yellow-light)', color: 'var(--cta-accent-yellow)' },
+  standard: { bg: 'var(--cta-accent-blue-light)', color: 'var(--cta-accent-blue)' },
+  enterprise: { bg: 'var(--cta-accent-purple-light)', color: 'var(--cta-accent-purple)' },
+  lead: { bg: 'var(--cta-accent-yellow-light)', color: 'var(--cta-accent-yellow)' },
+  analyst: { bg: 'var(--cta-accent-blue-light)', color: 'var(--cta-accent-blue)' },
+  planner: { bg: 'var(--cta-accent-blue-light)', color: 'var(--cta-accent-blue)' },
+  dev: { bg: 'var(--cta-accent-green-light)', color: 'var(--cta-accent-green)' },
+  qa: { bg: 'var(--cta-accent-red-light)', color: 'var(--cta-accent-red)' },
+  docops: { bg: 'var(--cta-bg-secondary)', color: 'var(--cta-text-muted)' },
+  claude: { bg: 'var(--cta-accent-primary-light)', color: 'var(--cta-accent-primary)' },
+  gemini: { bg: 'var(--cta-accent-blue-light)', color: 'var(--cta-accent-blue)' },
+  copilot: { bg: 'var(--cta-bg-secondary)', color: 'var(--cta-text-muted)' },
 };
 
 const defaultLabels: Record<BadgeVariant, string> = {
@@ -33,7 +33,7 @@ export function Badge({ variant, children }: BadgeProps) {
   const style = badgeColors[variant];
   return (
     <span
-      className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium font-mono"
+      className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium font-mono"
       style={{ background: style.bg, color: style.color }}
     >
       {children ?? defaultLabels[variant]}

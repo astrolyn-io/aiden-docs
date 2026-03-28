@@ -44,22 +44,23 @@ export function TableOfContents() {
       aria-label="Table of contents"
     >
       <h4
-        className="text-xs font-semibold uppercase tracking-wider mb-3"
+        className="text-[11px] font-semibold uppercase tracking-wider mb-3"
         style={{ color: 'var(--cta-text-muted)' }}
       >
         Sur cette page
       </h4>
-      <ul className="space-y-1">
+      <ul className="space-y-0.5" style={{ borderLeft: '1px solid var(--cta-border)' }}>
         {headings.map((h) => (
-          <li key={h.id} style={{ paddingLeft: h.level === 3 ? '0.75rem' : 0 }}>
+          <li key={h.id} style={{ paddingLeft: h.level === 3 ? '1.25rem' : '0.75rem' }}>
             <a
               href={`#${h.id}`}
-              className="block py-1 transition-colors text-xs"
+              className="block py-1 transition-colors text-xs no-underline"
               style={{
                 color:
                   activeId === h.id
-                    ? 'var(--cta-accent-blue)'
+                    ? 'var(--cta-accent-primary)'
                     : 'var(--cta-text-muted)',
+                fontWeight: activeId === h.id ? 500 : 400,
               }}
             >
               {h.text}

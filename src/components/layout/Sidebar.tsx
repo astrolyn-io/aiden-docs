@@ -19,13 +19,13 @@ export function Sidebar() {
   return (
     <>
       <button
-        className="fixed top-4 left-4 z-50 md:hidden p-2 rounded-cta"
-        style={{ background: 'var(--cta-bg-card)' }}
+        className="fixed top-4 left-4 z-50 md:hidden p-2 rounded-lg"
+        style={{ background: 'var(--cta-bg-card)', border: '1px solid var(--cta-border)' }}
         onClick={() => setMobileOpen(!mobileOpen)}
         aria-label="Toggle menu"
       >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
       </button>
 
@@ -34,21 +34,27 @@ export function Sidebar() {
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{
-          background: 'var(--cta-bg-secondary)',
+          background: 'var(--cta-bg-sidebar)',
           borderRight: '1px solid var(--cta-border)',
         }}
       >
         <div className="p-5">
-          <Link href="/" className="flex items-center gap-2 mb-6">
-            <span
-              className="text-xl font-bold font-mono"
-              style={{ color: 'var(--cta-accent-blue)' }}
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 mb-8 no-underline">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white"
+              style={{ background: 'var(--cta-accent-primary)' }}
             >
-              CTA
-            </span>
-            <span style={{ color: 'var(--cta-text-muted)' }} className="text-sm">
-              v0.1.0
-            </span>
+              C
+            </div>
+            <div>
+              <span className="font-bold text-sm" style={{ color: 'var(--cta-text-primary)' }}>
+                CTA
+              </span>
+              <span className="ml-1.5 text-xs" style={{ color: 'var(--cta-text-muted)' }}>
+                v0.7.0
+              </span>
+            </div>
           </Link>
 
           <nav className="space-y-6">
@@ -65,7 +71,7 @@ export function Sidebar() {
 
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+          className="fixed inset-0 z-30 bg-black/30 md:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -83,25 +89,26 @@ function SidebarSection({
   return (
     <div>
       <h3
-        className="text-xs font-semibold uppercase tracking-wider mb-2 flex items-center gap-2"
+        className="text-[11px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-2"
         style={{ color: 'var(--cta-text-muted)' }}
       >
         <span>{sectionIcons[section.icon] ?? '📄'}</span>
         {section.title}
       </h3>
-      <ul className="space-y-1">
+      <ul className="space-y-0.5">
         {section.items.map((item) => {
           const isActive = pathname === item.href;
           return (
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="block px-3 py-1.5 rounded-md text-sm transition-colors"
+                className="block px-3 py-1.5 rounded-md text-[13px] transition-all no-underline"
                 style={{
                   color: isActive
-                    ? 'var(--cta-accent-blue)'
+                    ? 'var(--cta-accent-primary)'
                     : 'var(--cta-text-secondary)',
-                  background: isActive ? 'var(--cta-bg-card)' : 'transparent',
+                  background: isActive ? 'var(--cta-accent-primary-light)' : 'transparent',
+                  fontWeight: isActive ? 500 : 400,
                 }}
               >
                 {item.title}

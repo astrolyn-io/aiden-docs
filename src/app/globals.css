@@ -5,9 +5,11 @@
   body {
     background-color: var(--cta-bg-primary);
     color: var(--cta-text-primary);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+    transition: background-color 0.2s, color 0.2s;
   }
 
   code,
@@ -16,7 +18,7 @@
   }
 
   ::selection {
-    background-color: var(--cta-accent-blue);
+    background-color: var(--cta-accent-primary);
     color: white;
   }
 
@@ -30,18 +32,22 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--cta-text-muted);
+    background: var(--cta-border);
     border-radius: 3px;
   }
 
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--cta-text-muted);
+  }
+
   a {
-    color: var(--cta-accent-blue);
+    color: var(--cta-accent-primary);
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color 0.15s ease;
   }
 
   a:hover {
-    color: #60a5fa;
+    color: var(--cta-accent-primary-hover);
   }
 }
 
@@ -50,8 +56,9 @@
     color: var(--cta-text-primary);
     font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     line-height: 1.2;
+    letter-spacing: -0.025em;
   }
 
   .prose-cta h2 {
@@ -62,11 +69,12 @@
     margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--cta-border);
+    letter-spacing: -0.02em;
   }
 
   .prose-cta h3 {
     color: var(--cta-text-primary);
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 600;
     margin-top: 2rem;
     margin-bottom: 0.5rem;
@@ -80,10 +88,11 @@
 
   .prose-cta code:not(pre code) {
     background: var(--cta-code-bg);
-    color: var(--cta-accent-green);
+    color: var(--cta-code-text);
     padding: 0.15em 0.4em;
-    border-radius: 4px;
+    border-radius: 5px;
     font-size: 0.875em;
+    font-weight: 500;
   }
 
   .prose-cta ul,
@@ -93,22 +102,35 @@
     margin-bottom: 1rem;
   }
 
+  .prose-cta ul {
+    list-style-type: disc;
+  }
+
+  .prose-cta ol {
+    list-style-type: decimal;
+  }
+
   .prose-cta li {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.35rem;
+    line-height: 1.7;
   }
 
   .prose-cta table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 1.5rem;
+    border-radius: var(--cta-radius);
+    overflow: hidden;
+    border: 1px solid var(--cta-border);
   }
 
   .prose-cta th {
-    background: var(--cta-bg-card);
-    color: var(--cta-accent-blue);
+    background: var(--cta-bg-secondary);
+    color: var(--cta-text-primary);
     padding: 0.75rem 1rem;
     text-align: left;
     font-weight: 600;
+    font-size: 0.875rem;
     border-bottom: 2px solid var(--cta-border);
   }
 
@@ -116,27 +138,66 @@
     padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--cta-border);
     color: var(--cta-text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .prose-cta tr:last-child td {
+    border-bottom: none;
   }
 
   .prose-cta blockquote {
-    border-left: 3px solid var(--cta-accent-blue);
-    padding-left: 1rem;
+    border-left: 3px solid var(--cta-accent-primary);
+    padding: 0.75rem 1rem;
     margin-left: 0;
+    margin-bottom: 1rem;
+    background: var(--cta-accent-primary-light);
+    border-radius: 0 var(--cta-radius) var(--cta-radius) 0;
     color: var(--cta-text-secondary);
-    font-style: italic;
+    font-style: normal;
+  }
+
+  .prose-cta blockquote strong {
+    color: var(--cta-text-primary);
+  }
+
+  .prose-cta hr {
+    border: none;
+    border-top: 1px solid var(--cta-border);
+    margin: 2rem 0;
+  }
+
+  .prose-cta pre {
+    background: var(--cta-terminal-bg);
+    border: 1px solid var(--cta-border);
+    border-radius: var(--cta-radius);
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    color: #e2e8f0;
+  }
+
+  .prose-cta pre code {
+    background: none;
+    padding: 0;
+    font-size: 0.85rem;
+    color: inherit;
   }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes typewriter {
-  from { width: 0; }
-  to { width: 100%; }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .animate-fade-in {
   animation: fadeIn 0.4s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
 }

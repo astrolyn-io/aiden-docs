@@ -9,19 +9,19 @@
 
 - **Node.js 20+** — verifiez avec `node --version`
 - **pnpm** — installez avec `npm install -g pnpm`
-- Au moins un provider IA : Claude Code, Gemini CLI ou GitHub Copilot
+- Au moins un provider IA : Claude Code, Gemini CLI, OpenCode ou GitHub Copilot (ou un proxy API type LiteLLM)
 
 ## Installer CTA
 
 ```bash
-pnpm add -g @edf/cta
+pnpm add -g @cta/cli
 ```
 
 Verifiez :
 
 ```bash
 $ cta --version
-0.5.0
+0.7.0
 ```
 
 > **Astuce** : Si `command not found`, ajoutez le dossier global pnpm a votre PATH : `export PATH="$(pnpm store path)/../../.pnpm:$PATH"`

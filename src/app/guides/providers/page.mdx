@@ -1,19 +1,23 @@
 # Providers
 
 > **Ce que vous allez apprendre**
-> - Configurer Claude Code, Gemini et Copilot
+> - Les 4 providers CLI natifs + providers API custom
 > - Le routage intelligent entre providers
+> - Configurer un proxy LLM (LiteLLM, AI Gateway)
+> - Le filtrage securite des prompts
 > - Gerer le budget tokens
 
 ## Providers supportes
 
-CTA supporte 3 providers IA nativement :
+CTA supporte 4 providers CLI nativement et permet de brancher n'importe quel provider API compatible OpenAI :
 
-| Provider | Commande | Forces |
-|---|---|---|
-| Claude Code | `claude` | Analyse, review, long contexte |
-| Gemini CLI | `gemini` | Generation code, multi-fichier |
-| GitHub Copilot | `gh copilot` | Completion, quick fix |
+| Provider | Commande | Type | Forces |
+|---|---|---|---|
+| Claude Code | `claude` | CLI | Analyse, review, long contexte |
+| Gemini CLI | `gemini` | CLI | Generation code, multi-fichier |
+| OpenCode | `opencode` | CLI | Open source, multi-provider via config |
+| GitHub Copilot | `gh copilot` | CLI | Completion, quick fix |
+| Custom API | `fetch()` | HTTP | N'importe quel endpoint OpenAI-compatible |
 
 ## Configuration
 
@@ -34,7 +38,48 @@ providers:
     model: gemini-2.5-pro
     maxTokens: 1000000
     costPer1k: 0.001
+  opencode:
+    enabled: true
+    command: opencode
+    model: opencode
+    maxTokens: 200000
+    costPer1k: 0.002
+  copilot:
+    enabled: true
+    command: gh
+    model: copilot
+    maxTokens: 50000
+    costPer1k: 0
 ```
+
+## Provider API custom (proxy LLM)
+
+CTA peut se connecter a n'importe quel endpoint compatible OpenAI via l'adapter API. Cela permet de brancher un proxy LLM (LiteLLM, Cloudflare AI Gateway) ou une API directe.
+
+```yaml
+providers:
+  litellm:
+    enabled: true
+    baseUrl: http://localhost:4000/v1
+    model: claude-sonnet-4-6
+    maxTokens: 100000
+    costPer1k: 0.003
+    command: ""
+  openai-direct:
+    enabled: true
+    baseUrl: https://api.openai.com/v1
+    apiKey: sk-...
+    model: gpt-4o
+    maxTokens: 128000
+    costPer1k: 0.005
+    command: ""
+```
+
+Quand `baseUrl` est defini, CTA utilise l'adapter HTTP (`fetch()`) au lieu du subprocess CLI. Cela fonctionne avec :
+- **LiteLLM** : proxy open source unifiant 100+ APIs
+- **Cloudflare AI Gateway** : gateway manage avec caching et analytics
+- **API directes** : OpenAI, Anthropic (via proxy), Google AI
+- **Modeles locaux** : Ollama, vLLM, tout endpoint OpenAI-compatible
 
 ## Routage
 
@@ -48,8 +93,16 @@ providers:
 ```yaml
 routing:
   strategy: auto
-  fallback: [gemini, claude-code, copilot]
+  fallback: [claude-code, gemini, opencode, copilot]
 ```
+
+En mode `auto`, chaque agent recoit le provider optimal :
+
+| Tache | Provider par defaut |
+|---|---|
+| Analyse, Planning, Documentation | claude-code |
+| Generation code, Tests | gemini |
+| Quick fix, PR review | copilot |
 
 ## Verifier le statut
 
@@ -58,6 +111,7 @@ $ cta provider status
 Provider status:
   claude-code: configured
   gemini: configured
+  opencode: configured
   copilot: configured
 ```
 
@@ -75,25 +129,40 @@ budget:
 
 > **Information** : L'alerte se declenche a 80% du budget. CTA bloque les appels si le budget est depasse.
 
-## Routage dans l'orchestrateur
+## Filtrage securite
 
-Le router est directement branche dans l'orchestrateur. Chaque agent recoit son provider via `router.route(taskType)` — pas un provider unique pour tout le workflow. En mode `auto`, l'Analyst utilise Claude Code (meilleur en analyse) tandis que le Dev utilise Gemini (meilleur en generation de code).
+CTA filtre automatiquement les donnees sensibles avant de les envoyer aux providers :
+
+- Bearer tokens
+- API keys (`sk-`, `ghp_`, `github_pat_`)
+- Mots de passe
+- Cles privees (PEM)
+- Connection strings (postgres, mongodb, redis)
+- AWS access keys
+
+Le filtrage est actif par defaut. Pour le desactiver (usage local uniquement) :
 
 ```yaml
-routing:
-  strategy: auto
-  fallback: [claude-code, gemini, copilot]
+sanitize: false
 ```
 
-Si un provider tombe pendant un workflow, le fallback est automatique — l'agent suivant recoit un provider fonctionnel.
+## Provider factory dynamique
+
+CTA instancie les providers automatiquement depuis la config. Pas besoin de modifier le code pour ajouter un provider :
+
+- **Nom connu** (claude-code, gemini, copilot, opencode) → adapter CLI specifique
+- **`baseUrl` defini** → adapter API HTTP (fetch)
+- **Disabled** → ignore
 
 ## Communication avec les providers
 
-CTA envoie les prompts aux providers via **stdin pipe** (pas comme argument de commande). Cela permet d'envoyer des prompts de taille illimitee sans etre contraint par les limites shell.
+**CLI adapters** envoient les prompts via **stdin pipe** (pas comme argument shell). Cela permet des prompts de taille illimitee.
 
-- **Timeout** : 120 secondes par defaut. Si un provider ne repond pas dans ce delai, `ProviderTimeoutError` est leve et le circuit breaker est notifie.
-- **Format de review** : CTA demande aux providers de repondre dans un format structure (`SCORE: N / PASSED: yes|no / ISSUES: ...`). Si le provider ne respecte pas le format, un fallback heuristique est utilise.
-- **Module partage** : Les 3 adapters utilisent `src/providers/subprocess.ts` — pas de duplication de code entre providers.
+**API adapters** utilisent `POST /chat/completions` avec le format OpenAI standard.
+
+- **Timeout** : 120 secondes par defaut
+- **Format review** : SCORE/PASSED/ISSUES avec fallback heuristique
+- **Disponibilite** : CLI verifie `--version`, API verifie `GET /models`
 
 ## Prochaine etape
 

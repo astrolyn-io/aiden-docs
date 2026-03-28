@@ -1,7 +1,7 @@
 # Reference CLI
 
 > **Ce que vous allez apprendre**
-> - Toutes les commandes CTA
+> - Toutes les commandes CTA (workflow, providers, skills, retex)
 > - Arguments et options de chaque commande
 > - Exemples d'utilisation
 
@@ -119,6 +119,36 @@ cta rules list                # Lister
 cta rules add security.md     # Ajouter
 cta rules remove security     # Supprimer
 ```
+
+### `cta skills`
+
+Gere les skills d'extensibilite.
+
+```bash
+cta skills list                # Lister les skills installes
+cta skills init my-skill       # Creer un nouveau skill
+cta skills add /path/to/skill  # Installer depuis un dossier
+cta skills remove my-skill     # Supprimer un skill
+cta skills enable my-skill     # Activer un skill
+cta skills disable my-skill    # Desactiver un skill
+```
+
+Les skills sont des packages declaratifs (YAML + Markdown) dans `.cta/skills/` qui injectent instructions, regles et hooks dans le pipeline. Voir le [guide skills](/guides/skills) pour plus de details.
+
+### `cta retex`
+
+Gere les retours d'experience (lessons learned).
+
+```bash
+cta retex list                                    # Lister tous les retex
+cta retex add --title "..." --context tag1,tag2 \
+  --outcome success --lesson "..." \
+  --recommendation "..."                           # Ajouter un retex
+cta retex search <tag>                             # Chercher par tag
+cta retex remove <id>                              # Supprimer un retex
+```
+
+Les retex sont stockes dans `.cta/retex/` en Markdown. Les retex pertinents sont injectes dans les prompts agents sous `--- Lessons Learned ---`.
 
 ### `cta template`
 

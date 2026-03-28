@@ -2,6 +2,7 @@
 
 > **Ce que vous allez apprendre**
 > - Le schema complet de `cta.config.yaml`
+> - Configurer des providers CLI et API custom
 > - Les valeurs par defaut
 > - Quel niveau surcharge quoi
 
@@ -27,16 +28,31 @@ providers:                       # Configuration par provider
     model: gemini-2.5-pro
     maxTokens: 1000000
     costPer1k: 0.001
+  opencode:
+    enabled: true
+    command: opencode
+    model: opencode
+    maxTokens: 200000
+    costPer1k: 0.002
   copilot:
     enabled: true
-    command: "gh copilot"
+    command: gh
     model: copilot
     maxTokens: 50000
     costPer1k: 0
+  # Provider API custom (proxy LLM)
+  litellm:
+    enabled: true
+    baseUrl: http://localhost:4000/v1   # endpoint OpenAI-compatible
+    # apiKey: sk-xxx                    # optionnel
+    model: claude-sonnet-4-6
+    maxTokens: 100000
+    costPer1k: 0.003
+    command: ""                         # pas de subprocess
 
 routing:                         # Strategie de routage
   strategy: prefer               # auto | prefer | fixed | cost-optimized
-  fallback: [gemini, claude-code, copilot]
+  fallback: [claude-code, gemini, opencode, copilot]
 
 budget:                          # Budget tokens
   monthlyLimit: 500000
@@ -51,20 +67,42 @@ rules: []                        # Fichiers de regles
 
 pipeline:                        # Configuration du pipeline inter-agents
   maxOutputCharsPerAgent: 8000   # Troncature outputs (defaut: 8000)
+
+sanitize: true                   # Filtrage donnees sensibles (defaut: true)
 ```
+
+### Options providers
+
+| Cle | Type | Defaut | Description |
+|---|---|---|---|
+| `providers.<name>.enabled` | boolean | — | Activer/desactiver le provider |
+| `providers.<name>.command` | string | — | Commande CLI a spawner |
+| `providers.<name>.model` | string | — | Modele a utiliser |
+| `providers.<name>.maxTokens` | number | — | Limite de tokens par requete |
+| `providers.<name>.costPer1k` | number | — | Cout par 1000 tokens |
+| `providers.<name>.baseUrl` | string | — | Endpoint API OpenAI-compatible (active l'adapter HTTP) |
+| `providers.<name>.apiKey` | string | — | Cle API pour l'authentification Bearer |
+
+Quand `baseUrl` est defini, CTA utilise l'adapter API (`fetch`) au lieu du subprocess CLI. Le `command` est ignore.
 
 ### Options pipeline
 
 | Cle | Type | Defaut | Description |
 |---|---|---|---|
-| `pipeline.maxOutputCharsPerAgent` | number | 8000 | Nombre max de caracteres par output d'agent injecte dans le prompt du suivant. Augmentez pour les LLMs a grand contexte, reduisez si vous atteignez les limites de tokens. |
+| `pipeline.maxOutputCharsPerAgent` | number | 8000 | Nombre max de caracteres par output d'agent injecte dans le prompt du suivant. |
 
 ### Options routing
 
 | Cle | Type | Defaut | Description |
 |---|---|---|---|
-| `routing.strategy` | string | `prefer` | Strategie de routage : `fixed` (un seul provider), `prefer` (prefere + fallback), `auto` (choix par type de tache), `cost-optimized` (minimise les couts). En mode `auto`, chaque agent recoit le provider optimal : Analyst → claude-code, Dev → gemini, etc. |
-| `routing.fallback` | string[] | `[claude-code, gemini, copilot]` | Chaine de fallback si le provider prefere est indisponible. |
+| `routing.strategy` | string | `prefer` | Strategie : `fixed`, `prefer`, `auto`, `cost-optimized`. En mode `auto`, chaque agent recoit le provider optimal. |
+| `routing.fallback` | string[] | `[claude-code, gemini, opencode, copilot]` | Chaine de fallback si le provider prefere est indisponible. |
+
+### Options securite
+
+| Cle | Type | Defaut | Description |
+|---|---|---|---|
+| `sanitize` | boolean | `true` | Active le filtrage des donnees sensibles (tokens, cles API, mots de passe, cles privees, connection strings) avant envoi aux providers. |
 
 ### Schema projet (context.yaml)
 
@@ -81,6 +119,46 @@ Le scan de `cta init` genere `.cta/memory/context.yaml` avec ce schema :
 | `project.monorepo` | string? | Outil monorepo (turborepo, nx, lerna, pnpm-workspaces) |
 
 Ces donnees sont injectees dans le prompt de chaque agent via la section `--- Project Context ---`.
+
+## Schema `skill.yaml`
+
+Chaque skill dans `.cta/skills/<name>/` contient un fichier `skill.yaml` :
+
+```yaml
+name: mon-skill                # (requis) Identifiant unique
+version: 1.0.0                 # Version semver (defaut: 1.0.0)
+description: ""                # Description lisible
+author: equipe-platform        # Auteur (optionnel)
+agents:                        # Agents cibles (defaut: tous)
+  - dev
+  - qa
+modes:                         # Modes actifs (defaut: tous)
+  - standard
+  - enterprise
+hooks:                         # Hooks declares
+  on_feature_created:
+    - command: ./hooks/notify.sh
+      onFailure: warn
+config:                        # Configuration custom
+  jira_url: https://company.atlassian.net
+priority: 10                   # Priorite (defaut: 0, plus haut = premier)
+enabled: true                  # Actif (defaut: true)
+```
+
+| Cle | Type | Defaut | Description |
+|---|---|---|---|
+| `name` | string | (requis) | Identifiant unique, valide par Zod |
+| `version` | string | `1.0.0` | Version semver |
+| `description` | string | `""` | Description |
+| `author` | string | — | Auteur |
+| `agents` | AgentRole[] | tous | `lead`, `analyst`, `planner`, `dev`, `qa`, `docops` |
+| `modes` | CTAMode[] | tous | `flash`, `standard`, `enterprise` |
+| `hooks` | Record | — | Hooks par evenement (meme format que `cta.config.yaml`) |
+| `config` | Record | — | Paires cle-valeur libres |
+| `priority` | integer | `0` | Tri decroissant |
+| `enabled` | boolean | `true` | Desactiver sans supprimer |
+
+Voir le [guide skills](/guides/skills) pour l'utilisation complete.
 
 ## Niveaux de surcharge
 

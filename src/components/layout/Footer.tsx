@@ -10,37 +10,46 @@ export function Footer() {
 
   return (
     <footer className="mt-16 pt-8" style={{ borderTop: '1px solid var(--cta-border)' }}>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-stretch gap-4">
         {prev ? (
           <Link
             href={prev.href}
-            className="flex items-center gap-2 text-sm transition-colors"
-            style={{ color: 'var(--cta-text-secondary)' }}
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all no-underline flex-1"
+            style={{
+              border: '1px solid var(--cta-border)',
+              background: 'var(--cta-bg-card)',
+            }}
           >
-            <span>←</span>
-            <span>{prev.title}</span>
+            <span style={{ color: 'var(--cta-text-muted)' }}>←</span>
+            <div>
+              <div className="text-[11px]" style={{ color: 'var(--cta-text-muted)' }}>Precedent</div>
+              <div style={{ color: 'var(--cta-text-primary)' }}>{prev.title}</div>
+            </div>
           </Link>
         ) : (
-          <div />
+          <div className="flex-1" />
         )}
         {next ? (
           <Link
             href={next.href}
-            className="flex items-center gap-2 text-sm transition-colors"
-            style={{ color: 'var(--cta-accent-blue)' }}
+            className="flex items-center justify-end gap-3 px-4 py-3 rounded-lg text-sm transition-all no-underline flex-1 text-right"
+            style={{
+              border: '1px solid var(--cta-border)',
+              background: 'var(--cta-bg-card)',
+            }}
           >
-            <span>{next.title}</span>
-            <span>→</span>
+            <div>
+              <div className="text-[11px]" style={{ color: 'var(--cta-text-muted)' }}>Suivant</div>
+              <div style={{ color: 'var(--cta-accent-primary)' }}>{next.title}</div>
+            </div>
+            <span style={{ color: 'var(--cta-accent-primary)' }}>→</span>
           </Link>
         ) : (
-          <div />
+          <div className="flex-1" />
         )}
       </div>
-      <p
-        className="mt-6 text-xs text-center"
-        style={{ color: 'var(--cta-text-muted)' }}
-      >
-        CTA - Core Team AI v0.1.0
+      <p className="mt-8 mb-4 text-xs text-center" style={{ color: 'var(--cta-text-muted)' }}>
+        CTA - Core Team AI v0.7.0
       </p>
     </footer>
   );

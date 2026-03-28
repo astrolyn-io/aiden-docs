@@ -22,20 +22,20 @@ function CellValue({ value }: { value: string | boolean }) {
 
 export function ComparisonTable({ rows }: ComparisonTableProps) {
   return (
-    <div className="my-6 overflow-x-auto rounded-cta" style={{ border: '1px solid var(--cta-border)' }}>
+    <div className="my-6 overflow-x-auto rounded-xl" style={{ border: '1px solid var(--cta-border)' }}>
       <table className="w-full text-sm">
         <thead>
-          <tr style={{ background: 'var(--cta-bg-card)' }}>
+          <tr style={{ background: 'var(--cta-bg-secondary)' }}>
             <th className="text-left px-4 py-3 font-semibold" style={{ color: 'var(--cta-text-primary)' }}>
               Fonctionnalite
             </th>
-            <th className="text-center px-4 py-3 font-semibold" style={{ color: '#f59e0b' }}>
+            <th className="text-center px-4 py-3 font-semibold" style={{ color: 'var(--cta-accent-yellow)' }}>
               Flash
             </th>
-            <th className="text-center px-4 py-3 font-semibold" style={{ color: '#3b82f6' }}>
+            <th className="text-center px-4 py-3 font-semibold" style={{ color: 'var(--cta-accent-primary)' }}>
               Standard
             </th>
-            <th className="text-center px-4 py-3 font-semibold" style={{ color: '#8b5cf6' }}>
+            <th className="text-center px-4 py-3 font-semibold" style={{ color: 'var(--cta-accent-purple)' }}>
               Enterprise
             </th>
           </tr>

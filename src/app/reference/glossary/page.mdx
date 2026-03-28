@@ -46,9 +46,13 @@
 
 **Mode** — Niveau de complexite du workflow : flash, standard ou enterprise.
 
+## O
+
+**OpenCode** — Provider CLI open source alternatif. Outil agentic configurable pointant vers n'importe quel endpoint.
+
 ## P
 
-**Provider** — Service IA externe (Claude Code, Gemini, Copilot) utilise par les agents.
+**Provider** — Service IA externe (Claude Code, Gemini, OpenCode, Copilot ou API custom) utilise par les agents.
 
 ## Q
 
@@ -56,9 +60,15 @@
 
 ## R
 
+**Retex** — Retour d'experience structure (lessons learned). Stocke dans `.cta/retex/` avec contexte, lecon et recommandation. Injecte dans les prompts agents.
+
 **Routage** — Selection automatique du provider optimal selon la tache.
 
 ## S
+
+**Sanitizer** — Mecanisme de filtrage qui masque les donnees sensibles (tokens, cles API, mots de passe, connection strings) dans les prompts avant envoi aux providers.
+
+**Skill** — Package declaratif (YAML + Markdown) dans `.cta/skills/` qui injecte instructions, regles et hooks dans le pipeline CTA. Mecanisme d'extensibilite principal pour les entreprises.
 
 **Spec** — Specification technique allegee creee par le Planner.
 
