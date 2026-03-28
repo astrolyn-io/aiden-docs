@@ -11,8 +11,11 @@ const withMDX = createMDX({
   },
 });
 
+const isGhPages = process.env.GITHUB_PAGES === 'true';
+
 const nextConfig: NextConfig = {
   output: 'export',
+  basePath: isGhPages ? '/aiden' : '',
   pageExtensions: ['ts', 'tsx', 'md', 'mdx'],
   images: {
     unoptimized: true,
