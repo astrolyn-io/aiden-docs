@@ -8,7 +8,7 @@ import { SearchModal } from '@/components/ui/SearchModal';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'CTA - Core Team AI',
+  title: 'AIDEN - AI-Driven Engineering',
   description: 'Framework CLI pour le developpement assiste par IA en entreprise',
 };
 
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <div className="md:ml-64">
           <Header />
           <div className="flex">
-            <main className="flex-1 max-w-3xl mx-auto px-6 py-8 prose-cta">
+            <main className="flex-1 max-w-3xl mx-auto px-6 py-8 prose-aiden">
               {children}
               <Footer />
             </main>

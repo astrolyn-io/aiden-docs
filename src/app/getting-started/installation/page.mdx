@@ -1,8 +1,8 @@
 # Installation
 
 > **Ce que vous allez apprendre**
-> - Installer CTA et ses prerequis
-> - Initialiser un projet avec `cta init`
+> - Installer AIDEN et ses prerequis
+> - Initialiser un projet avec `aiden init`
 > - Verifier que tout fonctionne
 
 ## Prerequis
@@ -11,7 +11,7 @@
 - **pnpm** — installez avec `npm install -g pnpm`
 - Au moins un provider IA : Claude Code, Gemini CLI, OpenCode ou GitHub Copilot (ou un proxy API type LiteLLM)
 
-## Installer CTA
+## Installer AIDEN
 
 ```bash
 pnpm add -g @cta/cli
@@ -31,18 +31,18 @@ $ cta --version
 Dans le repertoire de votre projet :
 
 ```bash
-$ cta init
-CTA initialized in .cta/
-  Config: .cta/cta.config.yaml
-  Rules:  .cta/rules/coding-standards.md
-  Memory: .cta/memory/
+$ aiden init
+AIDEN initialized in .aiden/
+  Config: .aiden/aiden.config.yaml
+  Rules:  .aiden/rules/coding-standards.md
+  Memory: .aiden/memory/
   Stack:  node, typescript, express
   Arch:   docker
   CI:     github-actions
   PM:     pnpm
 ```
 
-CTA scanne automatiquement votre projet et detecte :
+AIDEN scanne automatiquement votre projet et detecte :
 - **Tech stack** : Node.js, TypeScript, React, Express, NestJS, Vue, Angular, Python, Go, Rust...
 - **Architecture** : Docker, Docker Compose, Kubernetes
 - **CI/CD** : GitHub Actions, GitLab CI, Jenkins, CircleCI
@@ -55,8 +55,8 @@ Ces informations sont injectees dans le contexte de chaque agent pour des result
 Structure creee :
 
 ```
-.cta/
-  cta.config.yaml    # Configuration projet
+.aiden/
+  aiden.config.yaml    # Configuration projet
   memory/            # Contexte, decisions, metriques
   rules/             # Regles entreprise
   templates/         # Templates personnalises
@@ -65,10 +65,10 @@ Structure creee :
 
 ## Configurer le provider
 
-Par defaut, CTA utilise Claude Code. Pour changer :
+Par defaut, AIDEN utilise Claude Code. Pour changer :
 
 ```bash
-$ cta config set provider gemini
+$ aiden config set provider gemini
 Set provider = gemini
 ```
 
@@ -77,7 +77,7 @@ Providers disponibles : `claude-code`, `gemini`, `copilot`.
 Verifiez que votre provider est accessible :
 
 ```bash
-$ cta provider status
+$ aiden provider status
 Provider status:
   claude-code: configured
   gemini: not found
@@ -87,7 +87,7 @@ Provider status:
 ## Premier test
 
 ```bash
-$ cta flash "Ajouter hello.ts" --dry-run
+$ aiden flash "Ajouter hello.ts" --dry-run
 [DRY RUN] Flash workflow: "Ajouter hello.ts"
 Mode: flash | Agents: lead, dev
 ```
@@ -96,24 +96,24 @@ Le `--dry-run` montre ce qui serait fait sans appeler le provider.
 
 ## Mode slash (Claude Code)
 
-Si vous utilisez Claude Code, CTA est aussi disponible en slash commands sans installer le CLI :
+Si vous utilisez Claude Code, AIDEN est aussi disponible en slash commands sans installer le CLI :
 
-- `/cta-init` — initialiser CTA
+- `/cta-init` — initialiser AIDEN
 - `/cta-flash` — mode rapide
 - `/cta-standard` — mode complet
 - `/cta-enterprise` — mode enterprise
 
-Les deux modes (CLI et slash) ecrivent dans les memes fichiers `.cta/`.
+Les deux modes (CLI et slash) ecrivent dans les memes fichiers `.aiden/`.
 
 ## Troubleshooting
 
 **`command not found: cta`** — Assurez-vous que le dossier global pnpm est dans votre PATH.
 
-**`CTA not initialized`** — Lancez `cta init` dans le repertoire du projet.
+**`AIDEN not initialized`** — Lancez `aiden init` dans le repertoire du projet.
 
 **`No provider available`** — Installez Claude Code (`npm install -g @anthropic-ai/claude-code`) ou un autre provider.
 
-**Timeout sur le provider** — Le timeout par defaut est 120s. Si votre LLM est lent, augmentez-le dans `.cta/cta.config.yaml`.
+**Timeout sur le provider** — Le timeout par defaut est 120s. Si votre LLM est lent, augmentez-le dans `.aiden/aiden.config.yaml`.
 
 ## Prochaine etape
 

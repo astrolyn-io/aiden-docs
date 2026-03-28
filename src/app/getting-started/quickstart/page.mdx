@@ -1,9 +1,9 @@
 # Quickstart
 
 > **Ce que vous allez apprendre**
-> - Creer un projet CTA de zero en 5 minutes
+> - Creer un projet AIDEN de zero en 5 minutes
 > - Lancer un workflow flash et voir le resultat
-> - Comprendre ce que CTA a fait
+> - Comprendre ce que AIDEN a fait
 
 ## Etape 1 : Creer un projet
 
@@ -22,24 +22,24 @@ app.get('/', (req, res) => res.json({ status: 'ok' }));
 module.exports = app;
 ```
 
-## Etape 2 : Initialiser CTA
+## Etape 2 : Initialiser AIDEN
 
 ```bash
-$ cta init
-CTA initialized in .cta/
-  Config: .cta/cta.config.yaml
-  Rules:  .cta/rules/coding-standards.md
-  Memory: .cta/memory/
+$ aiden init
+AIDEN initialized in .aiden/
+  Config: .aiden/aiden.config.yaml
+  Rules:  .aiden/rules/coding-standards.md
+  Memory: .aiden/memory/
   Stack:  node, express
   PM:     npm
 ```
 
-CTA a detecte que c'est un projet Node.js avec Express.
+AIDEN a detecte que c'est un projet Node.js avec Express.
 
 ## Etape 3 : Lancer un flash
 
 ```bash
-$ cta flash "Ajouter un endpoint GET /health retournant {status: healthy}"
+$ aiden flash "Ajouter un endpoint GET /health retournant {status: healthy}"
 ```
 
 Output :
@@ -56,7 +56,7 @@ Starting flash workflow for: Ajouter un endpoint GET /health...
 ## Etape 4 : Verifier le resultat
 
 ```bash
-$ cta status
+$ aiden status
 ajouter-un-endpoint-get-health [completed] (flash)
   Tokens: 1250 | Created: 2026-03-27
 ```
@@ -64,7 +64,7 @@ ajouter-un-endpoint-get-health [completed] (flash)
 Explorez les artefacts :
 
 ```bash
-$ ls .cta/features/ajouter-un-endpoint-get-health/
+$ ls .aiden/features/ajouter-un-endpoint-get-health/
 change-summary.md
 ```
 
@@ -85,31 +85,31 @@ $ ls *.test.* *.spec.*
 ## Etape 6 : Voir les metriques
 
 ```bash
-$ cta metrics
+$ aiden metrics
 Features: 1 completed
 Tokens:   1250 used
 Cost:     $0.004
 ```
 
-## Ce que CTA a fait
+## Ce que AIDEN a fait
 
 1. **Detection** : Le Lead a analyse la demande et choisi le mode flash (simple, < 3 fichiers)
 2. **Implementation** : Le Dev a lu le code existant, ajoute la route `/health`, ecrit un test
-3. **Tracabilite** : La decision est logguee dans `.cta/memory/decisions.jsonl`, le contexte est mis a jour
+3. **Tracabilite** : La decision est logguee dans `.aiden/memory/decisions.jsonl`, le contexte est mis a jour
 
 ## Checklist de reussite
 
-- `.cta/` existe avec la config et la memoire
-- `cta status` montre la feature completee
+- `.aiden/` existe avec la config et la memoire
+- `aiden status` montre la feature completee
 - Un `change-summary.md` a ete genere
 - Le code contient la route `/health`
 
 ## Si ca ne marche pas
 
-- **"CTA not initialized"** — Lancez `cta init` d'abord
+- **"AIDEN not initialized"** — Lancez `aiden init` d'abord
 - **"No provider available"** — Verifiez que `claude --version` fonctionne
 - **Le provider timeout** — La premiere requete peut etre lente, reessayez
-- **Le code n'est pas ce que vous attendiez** — Essayez `cta standard` pour plus de controle (analyse + planning + review)
+- **Le code n'est pas ce que vous attendiez** — Essayez `aiden standard` pour plus de controle (analyse + planning + review)
 
 ## Prochaine etape
 

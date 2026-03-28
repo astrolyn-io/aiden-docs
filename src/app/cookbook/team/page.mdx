@@ -1,19 +1,19 @@
-# CTA en equipe
+# AIDEN en equipe
 
 > **Ce que vous allez apprendre**
-> - Configurer CTA pour une equipe de 5 a 50+ developpeurs
+> - Configurer AIDEN pour une equipe de 5 a 50+ developpeurs
 > - Partager les regles, conventions et templates
-> - Workflow Git avec CTA
+> - Workflow Git avec AIDEN
 > - Onboarding d'un nouveau membre en 30 minutes
 
 ## Configuration equipe
 
 ### Regles partagees dans Git
 
-Commitez `.cta/rules/` dans votre repo. Toute l'equipe utilise les memes standards automatiquement.
+Commitez `.aiden/rules/` dans votre repo. Toute l'equipe utilise les memes standards automatiquement.
 
 ```
-.cta/
+.aiden/
   rules/
     coding-standards.md         # Standards de code communs
     security-policy.md          # Politique de securite
@@ -28,7 +28,7 @@ Chaque regle est un fichier Markdown injecte automatiquement dans les prompts de
 Pour les regles qui s'appliquent a **tous les projets** de l'organisation, utilisez la config globale :
 
 ```yaml
-# ~/.cta/enterprise.config.yaml (sur chaque poste)
+# ~/.aiden/enterprise.config.yaml (sur chaque poste)
 company: MonEntreprise
 defaults:
   mode: standard
@@ -58,7 +58,7 @@ Distribuez ce fichier via le script de provisioning des postes developpeurs.
 Si votre organisation a plusieurs equipes avec des stacks differentes :
 
 ```yaml
-# .cta/cta.config.yaml
+# .aiden/aiden.config.yaml
 profiles:
   backend:
     rules: [coding-standards.md, api-guidelines.md, database-rules.md]
@@ -76,54 +76,54 @@ profiles:
     mode: standard
 ```
 
-## Workflow Git avec CTA
+## Workflow Git avec AIDEN
 
 ### Workflow recommande
 
 ```
 1. Creer une branche       git checkout -b feature/export-csv
-2. Lancer CTA              cta standard "Ajouter export CSV des rapports"
-3. CTA genere              code + tests + artefacts dans .cta/features/
+2. Lancer AIDEN              aiden standard "Ajouter export CSV des rapports"
+3. AIDEN genere              code + tests + artefacts dans .aiden/features/
 4. Review humaine          Le reviewer lit review.md + spec.md + le diff
 5. Commiter                git add -A && git commit -m "feat: export CSV"
 6. Push + PR               Les artefacts aident le reviewer
-7. Merge + clean           La feature reste archivee dans .cta/features/
+7. Merge + clean           La feature reste archivee dans .aiden/features/
 ```
 
 ### Convention de branches
 
-| Type de branche | Mode CTA recommande |
+| Type de branche | Mode AIDEN recommande |
 |----------------|---------------------|
-| `fix/<slug>` | `cta flash` |
-| `feature/<slug>` | `cta standard` |
-| `refactor/<slug>` | `cta standard` |
-| `release/<slug>` | `cta enterprise` |
-| `hotfix/<slug>` | `cta flash` |
+| `fix/<slug>` | `aiden flash` |
+| `feature/<slug>` | `aiden standard` |
+| `refactor/<slug>` | `aiden standard` |
+| `release/<slug>` | `aiden enterprise` |
+| `hotfix/<slug>` | `aiden flash` |
 
 ### Que commiter dans Git ?
 
 | Repertoire | Commiter ? | Raison |
 |-----------|------------|--------|
-| `.cta/cta.config.yaml` | **Oui** | Configuration partagee |
-| `.cta/rules/` | **Oui** | Standards d'equipe |
-| `.cta/templates/` | **Oui** | Templates personnalises |
-| `.cta/features/` | **Oui** | Artefacts = documentation vivante |
-| `.cta/memory/context.yaml` | **Optionnel** | Etat courant (utile pour la reprise) |
-| `.cta/memory/decisions.jsonl` | **Oui** | Audit trail |
-| `.cta/memory/metrics.jsonl` | **Optionnel** | Metriques (utile pour le suivi) |
+| `.aiden/aiden.config.yaml` | **Oui** | Configuration partagee |
+| `.aiden/rules/` | **Oui** | Standards d'equipe |
+| `.aiden/templates/` | **Oui** | Templates personnalises |
+| `.aiden/features/` | **Oui** | Artefacts = documentation vivante |
+| `.aiden/memory/context.yaml` | **Optionnel** | Etat courant (utile pour la reprise) |
+| `.aiden/memory/decisions.jsonl` | **Oui** | Audit trail |
+| `.aiden/memory/metrics.jsonl` | **Optionnel** | Metriques (utile pour le suivi) |
 
 ### .gitignore recommande
 
 ```gitignore
-# CTA — garder les artefacts, ignorer les fichiers temporaires
-.cta/memory/*.lock
+# AIDEN — garder les artefacts, ignorer les fichiers temporaires
+.aiden/memory/*.lock
 ```
 
-## Politique de review avec CTA
+## Politique de review avec AIDEN
 
 ### Review basee sur les artefacts
 
-Quand un developpeur ouvre une PR apres un `cta standard`, le reviewer dispose de :
+Quand un developpeur ouvre une PR apres un `aiden standard`, le reviewer dispose de :
 
 | Artefact | Ce que le reviewer verifie |
 |----------|---------------------------|
@@ -150,17 +150,17 @@ Le reviewer humain se concentre sur la **coherence metier** et les **choix d'arc
 ```
 5 min   Installer Node 20+ et pnpm
 2 min   pnpm add -g @cta/cli
-1 min   Copier ~/.cta/enterprise.config.yaml (via provisioning)
-2 min   Cloner le repo (les regles sont incluses dans .cta/rules/)
-1 min   cta provider status  — verifier le provider
-5 min   cta flash "Ajouter un log info au demarrage"  — premier flash
-5 min   cta status + explorer les artefacts generes
-10 min  Lire les artefacts d'une feature existante dans .cta/features/
+1 min   Copier ~/.aiden/enterprise.config.yaml (via provisioning)
+2 min   Cloner le repo (les regles sont incluses dans .aiden/rules/)
+1 min   aiden provider status  — verifier le provider
+5 min   aiden flash "Ajouter un log info au demarrage"  — premier flash
+5 min   aiden status + explorer les artefacts generes
+10 min  Lire les artefacts d'une feature existante dans .aiden/features/
 ```
 
 ### Valeur onboarding des artefacts
 
-Les artefacts CTA dans `.cta/features/` sont des **documents d'onboarding vivants**. Un nouveau membre peut lire :
+Les artefacts AIDEN dans `.aiden/features/` sont des **documents d'onboarding vivants**. Un nouveau membre peut lire :
 
 - Le `brief.md` pour comprendre **pourquoi** une feature existe
 - Le `spec.md` pour comprendre **comment** elle a ete concue
@@ -175,21 +175,21 @@ Les **retex** (retours d'experience) permettent a l'equipe de capitaliser les le
 
 ```bash
 # Apres une feature reussie
-cta retex add --title "Migration ORM incrementale" \
+aiden retex add --title "Migration ORM incrementale" \
   --context prisma,drizzle,migration \
   --outcome success \
   --lesson "Migrer table par table est plus sur qu'un big bang" \
   --recommendation "Garder les deux ORMs en parallele pendant la migration"
 
 # Apres un echec
-cta retex add --title "Cache Redis sans TTL" \
+aiden retex add --title "Cache Redis sans TTL" \
   --context redis,cache,bug \
   --outcome failure \
   --lesson "Un cache sans TTL a cause un OOM en production" \
   --recommendation "Toujours definir un TTL sur les cles Redis"
 
 # Consulter les retex pertinents
-cta retex search migration
+aiden retex search migration
 ```
 
 Les retex pertinents sont automatiquement injectes dans les prompts des agents. L'equipe apprend collectivement de ses experiences.
@@ -200,17 +200,17 @@ Les retex pertinents sont automatiquement injectes dans les prompts des agents. 
 
 ```bash
 # Metriques globales
-cta metrics
+aiden metrics
 
 # Export CSV pour dashboard
-cta metrics --export csv > metriques-equipe-mars.csv
+aiden metrics --export csv > metriques-equipe-mars.csv
 ```
 
 ### KPI equipe
 
 | Metrique | Cible | Comment |
 |----------|-------|---------|
-| % devs actifs sur CTA | > 70% | metrics.jsonl par agent unique |
+| % devs actifs sur AIDEN | > 70% | metrics.jsonl par agent unique |
 | Features standard vs flash | > 30% standard | decisions.jsonl type=mode_selection |
 | Cout moyen par dev/mois | < $80 | metrics.jsonl agrege |
 | Taux circuit breaker | < 10% | decisions.jsonl type=circuit_breaker |
@@ -219,12 +219,12 @@ cta metrics --export csv > metriques-equipe-mars.csv
 
 | Anti-pattern | Pourquoi c'est un probleme | Solution |
 |-------------|---------------------------|----------|
-| Forcer CTA sur toute l'equipe d'un coup | Rejet et frustration | Adopter progressivement : pilote → equipes → general |
+| Forcer AIDEN sur toute l'equipe d'un coup | Rejet et frustration | Adopter progressivement : pilote → equipes → general |
 | Utiliser enterprise pour tout | Sur-ingenierie, lenteur | Flash pour les fix, standard pour les features, enterprise pour les projets critiques |
-| Ne pas commiter les artefacts | Perte de tracabilite et d'onboarding | Toujours commiter `.cta/features/` avec le code |
+| Ne pas commiter les artefacts | Perte de tracabilite et d'onboarding | Toujours commiter `.aiden/features/` avec le code |
 | Ignorer le review.md | Perdre la valeur du QA automatique | Le reviewer humain doit lire le review.md en premier |
 | Des regles trop strictes au debut | Friction, contournement | Commencer avec des regles legeres, durcir progressivement |
 
 ## Prochaine etape
 
-Integrez CTA dans vos [pipelines CI/CD](/cookbook/ci-cd) pour automatiser les verifications.
+Integrez AIDEN dans vos [pipelines CI/CD](/cookbook/ci-cd) pour automatiser les verifications.

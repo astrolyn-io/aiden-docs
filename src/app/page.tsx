@@ -10,9 +10,9 @@ export default function HomePage() {
         <div
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-6"
           style={{
-            background: 'var(--cta-accent-primary-light)',
-            color: 'var(--cta-accent-primary)',
-            border: '1px solid var(--cta-accent-primary)',
+            background: 'var(--aiden-accent-primary-light)',
+            color: 'var(--aiden-accent-primary)',
+            border: '1px solid var(--aiden-accent-primary)',
             borderColor: 'transparent',
           }}
         >
@@ -20,12 +20,12 @@ export default function HomePage() {
         </div>
         <h1
           className="text-4xl md:text-5xl font-bold mb-4"
-          style={{ color: 'var(--cta-text-primary)', letterSpacing: '-0.03em' }}
+          style={{ color: 'var(--aiden-text-primary)', letterSpacing: '-0.03em' }}
         >
           Core Team{' '}
-          <span style={{ color: 'var(--cta-accent-primary)' }}>AI</span>
+          <span style={{ color: 'var(--aiden-accent-primary)' }}>AI</span>
         </h1>
-        <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--cta-text-secondary)' }}>
+        <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--aiden-text-secondary)' }}>
           Framework CLI pour le developpement assiste par IA en entreprise.
           Orchestrez des agents IA specialises a travers des workflows adaptatifs.
         </p>
@@ -34,43 +34,43 @@ export default function HomePage() {
       {/* Quick start terminal */}
       <Terminal title="Demarrage rapide">
         {`$ npm add -g @cta/cli
-$ cta init
-CTA Lead > Projet initialise dans .cta/
-$ cta flash "Ajouter GET /health"
-CTA Lead > Mode flash. Agents: lead, dev
-CTA Dev > Implementation en cours...
-CTA Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
+$ aiden init
+AIDEN Lead > Projet initialise dans .aiden/
+$ aiden flash "Ajouter GET /health"
+AIDEN Lead > Mode flash. Agents: lead, dev
+AIDEN Dev > Implementation en cours...
+AIDEN Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
       </Terminal>
 
       {/* 3 modes */}
       <section className="my-12">
         <h2
           className="text-2xl font-bold text-center mb-2"
-          style={{ color: 'var(--cta-text-primary)', borderBottom: 'none', letterSpacing: '-0.02em' }}
+          style={{ color: 'var(--aiden-text-primary)', borderBottom: 'none', letterSpacing: '-0.02em' }}
         >
           3 modes adaptatifs
         </h2>
-        <p className="text-center mb-6 text-sm" style={{ color: 'var(--cta-text-muted)' }}>
-          Du bug fix au projet enterprise, CTA s&apos;adapte.
+        <p className="text-center mb-6 text-sm" style={{ color: 'var(--aiden-text-muted)' }}>
+          Du bug fix au projet enterprise, AIDEN s&apos;adapte.
         </p>
         <div className="grid md:grid-cols-3 gap-4">
           <Card
             href="/guides/modes"
             title="Flash"
             description="Bug fixes, petites features. < 30 min."
-            icon={<span style={{ color: 'var(--cta-accent-yellow)' }}>⚡</span>}
+            icon={<span style={{ color: 'var(--aiden-accent-yellow)' }}>⚡</span>}
           />
           <Card
             href="/guides/modes"
             title="Standard"
             description="Features moyennes avec specs et review. 2h - 1 jour."
-            icon={<span style={{ color: 'var(--cta-accent-primary)' }}>📋</span>}
+            icon={<span style={{ color: 'var(--aiden-accent-primary)' }}>📋</span>}
           />
           <Card
             href="/guides/modes"
             title="Enterprise"
             description="Projets critiques, compliance, documentation complete."
-            icon={<span style={{ color: 'var(--cta-accent-purple)' }}>🏢</span>}
+            icon={<span style={{ color: 'var(--aiden-accent-purple)' }}>🏢</span>}
           />
         </div>
       </section>
@@ -79,23 +79,23 @@ CTA Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
       <section className="my-12">
         <h2
           className="text-2xl font-bold text-center mb-2"
-          style={{ color: 'var(--cta-text-primary)', borderBottom: 'none', letterSpacing: '-0.02em' }}
+          style={{ color: 'var(--aiden-text-primary)', borderBottom: 'none', letterSpacing: '-0.02em' }}
         >
           6 agents specialises
         </h2>
-        <p className="text-center mb-6 text-sm" style={{ color: 'var(--cta-text-muted)' }}>
+        <p className="text-center mb-6 text-sm" style={{ color: 'var(--aiden-text-muted)' }}>
           Chaque agent a un role precis. Le Lead orchestre le tout.
         </p>
         <AgentFlow />
       </section>
 
-      {/* Why CTA */}
+      {/* Why AIDEN */}
       <section className="my-12">
         <h2
           className="text-2xl font-bold text-center mb-8"
-          style={{ color: 'var(--cta-text-primary)', borderBottom: 'none', letterSpacing: '-0.02em' }}
+          style={{ color: 'var(--aiden-text-primary)', borderBottom: 'none', letterSpacing: '-0.02em' }}
         >
-          Pourquoi CTA ?
+          Pourquoi AIDEN ?
         </h2>
         <div className="grid sm:grid-cols-2 gap-6">
           {[
@@ -107,14 +107,14 @@ CTA Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
             <div
               key={title}
               className="flex gap-3 p-4 rounded-xl"
-              style={{ background: 'var(--cta-bg-secondary)' }}
+              style={{ background: 'var(--aiden-bg-secondary)' }}
             >
               <span className="text-xl">{icon}</span>
               <div>
-                <h3 className="font-semibold text-sm mb-0.5" style={{ color: 'var(--cta-text-primary)' }}>
+                <h3 className="font-semibold text-sm mb-0.5" style={{ color: 'var(--aiden-text-primary)' }}>
                   {title}
                 </h3>
-                <p className="text-xs" style={{ color: 'var(--cta-text-muted)' }}>
+                <p className="text-xs" style={{ color: 'var(--aiden-text-muted)' }}>
                   {desc}
                 </p>
               </div>
@@ -127,7 +127,7 @@ CTA Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
       <section className="my-12">
         <h2
           className="text-2xl font-bold text-center mb-6"
-          style={{ color: 'var(--cta-text-primary)', borderBottom: 'none', letterSpacing: '-0.02em' }}
+          style={{ color: 'var(--aiden-text-primary)', borderBottom: 'none', letterSpacing: '-0.02em' }}
         >
           Commencer
         </h2>
@@ -135,7 +135,7 @@ CTA Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
           <Card
             href="/getting-started/installation"
             title="Installation"
-            description="Installer et configurer CTA."
+            description="Installer et configurer AIDEN."
             icon="📦"
           />
           <Card

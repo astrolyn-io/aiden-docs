@@ -45,11 +45,11 @@ export function TableOfContents() {
     >
       <h4
         className="text-[11px] font-semibold uppercase tracking-wider mb-3"
-        style={{ color: 'var(--cta-text-muted)' }}
+        style={{ color: 'var(--aiden-text-muted)' }}
       >
         Sur cette page
       </h4>
-      <ul className="space-y-0.5" style={{ borderLeft: '1px solid var(--cta-border)' }}>
+      <ul className="space-y-0.5" style={{ borderLeft: '1px solid var(--aiden-border)' }}>
         {headings.map((h) => (
           <li key={h.id} style={{ paddingLeft: h.level === 3 ? '1.25rem' : '0.75rem' }}>
             <a
@@ -58,8 +58,8 @@ export function TableOfContents() {
               style={{
                 color:
                   activeId === h.id
-                    ? 'var(--cta-accent-primary)'
-                    : 'var(--cta-text-muted)',
+                    ? 'var(--aiden-accent-primary)'
+                    : 'var(--aiden-text-muted)',
                 fontWeight: activeId === h.id ? 500 : 400,
               }}
             >

@@ -1,44 +1,44 @@
 # Reference CLI
 
 > **Ce que vous allez apprendre**
-> - Toutes les commandes CTA (workflow, providers, skills, retex)
+> - Toutes les commandes AIDEN (workflow, providers, skills, retex)
 > - Arguments et options de chaque commande
 > - Exemples d'utilisation
 
 ## Commandes
 
-### `cta init`
+### `aiden init`
 
-Initialise CTA dans le projet courant.
+Initialise AIDEN dans le projet courant.
 
 ```bash
-cta init [--enterprise]
+aiden init [--enterprise]
 ```
 
 - `--enterprise` : inclut les templates et regles enterprise
 
-### `cta flash <description>`
+### `aiden flash <description>`
 
 Lance un workflow flash (rapide).
 
 ```bash
-cta flash "Fix bug #123" [--dry-run] [--provider <name>]
+aiden flash "Fix bug #123" [--dry-run] [--provider <name>]
 ```
 
-### `cta standard <description>`
+### `aiden standard <description>`
 
 Lance un workflow standard.
 
 ```bash
-cta standard "Nouvelle API users" [--dry-run] [--provider <name>]
+aiden standard "Nouvelle API users" [--dry-run] [--provider <name>]
 ```
 
-### `cta enterprise <description>`
+### `aiden enterprise <description>`
 
 Lance un workflow enterprise avec approbation humaine entre chaque phase.
 
 ```bash
-cta enterprise "Migration auth" [--dry-run] [--provider <name>] [--auto-approve]
+aiden enterprise "Migration auth" [--dry-run] [--provider <name>] [--auto-approve]
 ```
 
 Options :
@@ -46,136 +46,136 @@ Options :
 - `--provider <name>` : force un provider specifique
 - `--auto-approve` : bypasse les gates d'approbation humaine (utile en CI/CD)
 
-### `cta status [feature-slug]`
+### `aiden status [feature-slug]`
 
 Affiche le statut des features.
 
 ```bash
-cta status                    # Toutes les features
-cta status export-csv         # Une feature specifique
+aiden status                    # Toutes les features
+aiden status export-csv         # Une feature specifique
 ```
 
-### `cta resume <feature-slug>`
+### `aiden resume <feature-slug>`
 
 Reprend une feature en pause ou bloquee.
 
 ```bash
-cta resume export-csv
+aiden resume export-csv
 ```
 
-### `cta abort <feature-slug>`
+### `aiden abort <feature-slug>`
 
 Abandonne une feature (sauvegarde l'etat avant suppression).
 
 ```bash
-cta abort export-csv
+aiden abort export-csv
 ```
 
-### `cta agent <name> <prompt>`
+### `aiden agent <name> <prompt>`
 
 Invoque un agent directement.
 
 ```bash
-cta agent analyst "Analyser le module billing"
-cta agent qa "Reviewer les changements recents"
+aiden agent analyst "Analyser le module billing"
+aiden agent qa "Reviewer les changements recents"
 ```
 
 Agents : `analyst`, `planner`, `dev`, `qa`, `docops`.
 
-### `cta provider`
+### `aiden provider`
 
 Gere les providers IA.
 
 ```bash
-cta provider status           # Etat des providers
-cta provider switch gemini    # Changer de provider
-cta provider cost             # Rapport de couts
+aiden provider status           # Etat des providers
+aiden provider switch gemini    # Changer de provider
+aiden provider cost             # Rapport de couts
 ```
 
-### `cta metrics`
+### `aiden metrics`
 
 Affiche les metriques d'utilisation.
 
 ```bash
-cta metrics                   # Affichage texte
-cta metrics --export csv      # Export CSV
+aiden metrics                   # Affichage texte
+aiden metrics --export csv      # Export CSV
 ```
 
-### `cta config`
+### `aiden config`
 
 Gere la configuration.
 
 ```bash
-cta config show               # Afficher
-cta config set mode flash     # Modifier
+aiden config show               # Afficher
+aiden config set mode flash     # Modifier
 ```
 
-### `cta rules`
+### `aiden rules`
 
 Gere les regles d'entreprise.
 
 ```bash
-cta rules list                # Lister
-cta rules add security.md     # Ajouter
-cta rules remove security     # Supprimer
+aiden rules list                # Lister
+aiden rules add security.md     # Ajouter
+aiden rules remove security     # Supprimer
 ```
 
-### `cta skills`
+### `aiden skills`
 
 Gere les skills d'extensibilite.
 
 ```bash
-cta skills list                # Lister les skills installes
-cta skills init my-skill       # Creer un nouveau skill
-cta skills add /path/to/skill  # Installer depuis un dossier
-cta skills remove my-skill     # Supprimer un skill
-cta skills enable my-skill     # Activer un skill
-cta skills disable my-skill    # Desactiver un skill
+aiden skills list                # Lister les skills installes
+aiden skills init my-skill       # Creer un nouveau skill
+aiden skills add /path/to/skill  # Installer depuis un dossier
+aiden skills remove my-skill     # Supprimer un skill
+aiden skills enable my-skill     # Activer un skill
+aiden skills disable my-skill    # Desactiver un skill
 ```
 
-Les skills sont des packages declaratifs (YAML + Markdown) dans `.cta/skills/` qui injectent instructions, regles et hooks dans le pipeline. Voir le [guide skills](/guides/skills) pour plus de details.
+Les skills sont des packages declaratifs (YAML + Markdown) dans `.aiden/skills/` qui injectent instructions, regles et hooks dans le pipeline. Voir le [guide skills](/guides/skills) pour plus de details.
 
-### `cta retex`
+### `aiden retex`
 
 Gere les retours d'experience (lessons learned).
 
 ```bash
-cta retex list                                    # Lister tous les retex
-cta retex add --title "..." --context tag1,tag2 \
+aiden retex list                                    # Lister tous les retex
+aiden retex add --title "..." --context tag1,tag2 \
   --outcome success --lesson "..." \
   --recommendation "..."                           # Ajouter un retex
-cta retex search <tag>                             # Chercher par tag
-cta retex remove <id>                              # Supprimer un retex
+aiden retex search <tag>                             # Chercher par tag
+aiden retex remove <id>                              # Supprimer un retex
 ```
 
-Les retex sont stockes dans `.cta/retex/` en Markdown. Les retex pertinents sont injectes dans les prompts agents sous `--- Lessons Learned ---`.
+Les retex sont stockes dans `.aiden/retex/` en Markdown. Les retex pertinents sont injectes dans les prompts agents sous `--- Lessons Learned ---`.
 
-### `cta template`
+### `aiden template`
 
 Gere les templates.
 
 ```bash
-cta template list             # Lister
-cta template customize spec   # Personnaliser
+aiden template list             # Lister
+aiden template customize spec   # Personnaliser
 ```
 
 ## Slash commands (Claude Code)
 
-CTA est aussi disponible en slash commands dans Claude Code :
+AIDEN est aussi disponible en slash commands dans Claude Code :
 
 | Slash command | Equivalent CLI |
 |---|---|
 | `/cta-help` | — |
-| `/cta-init` | `cta init` |
-| `/cta-flash <desc>` | `cta flash "<desc>"` |
-| `/cta-standard <desc>` | `cta standard "<desc>"` |
-| `/cta-enterprise <desc>` | `cta enterprise "<desc>"` |
-| `/cta-status` | `cta status` |
-| `/cta-resume <slug>` | `cta resume <slug>` |
-| `/cta-agent <nom> <prompt>` | `cta agent <nom> "<prompt>"` |
-| `/cta-rules` | `cta rules list` |
+| `/cta-init` | `aiden init` |
+| `/cta-flash <desc>` | `aiden flash "<desc>"` |
+| `/cta-standard <desc>` | `aiden standard "<desc>"` |
+| `/cta-enterprise <desc>` | `aiden enterprise "<desc>"` |
+| `/cta-status` | `aiden status` |
+| `/cta-resume <slug>` | `aiden resume <slug>` |
+| `/cta-agent <nom> <prompt>` | `aiden agent <nom> "<prompt>"` |
+| `/cta-rules` | `aiden rules list` |
 
-Les deux modes ecrivent dans les memes fichiers `.cta/` et sont interchangeables.
+Les deux modes ecrivent dans les memes fichiers `.aiden/` et sont interchangeables.
 
 ## Prochaine etape
 

@@ -4,8 +4,8 @@ export default function GettingStartedPage() {
   return (
     <div>
       <h1>Demarrage</h1>
-      <p style={{ color: 'var(--cta-text-secondary)' }}>
-        Tout ce qu&apos;il faut pour installer CTA et lancer votre premiere feature.
+      <p style={{ color: 'var(--aiden-text-secondary)' }}>
+        Tout ce qu&apos;il faut pour installer AIDEN et lancer votre premiere feature.
       </p>
       <div className="grid gap-4 mt-6">
         <Card href="/getting-started/installation" title="Installation" description="Prerequis, installation et configuration initiale." icon="📦" />

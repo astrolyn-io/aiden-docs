@@ -2,7 +2,7 @@
 
 > **Ce que vous allez apprendre**
 > - Resoudre les problemes courants
-> - Lire les logs CTA
+> - Lire les logs AIDEN
 > - Resetrer une feature bloquee
 
 ## Problemes courants
@@ -15,62 +15,62 @@ $ pnpm bin -g
 ```
 Ajoutez ce chemin a votre PATH.
 
-### "No CTA config found"
+### "No AIDEN config found"
 
-Vous n'avez pas initialise CTA. Lancez `cta init`.
+Vous n'avez pas initialise AIDEN. Lancez `aiden init`.
 
 ### "No provider available"
 
 Aucun provider n'est accessible. Verifiez :
 ```bash
 $ claude --version   # ou gemini --version
-$ cta provider status
+$ aiden provider status
 ```
 
 ### "Budget exceeded"
 
 Le budget tokens de la feature est depasse. Options :
-- Augmenter le budget dans `cta.config.yaml`
+- Augmenter le budget dans `aiden.config.yaml`
 - Passer en mode flash (budget plus petit mais suffisant)
 
 ### Circuit breaker declenche
 
-Un agent a echoue 3 fois. CTA arrete et escalade :
+Un agent a echoue 3 fois. AIDEN arrete et escalade :
 ```
-CTA Lead > Circuit breaker OPEN for dev: escalating to human
+AIDEN Lead > Circuit breaker OPEN for dev: escalating to human
 ```
-Solution : verifiez l'erreur, corrigez le contexte, puis `cta resume <slug>`.
+Solution : verifiez l'erreur, corrigez le contexte, puis `aiden resume <slug>`.
 
 ### Feature bloquee
 
 ```bash
-$ cta status
+$ aiden status
 ma-feature [blocked] (standard) - ...
 ```
 
 Pour debloquer :
 ```bash
-$ cta resume ma-feature
+$ aiden resume ma-feature
 Resuming feature: ma-feature
 ```
 
 Pour abandonner :
 ```bash
-$ cta abort ma-feature
+$ aiden abort ma-feature
 Aborting feature: ma-feature
 ```
 
 ### Les artefacts ne sont pas generes
 
-Verifiez que le dossier `.cta/features/` existe et que le provider repond.
+Verifiez que le dossier `.aiden/features/` existe et que le provider repond.
 
 ## Logs
 
-Les decisions sont dans `.cta/memory/decisions.jsonl` (JSONL, une ligne par decision).
-Les metriques sont dans `.cta/memory/metrics.jsonl`.
+Les decisions sont dans `.aiden/memory/decisions.jsonl` (JSONL, une ligne par decision).
+Les metriques sont dans `.aiden/memory/metrics.jsonl`.
 
 ```bash
-$ cta metrics
+$ aiden metrics
 export-csv: 3000 tokens, $0.0090, 2 operations
 ```
 

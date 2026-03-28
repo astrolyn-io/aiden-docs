@@ -9,16 +9,16 @@
 
 Chaque niveau surcharge le precedent :
 
-1. **Defauts CTA** (built-in)
-2. **Enterprise** (`~/.cta/enterprise.config.yaml`)
-3. **Projet** (`.cta/cta.config.yaml`)
-4. **Feature** (`.cta/features/<slug>/.override.yaml`)
+1. **Defauts AIDEN** (built-in)
+2. **Enterprise** (`~/.aiden/enterprise.config.yaml`)
+3. **Projet** (`.aiden/aiden.config.yaml`)
+4. **Feature** (`.aiden/features/<slug>/.override.yaml`)
 5. **CLI flags** (`--mode`, `--provider`, etc.)
 
 ## Configuration minimale
 
 ```yaml
-# .cta/cta.config.yaml
+# .aiden/aiden.config.yaml
 project: mon-projet
 provider: claude-code
 mode: standard
@@ -54,7 +54,7 @@ Cette option controle la quantite de texte d'un agent precedent qui est injectee
 ## Configuration entreprise
 
 ```yaml
-# ~/.cta/enterprise.config.yaml
+# ~/.aiden/enterprise.config.yaml
 company: my-company
 defaults:
   mode: standard
@@ -72,10 +72,10 @@ coding:
 ## Modifier via CLI
 
 ```bash
-$ cta config set mode flash
+$ aiden config set mode flash
 Set mode = flash
 
-$ cta config show
+$ aiden config show
 { "project": "mon-projet", "mode": "flash", ... }
 ```
 

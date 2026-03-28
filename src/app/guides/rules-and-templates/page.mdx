@@ -7,12 +7,12 @@
 
 ## Regles d'entreprise
 
-Les regles sont des fichiers `.md` dans `.cta/rules/`. Elles sont automatiquement injectees dans le contexte de chaque agent.
+Les regles sont des fichiers `.md` dans `.aiden/rules/`. Elles sont automatiquement injectees dans le contexte de chaque agent.
 
 ### Ajouter une regle
 
 ```bash
-$ cta rules add coding-standards.md
+$ aiden rules add coding-standards.md
 Rule added: coding-standards.md
 ```
 
@@ -38,9 +38,9 @@ Rule added: coding-standards.md
 ### Lister les regles
 
 ```bash
-$ cta rules list
-  coding-standards (.cta/rules/coding-standards.md)
-  security-policy (.cta/rules/security-policy.md)
+$ aiden rules list
+  coding-standards (.aiden/rules/coding-standards.md)
+  security-policy (.aiden/rules/security-policy.md)
 ```
 
 ## Injection des regles
@@ -53,13 +53,13 @@ Les regles sont filtrees par agent :
 
 ## Templates
 
-CTA fournit 7 templates par defaut (brief, spec, story, review, change-summary, architecture-decision, quality-report).
+AIDEN fournit 7 templates par defaut (brief, spec, story, review, change-summary, architecture-decision, quality-report).
 
 ### Personnaliser un template
 
 ```bash
-$ cta template customize spec
-Template "spec" copied to .cta/templates/ for customization.
+$ aiden template customize spec
+Template "spec" copied to .aiden/templates/ for customization.
 ```
 
 Le template copie utilise Handlebars. Variables disponibles : `feature_name`, `provider`, `mode`, `date`, etc.

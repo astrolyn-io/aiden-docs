@@ -9,21 +9,21 @@ export function Footer() {
   const { prev, next } = getPrevNext(pathname);
 
   return (
-    <footer className="mt-16 pt-8" style={{ borderTop: '1px solid var(--cta-border)' }}>
+    <footer className="mt-16 pt-8" style={{ borderTop: '1px solid var(--aiden-border)' }}>
       <div className="flex justify-between items-stretch gap-4">
         {prev ? (
           <Link
             href={prev.href}
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all no-underline flex-1"
             style={{
-              border: '1px solid var(--cta-border)',
-              background: 'var(--cta-bg-card)',
+              border: '1px solid var(--aiden-border)',
+              background: 'var(--aiden-bg-card)',
             }}
           >
-            <span style={{ color: 'var(--cta-text-muted)' }}>←</span>
+            <span style={{ color: 'var(--aiden-text-muted)' }}>←</span>
             <div>
-              <div className="text-[11px]" style={{ color: 'var(--cta-text-muted)' }}>Precedent</div>
-              <div style={{ color: 'var(--cta-text-primary)' }}>{prev.title}</div>
+              <div className="text-[11px]" style={{ color: 'var(--aiden-text-muted)' }}>Precedent</div>
+              <div style={{ color: 'var(--aiden-text-primary)' }}>{prev.title}</div>
             </div>
           </Link>
         ) : (
@@ -34,22 +34,22 @@ export function Footer() {
             href={next.href}
             className="flex items-center justify-end gap-3 px-4 py-3 rounded-lg text-sm transition-all no-underline flex-1 text-right"
             style={{
-              border: '1px solid var(--cta-border)',
-              background: 'var(--cta-bg-card)',
+              border: '1px solid var(--aiden-border)',
+              background: 'var(--aiden-bg-card)',
             }}
           >
             <div>
-              <div className="text-[11px]" style={{ color: 'var(--cta-text-muted)' }}>Suivant</div>
-              <div style={{ color: 'var(--cta-accent-primary)' }}>{next.title}</div>
+              <div className="text-[11px]" style={{ color: 'var(--aiden-text-muted)' }}>Suivant</div>
+              <div style={{ color: 'var(--aiden-accent-primary)' }}>{next.title}</div>
             </div>
-            <span style={{ color: 'var(--cta-accent-primary)' }}>→</span>
+            <span style={{ color: 'var(--aiden-accent-primary)' }}>→</span>
           </Link>
         ) : (
           <div className="flex-1" />
         )}
       </div>
-      <p className="mt-8 mb-4 text-xs text-center" style={{ color: 'var(--cta-text-muted)' }}>
-        CTA - Core Team AI v0.7.0
+      <p className="mt-8 mb-4 text-xs text-center" style={{ color: 'var(--aiden-text-muted)' }}>
+        AIDEN - AI-Driven Engineering v0.7.0
       </p>
     </footer>
   );

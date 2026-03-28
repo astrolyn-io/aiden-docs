@@ -3,8 +3,8 @@
 
 @layer base {
   body {
-    background-color: var(--cta-bg-primary);
-    color: var(--cta-text-primary);
+    background-color: var(--aiden-bg-primary);
+    color: var(--aiden-text-primary);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -18,7 +18,7 @@
   }
 
   ::selection {
-    background-color: var(--cta-accent-primary);
+    background-color: var(--aiden-accent-primary);
     color: white;
   }
 
@@ -28,32 +28,32 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--cta-bg-secondary);
+    background: var(--aiden-bg-secondary);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--cta-border);
+    background: var(--aiden-border);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--cta-text-muted);
+    background: var(--aiden-text-muted);
   }
 
   a {
-    color: var(--cta-accent-primary);
+    color: var(--aiden-accent-primary);
     text-decoration: none;
     transition: color 0.15s ease;
   }
 
   a:hover {
-    color: var(--cta-accent-primary-hover);
+    color: var(--aiden-accent-primary-hover);
   }
 }
 
 @layer components {
-  .prose-cta h1 {
-    color: var(--cta-text-primary);
+  .prose-aiden h1 {
+    color: var(--aiden-text-primary);
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
@@ -61,122 +61,122 @@
     letter-spacing: -0.025em;
   }
 
-  .prose-cta h2 {
-    color: var(--cta-text-primary);
+  .prose-aiden h2 {
+    color: var(--aiden-text-primary);
     font-size: 1.5rem;
     font-weight: 600;
     margin-top: 2.5rem;
     margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--cta-border);
+    border-bottom: 1px solid var(--aiden-border);
     letter-spacing: -0.02em;
   }
 
-  .prose-cta h3 {
-    color: var(--cta-text-primary);
+  .prose-aiden h3 {
+    color: var(--aiden-text-primary);
     font-size: 1.2rem;
     font-weight: 600;
     margin-top: 2rem;
     margin-bottom: 0.5rem;
   }
 
-  .prose-cta p {
-    color: var(--cta-text-secondary);
+  .prose-aiden p {
+    color: var(--aiden-text-secondary);
     line-height: 1.75;
     margin-bottom: 1rem;
   }
 
-  .prose-cta code:not(pre code) {
-    background: var(--cta-code-bg);
-    color: var(--cta-code-text);
+  .prose-aiden code:not(pre code) {
+    background: var(--aiden-code-bg);
+    color: var(--aiden-code-text);
     padding: 0.15em 0.4em;
     border-radius: 5px;
     font-size: 0.875em;
     font-weight: 500;
   }
 
-  .prose-cta ul,
-  .prose-cta ol {
-    color: var(--cta-text-secondary);
+  .prose-aiden ul,
+  .prose-aiden ol {
+    color: var(--aiden-text-secondary);
     padding-left: 1.5rem;
     margin-bottom: 1rem;
   }
 
-  .prose-cta ul {
+  .prose-aiden ul {
     list-style-type: disc;
   }
 
-  .prose-cta ol {
+  .prose-aiden ol {
     list-style-type: decimal;
   }
 
-  .prose-cta li {
+  .prose-aiden li {
     margin-bottom: 0.35rem;
     line-height: 1.7;
   }
 
-  .prose-cta table {
+  .prose-aiden table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 1.5rem;
-    border-radius: var(--cta-radius);
+    border-radius: var(--aiden-radius);
     overflow: hidden;
-    border: 1px solid var(--cta-border);
+    border: 1px solid var(--aiden-border);
   }
 
-  .prose-cta th {
-    background: var(--cta-bg-secondary);
-    color: var(--cta-text-primary);
+  .prose-aiden th {
+    background: var(--aiden-bg-secondary);
+    color: var(--aiden-text-primary);
     padding: 0.75rem 1rem;
     text-align: left;
     font-weight: 600;
     font-size: 0.875rem;
-    border-bottom: 2px solid var(--cta-border);
+    border-bottom: 2px solid var(--aiden-border);
   }
 
-  .prose-cta td {
+  .prose-aiden td {
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--cta-border);
-    color: var(--cta-text-secondary);
+    border-bottom: 1px solid var(--aiden-border);
+    color: var(--aiden-text-secondary);
     font-size: 0.875rem;
   }
 
-  .prose-cta tr:last-child td {
+  .prose-aiden tr:last-child td {
     border-bottom: none;
   }
 
-  .prose-cta blockquote {
-    border-left: 3px solid var(--cta-accent-primary);
+  .prose-aiden blockquote {
+    border-left: 3px solid var(--aiden-accent-primary);
     padding: 0.75rem 1rem;
     margin-left: 0;
     margin-bottom: 1rem;
-    background: var(--cta-accent-primary-light);
-    border-radius: 0 var(--cta-radius) var(--cta-radius) 0;
-    color: var(--cta-text-secondary);
+    background: var(--aiden-accent-primary-light);
+    border-radius: 0 var(--aiden-radius) var(--aiden-radius) 0;
+    color: var(--aiden-text-secondary);
     font-style: normal;
   }
 
-  .prose-cta blockquote strong {
-    color: var(--cta-text-primary);
+  .prose-aiden blockquote strong {
+    color: var(--aiden-text-primary);
   }
 
-  .prose-cta hr {
+  .prose-aiden hr {
     border: none;
-    border-top: 1px solid var(--cta-border);
+    border-top: 1px solid var(--aiden-border);
     margin: 2rem 0;
   }
 
-  .prose-cta pre {
-    background: var(--cta-terminal-bg);
-    border: 1px solid var(--cta-border);
-    border-radius: var(--cta-radius);
+  .prose-aiden pre {
+    background: var(--aiden-terminal-bg);
+    border: 1px solid var(--aiden-border);
+    border-radius: var(--aiden-radius);
     padding: 1rem;
     overflow-x: auto;
     margin-bottom: 1rem;
     color: #e2e8f0;
   }
 
-  .prose-cta pre code {
+  .prose-aiden pre code {
     background: none;
     padding: 0;
     font-size: 0.85rem;

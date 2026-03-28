@@ -9,7 +9,7 @@
 
 ## Providers supportes
 
-CTA supporte 4 providers CLI nativement et permet de brancher n'importe quel provider API compatible OpenAI :
+AIDEN supporte 4 providers CLI nativement et permet de brancher n'importe quel provider API compatible OpenAI :
 
 | Provider | Commande | Type | Forces |
 |---|---|---|---|
@@ -21,7 +21,7 @@ CTA supporte 4 providers CLI nativement et permet de brancher n'importe quel pro
 
 ## Configuration
 
-Dans `.cta/cta.config.yaml` :
+Dans `.aiden/aiden.config.yaml` :
 
 ```yaml
 provider: claude-code
@@ -54,7 +54,7 @@ providers:
 
 ## Provider API custom (proxy LLM)
 
-CTA peut se connecter a n'importe quel endpoint compatible OpenAI via l'adapter API. Cela permet de brancher un proxy LLM (LiteLLM, Cloudflare AI Gateway) ou une API directe.
+AIDEN peut se connecter a n'importe quel endpoint compatible OpenAI via l'adapter API. Cela permet de brancher un proxy LLM (LiteLLM, Cloudflare AI Gateway) ou une API directe.
 
 ```yaml
 providers:
@@ -75,7 +75,7 @@ providers:
     command: ""
 ```
 
-Quand `baseUrl` est defini, CTA utilise l'adapter HTTP (`fetch()`) au lieu du subprocess CLI. Cela fonctionne avec :
+Quand `baseUrl` est defini, AIDEN utilise l'adapter HTTP (`fetch()`) au lieu du subprocess CLI. Cela fonctionne avec :
 - **LiteLLM** : proxy open source unifiant 100+ APIs
 - **Cloudflare AI Gateway** : gateway manage avec caching et analytics
 - **API directes** : OpenAI, Anthropic (via proxy), Google AI
@@ -107,7 +107,7 @@ En mode `auto`, chaque agent recoit le provider optimal :
 ## Verifier le statut
 
 ```bash
-$ cta provider status
+$ aiden provider status
 Provider status:
   claude-code: configured
   gemini: configured
@@ -127,11 +127,11 @@ budget:
     enterprise: 100000
 ```
 
-> **Information** : L'alerte se declenche a 80% du budget. CTA bloque les appels si le budget est depasse.
+> **Information** : L'alerte se declenche a 80% du budget. AIDEN bloque les appels si le budget est depasse.
 
 ## Filtrage securite
 
-CTA filtre automatiquement les donnees sensibles avant de les envoyer aux providers :
+AIDEN filtre automatiquement les donnees sensibles avant de les envoyer aux providers :
 
 - Bearer tokens
 - API keys (`sk-`, `ghp_`, `github_pat_`)
@@ -148,7 +148,7 @@ sanitize: false
 
 ## Provider factory dynamique
 
-CTA instancie les providers automatiquement depuis la config. Pas besoin de modifier le code pour ajouter un provider :
+AIDEN instancie les providers automatiquement depuis la config. Pas besoin de modifier le code pour ajouter un provider :
 
 - **Nom connu** (claude-code, gemini, copilot, opencode) → adapter CLI specifique
 - **`baseUrl` defini** → adapter API HTTP (fetch)

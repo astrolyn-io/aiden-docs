@@ -18,7 +18,7 @@ export function StepList({ steps }: StepListProps) {
             <div
               className="flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold shrink-0"
               style={{
-                background: 'var(--cta-accent-primary)',
+                background: 'var(--aiden-accent-primary)',
                 color: 'white',
               }}
             >
@@ -27,18 +27,18 @@ export function StepList({ steps }: StepListProps) {
             {i < steps.length - 1 && (
               <div
                 className="w-0.5 flex-1 my-1"
-                style={{ background: 'var(--cta-border)' }}
+                style={{ background: 'var(--aiden-border)' }}
               />
             )}
           </div>
           <div className="pb-6 flex-1">
             <h4
               className="font-semibold text-sm mb-1"
-              style={{ color: 'var(--cta-text-primary)' }}
+              style={{ color: 'var(--aiden-text-primary)' }}
             >
               {step.title}
             </h4>
-            <div className="text-sm" style={{ color: 'var(--cta-text-secondary)' }}>
+            <div className="text-sm" style={{ color: 'var(--aiden-text-secondary)' }}>
               {step.children}
             </div>
           </div>

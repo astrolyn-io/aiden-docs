@@ -1,16 +1,16 @@
 # Skills
 
 > **Ce que vous allez apprendre**
-> - Ce qu'est un skill CTA et pourquoi l'utiliser
+> - Ce qu'est un skill AIDEN et pourquoi l'utiliser
 > - Comment creer votre propre skill
 > - Le format `skill.yaml` et ses options
 > - Comment partager des skills entre equipes
 
 ## Qu'est-ce qu'un skill ?
 
-Un **skill** est un package declaratif (YAML + Markdown) qui regroupe des instructions, regles et hooks injectables dans le pipeline CTA. C'est le mecanisme d'extensibilite principal pour les entreprises.
+Un **skill** est un package declaratif (YAML + Markdown) qui regroupe des instructions, regles et hooks injectables dans le pipeline AIDEN. C'est le mecanisme d'extensibilite principal pour les entreprises.
 
-Contrairement aux regles simples (`.cta/rules/`), un skill :
+Contrairement aux regles simples (`.aiden/rules/`), un skill :
 - **Cible des agents specifiques** (ex: uniquement Dev et QA)
 - **Filtre par mode** (ex: uniquement en enterprise)
 - **Declare des hooks** executables a chaque etape du workflow
@@ -20,7 +20,7 @@ Contrairement aux regles simples (`.cta/rules/`), un skill :
 ## Structure d'un skill
 
 ```
-.cta/skills/
+.aiden/skills/
   mon-skill/
     skill.yaml            # Manifeste : metadata, agents cibles, hooks
     instructions.md       # Instructions injectees dans les prompts agents
@@ -86,7 +86,7 @@ Le contenu de ce fichier est injecte dans le prompt de chaque agent cible sous l
 
 ### `rules/` — Regles additionnelles
 
-Les fichiers `.md` dans ce dossier sont merges avec les regles du projet (`.cta/rules/`) et injectes dans la section `--- Enterprise Rules ---` du prompt.
+Les fichiers `.md` dans ce dossier sont merges avec les regles du projet (`.aiden/rules/`) et injectes dans la section `--- Enterprise Rules ---` du prompt.
 
 ## Schema complet `skill.yaml`
 
@@ -120,15 +120,15 @@ Les fichiers `.md` dans ce dossier sont merges avec les regles du projet (`.cta/
 ### Creer un nouveau skill
 
 ```bash
-cta skills init mon-skill
+aiden skills init mon-skill
 ```
 
-Cree `.cta/skills/mon-skill/` avec un `skill.yaml` template et un `instructions.md` vide.
+Cree `.aiden/skills/mon-skill/` avec un `skill.yaml` template et un `instructions.md` vide.
 
 ### Lister les skills installes
 
 ```bash
-cta skills list
+aiden skills list
 ```
 
 Affiche nom, version, agents cibles et statut (enabled/disabled).
@@ -136,36 +136,36 @@ Affiche nom, version, agents cibles et statut (enabled/disabled).
 ### Installer un skill externe
 
 ```bash
-cta skills add /chemin/vers/skill
+aiden skills add /chemin/vers/skill
 ```
 
-Copie le dossier skill dans `.cta/skills/`.
+Copie le dossier skill dans `.aiden/skills/`.
 
 ### Supprimer un skill
 
 ```bash
-cta skills remove mon-skill
+aiden skills remove mon-skill
 ```
 
 ### Activer/Desactiver
 
 ```bash
-cta skills enable mon-skill
-cta skills disable mon-skill
+aiden skills enable mon-skill
+aiden skills disable mon-skill
 ```
 
 Modifie `enabled` dans `skill.yaml` sans supprimer le skill.
 
 ## Exemples de skills
 
-CTA fournit 3 templates de skills dans `templates/skills/` :
+AIDEN fournit 3 templates de skills dans `templates/skills/` :
 
 ### `code-review-strict`
 
 Enforce des standards de code review stricts pour Dev et QA : types explicites, pas de `any`, JSDoc obligatoire, couverture de tests >= 80%.
 
 ```bash
-cp -r templates/skills/code-review-strict .cta/skills/
+cp -r templates/skills/code-review-strict .aiden/skills/
 ```
 
 ### `compliance-rgpd`
@@ -174,11 +174,11 @@ Checks de conformite RGPD pour le code manipulant des donnees personnelles. Cibl
 
 ### `jira-sync`
 
-Synchronise les features CTA avec Jira. Declare des hooks sur `on_feature_created` et `on_feature_completed`. Desactive par defaut (a configurer avec votre URL Jira).
+Synchronise les features AIDEN avec Jira. Declare des hooks sur `on_feature_created` et `on_feature_completed`. Desactive par defaut (a configurer avec votre URL Jira).
 
 ## Comment les skills sont charges
 
-1. Au demarrage d'un workflow, l'orchestrateur charge tous les skills depuis `.cta/skills/`
+1. Au demarrage d'un workflow, l'orchestrateur charge tous les skills depuis `.aiden/skills/`
 2. Les skills avec `enabled: false` sont filtres
 3. Les skills sont tries par `priority` (plus haut = injecte en premier)
 4. Pour chaque agent, seuls les skills qui le ciblent (et correspondent au mode) sont injectes
@@ -190,13 +190,13 @@ Synchronise les features CTA avec Jira. Declare des hooks sur `on_feature_create
 ### Git submodule
 
 ```bash
-git submodule add https://github.com/org/cta-skills-common .cta/skills/common
+git submodule add https://github.com/org/cta-skills-common .aiden/skills/common
 ```
 
 ### Copie directe
 
 ```bash
-cta skills add /path/to/shared-skills/compliance-rgpd
+aiden skills add /path/to/shared-skills/compliance-rgpd
 ```
 
 ### Monorepo
@@ -209,7 +209,7 @@ shared-skills/
   compliance-rgpd/
 
 # Dans chaque package
-.cta/skills/compliance-rgpd -> ../../../shared-skills/compliance-rgpd
+.aiden/skills/compliance-rgpd -> ../../../shared-skills/compliance-rgpd
 ```
 
 ## Bonnes pratiques
@@ -219,7 +219,7 @@ shared-skills/
 3. **Ciblez les agents pertinents** : ne ciblez pas tous les agents si seul le Dev est concerne
 4. **Utilisez les modes** : les skills de conformite n'ont pas besoin d'etre actifs en mode flash
 5. **Priorite** : les skills de securite/conformite devraient avoir une priorite haute (>= 20)
-6. **Committez vos skills** : `.cta/skills/` doit etre versionne avec le code
+6. **Committez vos skills** : `.aiden/skills/` doit etre versionne avec le code
 
 ## Prochaine etape
 

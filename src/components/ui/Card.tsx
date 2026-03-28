@@ -14,9 +14,9 @@ export function Card({ href, title, description, icon }: CardProps) {
       href={href}
       className="group block p-5 rounded-xl transition-all no-underline hover:translate-y-[-2px]"
       style={{
-        background: 'var(--cta-bg-card)',
-        border: '1px solid var(--cta-border)',
-        boxShadow: 'var(--cta-shadow)',
+        background: 'var(--aiden-bg-card)',
+        border: '1px solid var(--aiden-border)',
+        boxShadow: 'var(--aiden-shadow)',
       }}
     >
       <div className="flex items-start gap-3">
@@ -24,17 +24,17 @@ export function Card({ href, title, description, icon }: CardProps) {
         <div>
           <h3
             className="font-semibold text-sm mb-1 transition-colors"
-            style={{ color: 'var(--cta-text-primary)' }}
+            style={{ color: 'var(--aiden-text-primary)' }}
           >
             {title}
             <span
               className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              style={{ color: 'var(--cta-accent-primary)' }}
+              style={{ color: 'var(--aiden-accent-primary)' }}
             >
               →
             </span>
           </h3>
-          <p className="text-xs leading-relaxed" style={{ color: 'var(--cta-text-muted)' }}>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--aiden-text-muted)' }}>
             {description}
           </p>
         </div>

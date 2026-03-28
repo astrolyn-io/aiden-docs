@@ -9,18 +9,18 @@ interface BadgeProps {
 }
 
 const badgeColors: Record<BadgeVariant, { bg: string; color: string }> = {
-  flash: { bg: 'var(--cta-accent-yellow-light)', color: 'var(--cta-accent-yellow)' },
-  standard: { bg: 'var(--cta-accent-blue-light)', color: 'var(--cta-accent-blue)' },
-  enterprise: { bg: 'var(--cta-accent-purple-light)', color: 'var(--cta-accent-purple)' },
-  lead: { bg: 'var(--cta-accent-yellow-light)', color: 'var(--cta-accent-yellow)' },
-  analyst: { bg: 'var(--cta-accent-blue-light)', color: 'var(--cta-accent-blue)' },
-  planner: { bg: 'var(--cta-accent-blue-light)', color: 'var(--cta-accent-blue)' },
-  dev: { bg: 'var(--cta-accent-green-light)', color: 'var(--cta-accent-green)' },
-  qa: { bg: 'var(--cta-accent-red-light)', color: 'var(--cta-accent-red)' },
-  docops: { bg: 'var(--cta-bg-secondary)', color: 'var(--cta-text-muted)' },
-  claude: { bg: 'var(--cta-accent-primary-light)', color: 'var(--cta-accent-primary)' },
-  gemini: { bg: 'var(--cta-accent-blue-light)', color: 'var(--cta-accent-blue)' },
-  copilot: { bg: 'var(--cta-bg-secondary)', color: 'var(--cta-text-muted)' },
+  flash: { bg: 'var(--aiden-accent-yellow-light)', color: 'var(--aiden-accent-yellow)' },
+  standard: { bg: 'var(--aiden-accent-blue-light)', color: 'var(--aiden-accent-blue)' },
+  enterprise: { bg: 'var(--aiden-accent-purple-light)', color: 'var(--aiden-accent-purple)' },
+  lead: { bg: 'var(--aiden-accent-yellow-light)', color: 'var(--aiden-accent-yellow)' },
+  analyst: { bg: 'var(--aiden-accent-blue-light)', color: 'var(--aiden-accent-blue)' },
+  planner: { bg: 'var(--aiden-accent-blue-light)', color: 'var(--aiden-accent-blue)' },
+  dev: { bg: 'var(--aiden-accent-green-light)', color: 'var(--aiden-accent-green)' },
+  qa: { bg: 'var(--aiden-accent-red-light)', color: 'var(--aiden-accent-red)' },
+  docops: { bg: 'var(--aiden-bg-secondary)', color: 'var(--aiden-text-muted)' },
+  claude: { bg: 'var(--aiden-accent-primary-light)', color: 'var(--aiden-accent-primary)' },
+  gemini: { bg: 'var(--aiden-accent-blue-light)', color: 'var(--aiden-accent-blue)' },
+  copilot: { bg: 'var(--aiden-bg-secondary)', color: 'var(--aiden-text-muted)' },
 };
 
 const defaultLabels: Record<BadgeVariant, string> = {

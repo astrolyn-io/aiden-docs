@@ -21,7 +21,7 @@
 Pour les changements simples : bug fix, petite feature, refactoring cible.
 
 ```bash
-$ cta flash "Fix le bug #123"
+$ aiden flash "Fix le bug #123"
 ```
 
 Quand l'utiliser :
@@ -34,7 +34,7 @@ Quand l'utiliser :
 Pour les features moyennes necessitant planification.
 
 ```bash
-$ cta standard "Nouvelle API users"
+$ aiden standard "Nouvelle API users"
 ```
 
 Quand l'utiliser :
@@ -47,7 +47,7 @@ Quand l'utiliser :
 Pour les projets critiques avec compliance.
 
 ```bash
-$ cta enterprise "Migration authentification"
+$ aiden enterprise "Migration authentification"
 ```
 
 Quand l'utiliser :
@@ -71,7 +71,7 @@ Si vous repondez `n`, le workflow est avorte avec le statut `aborted`.
 Pour bypasser les approbations (par exemple en CI/CD) :
 
 ```bash
-$ cta enterprise "Migration auth" --auto-approve
+$ aiden enterprise "Migration auth" --auto-approve
 ```
 
 > **Attention** : `--auto-approve` desactive toute validation humaine. A utiliser uniquement dans les pipelines automatises.
@@ -88,12 +88,12 @@ La detection prend aussi en compte le contexte projet (nombre de technologies, a
 
 ## Passage dynamique avec re-routing
 
-CTA peut changer de mode en cours de route **sans perdre le travail** et en executant les phases manquantes :
+AIDEN peut changer de mode en cours de route **sans perdre le travail** et en executant les phases manquantes :
 
 ```bash
 # Demarre en flash, bascule en standard si complexite detectee
-$ cta flash "Export CSV"
-CTA Lead > Complexite detectee (5 fichiers). Passer en standard ? [Y/n]
+$ aiden flash "Export CSV"
+AIDEN Lead > Complexite detectee (5 fichiers). Passer en standard ? [Y/n]
 ```
 
 Quand vous passez de flash a standard, `switchMode()` :
@@ -105,4 +105,4 @@ Le passage de standard a flash est un no-op — les phases flash sont un sous-en
 
 ## Prochaine etape
 
-Decouvrez les [agents CTA](/guides/agents) et leurs roles.
+Decouvrez les [agents AIDEN](/guides/agents) et leurs roles.

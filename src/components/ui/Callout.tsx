@@ -9,10 +9,10 @@ interface CalloutProps {
 }
 
 const calloutStyles: Record<CalloutType, { color: string; bg: string; icon: string }> = {
-  info: { color: 'var(--cta-accent-blue)', bg: 'var(--cta-accent-blue-light)', icon: 'ℹ️' },
-  tip: { color: 'var(--cta-accent-green)', bg: 'var(--cta-accent-green-light)', icon: '💡' },
-  warning: { color: 'var(--cta-accent-yellow)', bg: 'var(--cta-accent-yellow-light)', icon: '⚠️' },
-  danger: { color: 'var(--cta-accent-red)', bg: 'var(--cta-accent-red-light)', icon: '🚨' },
+  info: { color: 'var(--aiden-accent-blue)', bg: 'var(--aiden-accent-blue-light)', icon: 'ℹ️' },
+  tip: { color: 'var(--aiden-accent-green)', bg: 'var(--aiden-accent-green-light)', icon: '💡' },
+  warning: { color: 'var(--aiden-accent-yellow)', bg: 'var(--aiden-accent-yellow-light)', icon: '⚠️' },
+  danger: { color: 'var(--aiden-accent-red)', bg: 'var(--aiden-accent-red-light)', icon: '🚨' },
 };
 
 const defaultTitles: Record<CalloutType, string> = {
@@ -37,7 +37,7 @@ export function Callout({ type = 'info', title, children }: CalloutProps) {
         <span>{style.icon}</span>
         <span>{title ?? defaultTitles[type]}</span>
       </div>
-      <div className="text-sm" style={{ color: 'var(--cta-text-secondary)' }}>
+      <div className="text-sm" style={{ color: 'var(--aiden-text-secondary)' }}>
         {children}
       </div>
     </div>

@@ -1,7 +1,7 @@
 # Reference Configuration
 
 > **Ce que vous allez apprendre**
-> - Le schema complet de `cta.config.yaml`
+> - Le schema complet de `aiden.config.yaml`
 > - Configurer des providers CLI et API custom
 > - Les valeurs par defaut
 > - Quel niveau surcharge quoi
@@ -9,7 +9,7 @@
 ## Schema complet
 
 ```yaml
-# .cta/cta.config.yaml
+# .aiden/aiden.config.yaml
 project: mon-projet              # (requis) Nom du projet
 provider: claude-code            # Provider par defaut
 mode: standard                   # flash | standard | enterprise
@@ -83,7 +83,7 @@ sanitize: true                   # Filtrage donnees sensibles (defaut: true)
 | `providers.<name>.baseUrl` | string | — | Endpoint API OpenAI-compatible (active l'adapter HTTP) |
 | `providers.<name>.apiKey` | string | — | Cle API pour l'authentification Bearer |
 
-Quand `baseUrl` est defini, CTA utilise l'adapter API (`fetch`) au lieu du subprocess CLI. Le `command` est ignore.
+Quand `baseUrl` est defini, AIDEN utilise l'adapter API (`fetch`) au lieu du subprocess CLI. Le `command` est ignore.
 
 ### Options pipeline
 
@@ -106,7 +106,7 @@ Quand `baseUrl` est defini, CTA utilise l'adapter API (`fetch`) au lieu du subpr
 
 ### Schema projet (context.yaml)
 
-Le scan de `cta init` genere `.cta/memory/context.yaml` avec ce schema :
+Le scan de `aiden init` genere `.aiden/memory/context.yaml` avec ce schema :
 
 | Cle | Type | Description |
 |---|---|---|
@@ -122,7 +122,7 @@ Ces donnees sont injectees dans le prompt de chaque agent via la section `--- Pr
 
 ## Schema `skill.yaml`
 
-Chaque skill dans `.cta/skills/<name>/` contient un fichier `skill.yaml` :
+Chaque skill dans `.aiden/skills/<name>/` contient un fichier `skill.yaml` :
 
 ```yaml
 name: mon-skill                # (requis) Identifiant unique
@@ -153,7 +153,7 @@ enabled: true                  # Actif (defaut: true)
 | `author` | string | — | Auteur |
 | `agents` | AgentRole[] | tous | `lead`, `analyst`, `planner`, `dev`, `qa`, `docops` |
 | `modes` | CTAMode[] | tous | `flash`, `standard`, `enterprise` |
-| `hooks` | Record | — | Hooks par evenement (meme format que `cta.config.yaml`) |
+| `hooks` | Record | — | Hooks par evenement (meme format que `aiden.config.yaml`) |
 | `config` | Record | — | Paires cle-valeur libres |
 | `priority` | integer | `0` | Tri decroissant |
 | `enabled` | boolean | `true` | Desactiver sans supprimer |
@@ -165,9 +165,9 @@ Voir le [guide skills](/guides/skills) pour l'utilisation complete.
 | Niveau | Fichier | Portee |
 |---|---|---|
 | 1. Defauts | (built-in) | Global |
-| 2. Enterprise | `~/.cta/enterprise.config.yaml` | Tous les projets |
-| 3. Projet | `.cta/cta.config.yaml` | Ce projet |
-| 4. Feature | `.cta/features/<slug>/.override.yaml` | Cette feature |
+| 2. Enterprise | `~/.aiden/enterprise.config.yaml` | Tous les projets |
+| 3. Projet | `.aiden/aiden.config.yaml` | Ce projet |
+| 4. Feature | `.aiden/features/<slug>/.override.yaml` | Cette feature |
 | 5. CLI | `--mode`, `--provider` | Cette commande |
 
 Chaque niveau ecrase les valeurs du precedent. Les objets sont fusionnes en profondeur, les tableaux sont remplaces.

@@ -1,7 +1,7 @@
 # Agents
 
 > **Ce que vous allez apprendre**
-> - Les 6 agents CTA et leurs roles
+> - Les 6 agents AIDEN et leurs roles
 > - Quels agents sont actifs par mode
 > - Invoquer un agent manuellement
 
@@ -47,7 +47,7 @@ Actif en enterprise uniquement. Genere la documentation, changelog, verifie la c
 Les agents ne travaillent pas en isolation. Chaque agent recoit un `PipelineContext` contenant :
 - La **feature request** originale
 - Les **outputs de tous les agents precedents** (tronques a 8000 chars par agent, configurable)
-- Le **contexte projet** reel (tech stack, architecture, CI — detectes par `cta init`)
+- Le **contexte projet** reel (tech stack, architecture, CI — detectes par `aiden init`)
 
 Flux concret en mode standard :
 
@@ -122,12 +122,12 @@ Apres la phase **planning** : le gate verifie que la spec contient du contenu et
 Vous pouvez invoquer un agent en dehors d'un workflow :
 
 ```bash
-$ cta agent analyst "Analyser le module billing"
+$ aiden agent analyst "Analyser le module billing"
 Invoking agent "analyst" with: "Analyser le module billing"
 ```
 
 ```bash
-$ cta agent qa "Reviewer les changements du dernier commit"
+$ aiden agent qa "Reviewer les changements du dernier commit"
 ```
 
 > **Astuce** : L'invocation manuelle est utile pour des analyses ponctuelles sans creer de feature.

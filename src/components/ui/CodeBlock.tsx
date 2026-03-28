@@ -27,7 +27,7 @@ export function CodeBlock({ children, language: _language, filename, highlight }
   return (
     <div
       className="rounded-xl overflow-hidden my-4"
-      style={{ background: 'var(--cta-terminal-bg)', border: '1px solid var(--cta-border)' }}
+      style={{ background: 'var(--aiden-terminal-bg)', border: '1px solid var(--aiden-border)' }}
     >
       {filename && (
         <div
@@ -69,7 +69,7 @@ export function CodeBlock({ children, language: _language, filename, highlight }
                   ? 'rgba(232, 93, 4, 0.08)'
                   : 'transparent',
                 borderLeft: highlightLines.includes(i + 1)
-                  ? '2px solid var(--cta-accent-primary)'
+                  ? '2px solid var(--aiden-accent-primary)'
                   : '2px solid transparent',
                 paddingLeft: '0.75rem',
                 color: '#e2e8f0',

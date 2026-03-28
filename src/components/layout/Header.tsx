@@ -29,8 +29,8 @@ export function Header() {
     <header
       className="sticky top-0 z-20 flex items-center justify-between h-14 px-6"
       style={{
-        background: 'var(--cta-bg-primary)',
-        borderBottom: '1px solid var(--cta-border)',
+        background: 'var(--aiden-bg-primary)',
+        borderBottom: '1px solid var(--aiden-border)',
         backdropFilter: 'blur(12px)',
       }}
     >
@@ -38,7 +38,7 @@ export function Header() {
         {breadcrumbs.map((crumb, i) => (
           <span key={crumb.href} className="flex items-center gap-1.5">
             {i > 0 && (
-              <span style={{ color: 'var(--cta-text-muted)' }} className="text-xs">/</span>
+              <span style={{ color: 'var(--aiden-text-muted)' }} className="text-xs">/</span>
             )}
             <Link
               href={crumb.href}
@@ -46,8 +46,8 @@ export function Header() {
               style={{
                 color:
                   i === breadcrumbs.length - 1
-                    ? 'var(--cta-text-primary)'
-                    : 'var(--cta-text-muted)',
+                    ? 'var(--aiden-text-primary)'
+                    : 'var(--aiden-text-muted)',
                 fontSize: '0.875rem',
               }}
             >
@@ -61,9 +61,9 @@ export function Header() {
         <kbd
           className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md"
           style={{
-            background: 'var(--cta-bg-secondary)',
-            color: 'var(--cta-text-muted)',
-            border: '1px solid var(--cta-border)',
+            background: 'var(--aiden-bg-secondary)',
+            color: 'var(--aiden-text-muted)',
+            border: '1px solid var(--aiden-border)',
           }}
         >
           Ctrl+K
@@ -73,7 +73,7 @@ export function Header() {
           onClick={toggleTheme}
           className="p-1.5 rounded-md transition-colors cursor-pointer"
           style={{
-            color: 'var(--cta-text-muted)',
+            color: 'var(--aiden-text-muted)',
             background: 'transparent',
             border: 'none',
           }}
@@ -96,7 +96,7 @@ export function Header() {
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm no-underline transition-colors"
-          style={{ color: 'var(--cta-text-muted)' }}
+          style={{ color: 'var(--aiden-text-muted)' }}
         >
           GitHub
         </a>
@@ -106,10 +106,10 @@ export function Header() {
 }
 
 function buildBreadcrumbs(pathname: string): Array<{ label: string; href: string }> {
-  if (pathname === '/') return [{ label: 'CTA', href: '/' }];
+  if (pathname === '/') return [{ label: 'AIDEN', href: '/' }];
 
   const parts = pathname.split('/').filter(Boolean);
-  const crumbs = [{ label: 'CTA', href: '/' }];
+  const crumbs = [{ label: 'AIDEN', href: '/' }];
 
   let path = '';
   for (const part of parts) {

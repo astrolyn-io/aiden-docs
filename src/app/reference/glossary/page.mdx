@@ -1,7 +1,7 @@
 # Glossaire
 
 > **Ce que vous allez apprendre**
-> - La terminologie CTA
+> - La terminologie AIDEN
 > - Les acronymes et concepts cles
 
 ## A
@@ -16,13 +16,13 @@
 
 **Brief** — Document de decouverte cree par l'Analyst. Resume la demande et le contexte.
 
-**Bus de contexte** — Memoire partagee entre tous les agents (`.cta/memory/context.yaml`).
+**Bus de contexte** — Memoire partagee entre tous les agents (`.aiden/memory/context.yaml`).
 
 ## C
 
 **Circuit breaker** — Mecanisme qui arrete un agent apres N echecs consecutifs et escalade a l'humain.
 
-**CTA** — Core Team AI. Le framework lui-meme.
+**AIDEN** — Core Team AI. Le framework lui-meme.
 
 ## D
 
@@ -34,7 +34,7 @@
 
 ## F
 
-**Feature** — Unite de travail dans CTA. Chaque feature a son propre cycle de vie et dossier d'artefacts.
+**Feature** — Unite de travail dans AIDEN. Chaque feature a son propre cycle de vie et dossier d'artefacts.
 
 **Flash** — Mode le plus rapide. Lead + Dev uniquement, pas de spec ni review.
 
@@ -60,7 +60,7 @@
 
 ## R
 
-**Retex** — Retour d'experience structure (lessons learned). Stocke dans `.cta/retex/` avec contexte, lecon et recommandation. Injecte dans les prompts agents.
+**Retex** — Retour d'experience structure (lessons learned). Stocke dans `.aiden/retex/` avec contexte, lecon et recommandation. Injecte dans les prompts agents.
 
 **Routage** — Selection automatique du provider optimal selon la tache.
 
@@ -68,7 +68,7 @@
 
 **Sanitizer** — Mecanisme de filtrage qui masque les donnees sensibles (tokens, cles API, mots de passe, connection strings) dans les prompts avant envoi aux providers.
 
-**Skill** — Package declaratif (YAML + Markdown) dans `.cta/skills/` qui injecte instructions, regles et hooks dans le pipeline CTA. Mecanisme d'extensibilite principal pour les entreprises.
+**Skill** — Package declaratif (YAML + Markdown) dans `.aiden/skills/` qui injecte instructions, regles et hooks dans le pipeline AIDEN. Mecanisme d'extensibilite principal pour les entreprises.
 
 **Spec** — Specification technique allegee creee par le Planner.
 

@@ -20,7 +20,7 @@ export function Sidebar() {
     <>
       <button
         className="fixed top-4 left-4 z-50 md:hidden p-2 rounded-lg"
-        style={{ background: 'var(--cta-bg-card)', border: '1px solid var(--cta-border)' }}
+        style={{ background: 'var(--aiden-bg-card)', border: '1px solid var(--aiden-border)' }}
         onClick={() => setMobileOpen(!mobileOpen)}
         aria-label="Toggle menu"
       >
@@ -34,8 +34,8 @@ export function Sidebar() {
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{
-          background: 'var(--cta-bg-sidebar)',
-          borderRight: '1px solid var(--cta-border)',
+          background: 'var(--aiden-bg-sidebar)',
+          borderRight: '1px solid var(--aiden-border)',
         }}
       >
         <div className="p-5">
@@ -43,15 +43,15 @@ export function Sidebar() {
           <Link href="/" className="flex items-center gap-2.5 mb-8 no-underline">
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white"
-              style={{ background: 'var(--cta-accent-primary)' }}
+              style={{ background: 'var(--aiden-accent-primary)' }}
             >
               C
             </div>
             <div>
-              <span className="font-bold text-sm" style={{ color: 'var(--cta-text-primary)' }}>
-                CTA
+              <span className="font-bold text-sm" style={{ color: 'var(--aiden-text-primary)' }}>
+                AIDEN
               </span>
-              <span className="ml-1.5 text-xs" style={{ color: 'var(--cta-text-muted)' }}>
+              <span className="ml-1.5 text-xs" style={{ color: 'var(--aiden-text-muted)' }}>
                 v0.7.0
               </span>
             </div>
@@ -90,7 +90,7 @@ function SidebarSection({
     <div>
       <h3
         className="text-[11px] font-semibold uppercase tracking-wider mb-2 flex items-center gap-2"
-        style={{ color: 'var(--cta-text-muted)' }}
+        style={{ color: 'var(--aiden-text-muted)' }}
       >
         <span>{sectionIcons[section.icon] ?? '📄'}</span>
         {section.title}
@@ -105,9 +105,9 @@ function SidebarSection({
                 className="block px-3 py-1.5 rounded-md text-[13px] transition-all no-underline"
                 style={{
                   color: isActive
-                    ? 'var(--cta-accent-primary)'
-                    : 'var(--cta-text-secondary)',
-                  background: isActive ? 'var(--cta-accent-primary-light)' : 'transparent',
+                    ? 'var(--aiden-accent-primary)'
+                    : 'var(--aiden-text-secondary)',
+                  background: isActive ? 'var(--aiden-accent-primary-light)' : 'transparent',
                   fontWeight: isActive ? 500 : 400,
                 }}
               >

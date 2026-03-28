@@ -12,9 +12,9 @@ export function Terminal({ children, title }: TerminalProps) {
     <div
       className="rounded-xl overflow-hidden my-4 font-mono"
       style={{
-        background: 'var(--cta-terminal-bg)',
-        border: '1px solid var(--cta-border)',
-        boxShadow: 'var(--cta-shadow)',
+        background: 'var(--aiden-terminal-bg)',
+        border: '1px solid var(--aiden-border)',
+        boxShadow: 'var(--aiden-shadow)',
       }}
     >
       <div
@@ -35,12 +35,12 @@ export function Terminal({ children, title }: TerminalProps) {
           <div key={i}>
             {line.startsWith('$ ') ? (
               <>
-                <span style={{ color: 'var(--cta-terminal-green)' }}>$ </span>
+                <span style={{ color: 'var(--aiden-terminal-green)' }}>$ </span>
                 <span style={{ color: '#e2e8f0' }}>
                   {line.slice(2)}
                 </span>
               </>
-            ) : line.startsWith('CTA ') ? (
+            ) : line.startsWith('AIDEN ') ? (
               <span style={{ color: '#ff7b29' }}>{line}</span>
             ) : (
               <span style={{ color: '#94a3b8' }}>{line || ' '}</span>

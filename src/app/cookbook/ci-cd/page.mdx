@@ -1,25 +1,25 @@
 # Integration CI/CD
 
 > **Ce que vous allez apprendre**
-> - Valider les artefacts CTA dans la CI
-> - Automatiser les checks CTA dans les pipelines
-> - Integrer les metriques CTA dans vos dashboards
+> - Valider les artefacts AIDEN dans la CI
+> - Automatiser les checks AIDEN dans les pipelines
+> - Integrer les metriques AIDEN dans vos dashboards
 
 ## Principe
 
-CTA s'execute **sur le poste du developpeur**, pas dans la CI. Mais la CI peut :
-1. **Verifier** que les artefacts CTA existent et sont coherents
+AIDEN s'execute **sur le poste du developpeur**, pas dans la CI. Mais la CI peut :
+1. **Verifier** que les artefacts AIDEN existent et sont coherents
 2. **Bloquer** les PRs sans artefacts (si votre politique l'exige)
 3. **Collecter** les metriques pour le dashboard d'equipe
 4. **Executer** des flash non-interactifs pour les fix automatiques
 
 ## GitHub Actions
 
-### Verifier les artefacts CTA sur une PR
+### Verifier les artefacts AIDEN sur une PR
 
 ```yaml
 # .github/workflows/cta-check.yml
-name: CTA Artefacts Check
+name: AIDEN Artefacts Check
 
 on:
   pull_request:
@@ -31,17 +31,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check CTA initialized
+      - name: Check AIDEN initialized
         run: |
-          if [ ! -f .cta/cta.config.yaml ]; then
-            echo "::warning::CTA not initialized in this project"
+          if [ ! -f .aiden/aiden.config.yaml ]; then
+            echo "::warning::AIDEN not initialized in this project"
             exit 0
           fi
 
       - name: Check feature artefacts
         run: |
-          if [ -d .cta/features ]; then
-            for feature_dir in .cta/features/*/; do
+          if [ -d .aiden/features ]; then
+            for feature_dir in .aiden/features/*/; do
               if [ -d "$feature_dir" ]; then
                 feature=$(basename "$feature_dir")
                 echo "Checking feature: $feature"
@@ -56,18 +56,18 @@ jobs:
 
       - name: Check decisions trail
         run: |
-          if [ -f .cta/memory/decisions.jsonl ]; then
-            echo "Decisions logged: $(wc -l < .cta/memory/decisions.jsonl)"
+          if [ -f .aiden/memory/decisions.jsonl ]; then
+            echo "Decisions logged: $(wc -l < .aiden/memory/decisions.jsonl)"
           else
             echo "::warning::No decisions log found"
           fi
 ```
 
-### Collecter les metriques CTA
+### Collecter les metriques AIDEN
 
 ```yaml
 # .github/workflows/cta-metrics.yml
-name: CTA Metrics
+name: AIDEN Metrics
 
 on:
   push:
@@ -79,16 +79,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Extract CTA metrics
+      - name: Extract AIDEN metrics
         run: |
-          if [ -f .cta/memory/metrics.jsonl ]; then
-            echo "## CTA Metrics" >> $GITHUB_STEP_SUMMARY
+          if [ -f .aiden/memory/metrics.jsonl ]; then
+            echo "## AIDEN Metrics" >> $GITHUB_STEP_SUMMARY
 
-            total_tokens=$(cat .cta/memory/metrics.jsonl | \
+            total_tokens=$(cat .aiden/memory/metrics.jsonl | \
               python3 -c "import sys,json; print(sum(json.loads(l)['tokensUsed'] for l in sys.stdin))")
-            total_cost=$(cat .cta/memory/metrics.jsonl | \
+            total_cost=$(cat .aiden/memory/metrics.jsonl | \
               python3 -c "import sys,json; print(f'{sum(json.loads(l).get(\"cost\",0) for l in sys.stdin):.2f}')")
-            features=$(cat .cta/memory/metrics.jsonl | \
+            features=$(cat .aiden/memory/metrics.jsonl | \
               python3 -c "import sys,json; print(len(set(json.loads(l)['feature'] for l in sys.stdin)))")
 
             echo "| Metrique | Valeur |" >> $GITHUB_STEP_SUMMARY
@@ -109,29 +109,29 @@ cta-check:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   script:
     - |
-      if [ ! -f .cta/cta.config.yaml ]; then
-        echo "CTA not initialized — skipping"
+      if [ ! -f .aiden/aiden.config.yaml ]; then
+        echo "AIDEN not initialized — skipping"
         exit 0
       fi
 
-      for dir in .cta/features/*/; do
+      for dir in .aiden/features/*/; do
         [ -d "$dir" ] || continue
         feature=$(basename "$dir")
         echo "Feature: $feature"
         ls -la "$dir"
       done
 
-      if [ -f .cta/memory/decisions.jsonl ]; then
-        echo "Decisions: $(wc -l < .cta/memory/decisions.jsonl)"
+      if [ -f .aiden/memory/decisions.jsonl ]; then
+        echo "Decisions: $(wc -l < .aiden/memory/decisions.jsonl)"
       fi
 ```
 
 ## Mode non-interactif
 
-Pour les taches automatisees (fix de lint, updates de deps), CTA peut tourner en CI :
+Pour les taches automatisees (fix de lint, updates de deps), AIDEN peut tourner en CI :
 
 ```bash
-cta flash "Fix lint errors" --non-interactive --auto-approve
+aiden flash "Fix lint errors" --non-interactive --auto-approve
 ```
 
 Le `--non-interactive` desactive les prompts. Le `--auto-approve` skip les approbations enterprise.
@@ -146,10 +146,10 @@ Verifier que les artefacts sont commites avec le code :
 #!/bin/sh
 # .git/hooks/pre-commit
 
-if git diff --cached --name-only | grep -q "^\.cta/features/"; then
+if git diff --cached --name-only | grep -q "^\.aiden/features/"; then
   if ! git diff --cached --name-only | grep -q "decisions.jsonl"; then
     echo "WARNING: Feature artefacts modifies sans decisions log."
-    echo "Avez-vous utilise CTA pour generer ces artefacts ?"
+    echo "Avez-vous utilise AIDEN pour generer ces artefacts ?"
   fi
 fi
 ```
@@ -159,7 +159,7 @@ fi
 ### Export pour Grafana / PowerBI
 
 ```bash
-cta metrics --export csv > cta-metrics.csv
+aiden metrics --export csv > cta-metrics.csv
 # Colonnes: timestamp, feature, agent, provider, tokensUsed, durationMs, cost
 ```
 
@@ -177,7 +177,7 @@ cta metrics --export csv > cta-metrics.csv
 ## Rapport de couts
 
 ```bash
-$ cta provider cost
+$ aiden provider cost
 Provider cost report:
   claude-code: 45000 tokens ($0.135)
   gemini:      120000 tokens ($0.120)

@@ -69,13 +69,13 @@ export function SearchModal() {
       <div
         className="relative w-full max-w-lg rounded-xl overflow-hidden"
         style={{
-          background: 'var(--cta-bg-card)',
-          border: '1px solid var(--cta-border)',
-          boxShadow: 'var(--cta-shadow-lg)',
+          background: 'var(--aiden-bg-card)',
+          border: '1px solid var(--aiden-border)',
+          boxShadow: 'var(--aiden-shadow-lg)',
         }}
       >
-        <div className="flex items-center px-4" style={{ borderBottom: '1px solid var(--cta-border)' }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cta-text-muted)" strokeWidth="2" strokeLinecap="round" className="shrink-0">
+        <div className="flex items-center px-4" style={{ borderBottom: '1px solid var(--aiden-border)' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--aiden-text-muted)" strokeWidth="2" strokeLinecap="round" className="shrink-0">
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
@@ -85,7 +85,7 @@ export function SearchModal() {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher dans la documentation..."
             className="w-full px-3 py-3.5 text-sm bg-transparent outline-none"
-            style={{ color: 'var(--cta-text-primary)' }}
+            style={{ color: 'var(--aiden-text-primary)' }}
           />
         </div>
         <div className="max-h-72 overflow-y-auto">
@@ -100,14 +100,14 @@ export function SearchModal() {
               className="w-full text-left px-4 py-2.5 text-sm flex items-center justify-between transition-colors cursor-pointer"
               style={{
                 background:
-                  i === selectedIndex ? 'var(--cta-bg-hover)' : 'transparent',
-                color: 'var(--cta-text-secondary)',
+                  i === selectedIndex ? 'var(--aiden-bg-hover)' : 'transparent',
+                color: 'var(--aiden-text-secondary)',
               }}
             >
-              <span style={{ color: i === selectedIndex ? 'var(--cta-text-primary)' : 'var(--cta-text-secondary)' }}>
+              <span style={{ color: i === selectedIndex ? 'var(--aiden-text-primary)' : 'var(--aiden-text-secondary)' }}>
                 {item.title}
               </span>
-              <span className="text-xs" style={{ color: 'var(--cta-text-muted)' }}>
+              <span className="text-xs" style={{ color: 'var(--aiden-text-muted)' }}>
                 {item.section}
               </span>
             </button>
@@ -115,7 +115,7 @@ export function SearchModal() {
           {filtered.length === 0 && (
             <p
               className="px-4 py-6 text-sm text-center"
-              style={{ color: 'var(--cta-text-muted)' }}
+              style={{ color: 'var(--aiden-text-muted)' }}
             >
               Aucun resultat pour &quot;{query}&quot;
             </p>

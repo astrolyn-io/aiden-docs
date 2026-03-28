@@ -8,7 +8,7 @@
 ## Scenario : ajouter GET /health a une API Express
 
 ```bash
-$ cta standard "Ajouter un endpoint GET /health avec verification connexion DB"
+$ aiden standard "Ajouter un endpoint GET /health avec verification connexion DB"
 ```
 
 ## Phase 1 — Decouverte (Analyst)
@@ -24,7 +24,7 @@ Output structure :
 - **Risques** : dependance DB non mocke dans les tests
 - **Questions** : format de reponse ? verifier la connexion DB ou juste le serveur ?
 
-Artefact genere : `.cta/features/ajouter-un-endpoint-get-health/brief.md`
+Artefact genere : `.aiden/features/ajouter-un-endpoint-get-health/brief.md`
 
 ```markdown
 ---
@@ -125,7 +125,7 @@ Si `passed = false`, l'orchestrateur lance un **feedback loop** :
 ## Resultat final
 
 ```bash
-$ cta status ajouter-un-endpoint-get-health
+$ aiden status ajouter-un-endpoint-get-health
 Feature: Ajouter un endpoint GET /health avec verification connexion DB
   State: completed
   Mode: standard
@@ -133,7 +133,7 @@ Feature: Ajouter un endpoint GET /health avec verification connexion DB
   Agents: analyst → planner → dev → qa
 ```
 
-Artefacts dans `.cta/features/ajouter-un-endpoint-get-health/` :
+Artefacts dans `.aiden/features/ajouter-un-endpoint-get-health/` :
 
 ```
 brief.md              # Analyse de l'Analyst
@@ -144,7 +144,7 @@ review.md             # Rapport du QA
 change-summary.md     # Resume des changements
 ```
 
-Decisions tracees dans `.cta/memory/decisions.jsonl` :
+Decisions tracees dans `.aiden/memory/decisions.jsonl` :
 
 ```json
 {"ts":"2026-03-27T10:15:00Z","feature":"ajouter-un-endpoint-get-health","agent":"analyst","type":"complexity","value":2}
@@ -159,11 +159,11 @@ Pour les projets critiques, le mode enterprise ajoute :
 - **Quality report** complet
 
 ```bash
-$ cta enterprise "Migration authentification" --auto-approve
+$ aiden enterprise "Migration authentification" --auto-approve
 ```
 
 Sans `--auto-approve`, chaque phase demande votre validation avant de continuer.
 
 ## Prochaine etape
 
-Decouvrez les [3 modes de CTA](/guides/modes) et quand utiliser chacun.
+Decouvrez les [3 modes de AIDEN](/guides/modes) et quand utiliser chacun.
