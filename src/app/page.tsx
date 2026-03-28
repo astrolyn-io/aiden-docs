@@ -37,7 +37,7 @@ export default function HomePage() {
 
       {/* Quick start terminal */}
       <Terminal title="Démarrage rapide">
-        {`$ npm add -g @aiden/cli
+        {`$ npm add -g @astrolyn/aiden
 $ aiden init
 AIDEN Lead > Projet initialisé dans .aiden/
 $ aiden flash "Ajouter GET /health"
