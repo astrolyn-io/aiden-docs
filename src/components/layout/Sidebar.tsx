@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { navigation, type NavSection } from '@/lib/navigation';
+import { AidenLogo } from '@/components/ui/AidenLogo';
 
 const sectionIcons: Record<string, string> = {
   rocket: '🚀',
@@ -41,12 +42,7 @@ export function Sidebar() {
         <div className="p-5">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 mb-8 no-underline">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white"
-              style={{ background: 'var(--aiden-accent-primary)' }}
-            >
-              C
-            </div>
+            <AidenLogo size={32} />
             <div>
               <span className="font-bold text-sm" style={{ color: 'var(--aiden-text-primary)' }}>
                 AIDEN
@@ -98,21 +94,46 @@ function SidebarSection({
       <ul className="space-y-0.5">
         {section.items.map((item) => {
           const isActive = pathname === item.href;
+          const isChildActive = item.children?.some((c) => pathname === c.href);
           return (
             <li key={item.href}>
               <Link
                 href={item.href}
                 className="block px-3 py-1.5 rounded-md text-[13px] transition-all no-underline"
                 style={{
-                  color: isActive
+                  color: isActive || isChildActive
                     ? 'var(--aiden-accent-primary)'
                     : 'var(--aiden-text-secondary)',
                   background: isActive ? 'var(--aiden-accent-primary-light)' : 'transparent',
-                  fontWeight: isActive ? 500 : 400,
+                  fontWeight: isActive || isChildActive ? 500 : 400,
                 }}
               >
                 {item.title}
               </Link>
+              {item.children && (isActive || isChildActive || pathname.startsWith(item.href + '/')) && (
+                <ul className="ml-3 mt-0.5 space-y-0.5 border-l border-[var(--aiden-border)] pl-2">
+                  {item.children.map((child) => {
+                    const isSubActive = pathname === child.href;
+                    return (
+                      <li key={child.href}>
+                        <Link
+                          href={child.href}
+                          className="block px-2 py-1 rounded-md text-[12px] transition-all no-underline"
+                          style={{
+                            color: isSubActive
+                              ? 'var(--aiden-accent-primary)'
+                              : 'var(--aiden-text-muted)',
+                            background: isSubActive ? 'var(--aiden-accent-primary-light)' : 'transparent',
+                            fontWeight: isSubActive ? 500 : 400,
+                          }}
+                        >
+                          {child.title}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </li>
           );
         })}

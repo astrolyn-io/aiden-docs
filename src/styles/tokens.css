@@ -1,4 +1,4 @@
-/* CTA Documentation — Light/Dark Theme Tokens
+/* AIDEN Documentation — Light/Dark Theme Tokens
    Palette inspired by energy industry: deep blue + vivid orange
    Light theme by default, dark via [data-theme="dark"] */
 
@@ -39,8 +39,18 @@
   /* Code */
   --aiden-code-bg: #f4f5f7;
   --aiden-code-text: #e85d04;
-  --aiden-terminal-bg: #1a1b26;
-  --aiden-terminal-green: #34d399;
+  --aiden-terminal-bg: #f4f5f7;
+  --aiden-terminal-green: #059669;
+  --aiden-terminal-text: #1e293b;
+  --aiden-terminal-comment: #9ca3af;
+  --aiden-terminal-string: #059669;
+  --aiden-terminal-keyword: #7c3aed;
+  --aiden-terminal-cmd: #004a9c;
+  --aiden-terminal-key: #b45309;
+  --aiden-terminal-value: #047857;
+  --aiden-terminal-output: #6b7280;
+  --aiden-terminal-aiden: #e85d04;
+  --aiden-terminal-shell: #0284c7;
 
   /* Radius */
   --aiden-radius: 8px;
@@ -84,6 +94,16 @@
   /* Code */
   --aiden-code-bg: #1c1e2a;
   --aiden-code-text: #ff7b29;
-  --aiden-terminal-bg: #0f1117;
+  --aiden-terminal-bg: #1a1b26;
   --aiden-terminal-green: #34d399;
+  --aiden-terminal-text: #e2e8f0;
+  --aiden-terminal-comment: #636e7b;
+  --aiden-terminal-string: #a5d6a7;
+  --aiden-terminal-keyword: #c792ea;
+  --aiden-terminal-cmd: #82aaff;
+  --aiden-terminal-key: #ffcb6b;
+  --aiden-terminal-value: #c3e88d;
+  --aiden-terminal-output: #94a3b8;
+  --aiden-terminal-aiden: #ff7b29;
+  --aiden-terminal-shell: #89ddff;
 }

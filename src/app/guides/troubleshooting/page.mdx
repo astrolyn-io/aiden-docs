@@ -1,27 +1,27 @@
 # Troubleshooting
 
 > **Ce que vous allez apprendre**
-> - Resoudre les problemes courants
+> - Résoudre les problèmes courants
 > - Lire les logs AIDEN
-> - Resetrer une feature bloquee
+> - Réinitialiser une feature bloquée
 
-## Problemes courants
+## Problèmes courants
 
-### "command not found: cta"
+### "command not found: aiden"
 
-Le binaire n'est pas dans le PATH. Verifiez :
+Le binaire n'est pas dans le PATH. Vérifiez :
 ```bash
 $ pnpm bin -g
 ```
-Ajoutez ce chemin a votre PATH.
+Ajoutez ce chemin à votre PATH.
 
 ### "No AIDEN config found"
 
-Vous n'avez pas initialise AIDEN. Lancez `aiden init`.
+Vous n'avez pas initialisé AIDEN. Lancez `aiden init`.
 
 ### "No provider available"
 
-Aucun provider n'est accessible. Verifiez :
+Aucun provider n'est accessible. Vérifiez :
 ```bash
 $ claude --version   # ou gemini --version
 $ aiden provider status
@@ -29,26 +29,26 @@ $ aiden provider status
 
 ### "Budget exceeded"
 
-Le budget tokens de la feature est depasse. Options :
+Le budget tokens de la feature est dépassé. Options :
 - Augmenter le budget dans `aiden.config.yaml`
 - Passer en mode flash (budget plus petit mais suffisant)
 
-### Circuit breaker declenche
+### Circuit breaker déclenché
 
-Un agent a echoue 3 fois. AIDEN arrete et escalade :
+Un agent a échoué 3 fois. AIDEN arrête et escalade :
 ```
 AIDEN Lead > Circuit breaker OPEN for dev: escalating to human
 ```
-Solution : verifiez l'erreur, corrigez le contexte, puis `aiden resume <slug>`.
+Solution : vérifiez l'erreur, corrigez le contexte, puis `aiden resume <slug>`.
 
-### Feature bloquee
+### Feature bloquée
 
 ```bash
 $ aiden status
 ma-feature [blocked] (standard) - ...
 ```
 
-Pour debloquer :
+Pour débloquer :
 ```bash
 $ aiden resume ma-feature
 Resuming feature: ma-feature
@@ -60,14 +60,14 @@ $ aiden abort ma-feature
 Aborting feature: ma-feature
 ```
 
-### Les artefacts ne sont pas generes
+### Les artefacts ne sont pas générés
 
-Verifiez que le dossier `.aiden/features/` existe et que le provider repond.
+Vérifiez que le dossier `.aiden/features/` existe et que le provider répond.
 
 ## Logs
 
-Les decisions sont dans `.aiden/memory/decisions.jsonl` (JSONL, une ligne par decision).
-Les metriques sont dans `.aiden/memory/metrics.jsonl`.
+Les décisions sont dans `.aiden/memory/decisions.jsonl` (JSONL, une ligne par décision).
+Les métriques sont dans `.aiden/memory/metrics.jsonl`.
 
 ```bash
 $ aiden metrics
@@ -76,6 +76,6 @@ export-csv: 3000 tokens, $0.0090, 2 operations
 
 > **Danger** : Ne modifiez jamais `decisions.jsonl` manuellement. C'est un log append-only.
 
-## Prochaine etape
+## Prochaine étape
 
-Consultez la [reference CLI](/reference/cli) pour la documentation complete.
+Consultez la [référence CLI](/reference/cli) pour la documentation complète.

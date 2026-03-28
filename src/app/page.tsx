@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/Card';
 import { Terminal } from '@/components/ui/Terminal';
 import { AgentFlow } from '@/components/ui/AgentFlow';
+import { AidenLogo } from '@/components/ui/AidenLogo';
 
 export default function HomePage() {
   return (
@@ -18,28 +19,31 @@ export default function HomePage() {
         >
           v0.7.0 — Multi-Provider & Retex
         </div>
+        <div className="flex justify-center mb-4">
+          <AidenLogo size={80} />
+        </div>
         <h1
           className="text-4xl md:text-5xl font-bold mb-4"
           style={{ color: 'var(--aiden-text-primary)', letterSpacing: '-0.03em' }}
         >
-          Core Team{' '}
-          <span style={{ color: 'var(--aiden-accent-primary)' }}>AI</span>
+          AIDEN{' '}
+          <span className="text-2xl md:text-3xl font-normal" style={{ color: 'var(--aiden-accent-primary)' }}>AI-Driven Engineering</span>
         </h1>
         <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--aiden-text-secondary)' }}>
-          Framework CLI pour le developpement assiste par IA en entreprise.
-          Orchestrez des agents IA specialises a travers des workflows adaptatifs.
+          Framework CLI pour le développement assisté par IA en entreprise.
+          Orchestrez des agents IA spécialisés à travers des workflows adaptatifs.
         </p>
       </section>
 
       {/* Quick start terminal */}
-      <Terminal title="Demarrage rapide">
-        {`$ npm add -g @cta/cli
+      <Terminal title="Démarrage rapide">
+        {`$ npm add -g @aiden/cli
 $ aiden init
-AIDEN Lead > Projet initialise dans .aiden/
+AIDEN Lead > Projet initialisé dans .aiden/
 $ aiden flash "Ajouter GET /health"
 AIDEN Lead > Mode flash. Agents: lead, dev
-AIDEN Dev > Implementation en cours...
-AIDEN Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
+AIDEN Dev > Implémentation en cours...
+AIDEN Dev > Done. 2 fichiers modifiés, 1 test ajouté.`}
       </Terminal>
 
       {/* 3 modes */}
@@ -69,7 +73,7 @@ AIDEN Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
           <Card
             href="/guides/modes"
             title="Enterprise"
-            description="Projets critiques, compliance, documentation complete."
+            description="Projets critiques, compliance, documentation complète."
             icon={<span style={{ color: 'var(--aiden-accent-purple)' }}>🏢</span>}
           />
         </div>
@@ -81,10 +85,10 @@ AIDEN Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
           className="text-2xl font-bold text-center mb-2"
           style={{ color: 'var(--aiden-text-primary)', borderBottom: 'none', letterSpacing: '-0.02em' }}
         >
-          6 agents specialises
+          6 agents spécialisés
         </h2>
         <p className="text-center mb-6 text-sm" style={{ color: 'var(--aiden-text-muted)' }}>
-          Chaque agent a un role precis. Le Lead orchestre le tout.
+          Chaque agent a un rôle précis. Le Lead orchestre le tout.
         </p>
         <AgentFlow />
       </section>
@@ -99,10 +103,10 @@ AIDEN Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
         </h2>
         <div className="grid sm:grid-cols-2 gap-6">
           {[
-            { icon: '🎯', title: 'Simple', desc: 'Commencez en 5 min. La complexite est opt-in.' },
+            { icon: '🎯', title: 'Simple', desc: 'Commencez en 5 min. La complexité est opt-in.' },
             { icon: '🔄', title: 'Adaptatif', desc: '3 modes, passage dynamique sans perte de travail.' },
             { icon: '🤖', title: 'Multi-provider', desc: 'Claude Code, Gemini, Copilot. Routage intelligent.' },
-            { icon: '🧩', title: 'Extensible', desc: 'Skills, regles, hooks et templates pour votre equipe.' },
+            { icon: '🧩', title: 'Extensible', desc: 'Skills, règles, hooks et templates pour votre équipe.' },
           ].map(({ icon, title, desc }) => (
             <div
               key={title}
@@ -141,12 +145,12 @@ AIDEN Dev > Done. 2 fichiers modifies, 1 test ajoute.`}
           <Card
             href="/getting-started/quickstart"
             title="Quickstart"
-            description="Votre premiere feature en 5 min."
+            description="Votre première feature en 5 min."
             icon="🚀"
           />
           <Card
             href="/getting-started/first-feature"
-            title="Premiere feature"
+            title="Première feature"
             description="Tutoriel complet mode standard."
             icon="✨"
           />

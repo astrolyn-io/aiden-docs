@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 interface TOCItem {
   id: string;
@@ -9,17 +10,23 @@ interface TOCItem {
 }
 
 export function TableOfContents() {
+  const pathname = usePathname();
   const [headings, setHeadings] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState('');
 
   useEffect(() => {
-    const elements = document.querySelectorAll('h2, h3');
-    const items: TOCItem[] = Array.from(elements).map((el) => ({
-      id: el.id,
-      text: el.textContent ?? '',
-      level: el.tagName === 'H2' ? 2 : 3,
-    }));
+    const main = document.querySelector('main');
+    if (!main) return;
+    const elements = main.querySelectorAll('h2, h3');
+    const items: TOCItem[] = Array.from(elements)
+      .filter((el) => el.id)
+      .map((el) => ({
+        id: el.id,
+        text: el.textContent ?? '',
+        level: el.tagName === 'H2' ? 2 : 3,
+      }));
     setHeadings(items);
+    setActiveId('');
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -34,7 +41,7 @@ export function TableOfContents() {
 
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   if (headings.length === 0) return null;
 

@@ -35,15 +35,15 @@ export function Terminal({ children, title }: TerminalProps) {
           <div key={i}>
             {line.startsWith('$ ') ? (
               <>
-                <span style={{ color: 'var(--aiden-terminal-green)' }}>$ </span>
-                <span style={{ color: '#e2e8f0' }}>
+                <span style={{ color: 'var(--aiden-terminal-shell)' }}>$ </span>
+                <span style={{ color: 'var(--aiden-terminal-cmd)' }}>
                   {line.slice(2)}
                 </span>
               </>
             ) : line.startsWith('AIDEN ') ? (
-              <span style={{ color: '#ff7b29' }}>{line}</span>
+              <span style={{ color: 'var(--aiden-terminal-aiden)' }}>{line}</span>
             ) : (
-              <span style={{ color: '#94a3b8' }}>{line || ' '}</span>
+              <span style={{ color: 'var(--aiden-terminal-output)' }}>{line || ' '}</span>
             )}
           </div>
         ))}

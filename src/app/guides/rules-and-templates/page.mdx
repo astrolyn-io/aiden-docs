@@ -1,22 +1,22 @@
-# Regles et Templates
+# Règles et Templates
 
 > **Ce que vous allez apprendre**
-> - Ecrire et ajouter des regles d'entreprise
+> - Écrire et ajouter des règles d'entreprise
 > - Personnaliser les templates d'artefacts
-> - Comment les regles sont injectees dans les agents
+> - Comment les règles sont injectées dans les agents
 
-## Regles d'entreprise
+## Règles d'entreprise
 
-Les regles sont des fichiers `.md` dans `.aiden/rules/`. Elles sont automatiquement injectees dans le contexte de chaque agent.
+Les règles sont des fichiers `.md` dans `.aiden/rules/`. Elles sont automatiquement injectées dans le contexte de chaque agent.
 
-### Ajouter une regle
+### Ajouter une règle
 
 ```bash
 $ aiden rules add coding-standards.md
 Rule added: coding-standards.md
 ```
 
-### Exemple de regle
+### Exemple de règle
 
 ```markdown
 # Standards de code
@@ -35,7 +35,7 @@ Rule added: coding-standards.md
 - PR : max 400 lignes
 ```
 
-### Lister les regles
+### Lister les règles
 
 ```bash
 $ aiden rules list
@@ -43,17 +43,17 @@ $ aiden rules list
   security-policy (.aiden/rules/security-policy.md)
 ```
 
-## Injection des regles
+## Injection des règles
 
-Les regles sont filtrees par agent :
-- **Dev** recoit : coding-standards, security-policy
-- **QA** recoit : coding-standards, security-policy
-- **Planner** recoit : coding-standards, architecture-principles
-- Les regles custom sont toujours envoyees a tous les agents
+Les règles sont filtrées par agent :
+- **Dev** reçoit : coding-standards, security-policy
+- **QA** reçoit : coding-standards, security-policy
+- **Planner** reçoit : coding-standards, architecture-principles
+- Les règles custom sont toujours envoyées à tous les agents
 
 ## Templates
 
-AIDEN fournit 7 templates par defaut (brief, spec, story, review, change-summary, architecture-decision, quality-report).
+AIDEN fournit 7 templates par défaut (brief, spec, story, review, change-summary, architecture-decision, quality-report).
 
 ### Personnaliser un template
 
@@ -62,8 +62,8 @@ $ aiden template customize spec
 Template "spec" copied to .aiden/templates/ for customization.
 ```
 
-Le template copie utilise Handlebars. Variables disponibles : `feature_name`, `provider`, `mode`, `date`, etc.
+Le template copié utilise Handlebars. Variables disponibles : `feature_name`, `provider`, `mode`, `date`, etc.
 
-## Prochaine etape
+## Prochaine étape
 
 Consultez le guide de [troubleshooting](/guides/troubleshooting).

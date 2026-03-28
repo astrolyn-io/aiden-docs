@@ -7,9 +7,9 @@
 
 ## Les 5 niveaux
 
-Chaque niveau surcharge le precedent :
+Chaque niveau surcharge le précédent :
 
-1. **Defauts AIDEN** (built-in)
+1. **Défauts AIDEN** (built-in)
 2. **Enterprise** (`~/.aiden/enterprise.config.yaml`)
 3. **Projet** (`.aiden/aiden.config.yaml`)
 4. **Feature** (`.aiden/features/<slug>/.override.yaml`)
@@ -25,21 +25,21 @@ mode: standard
 lang: fr
 ```
 
-4 lignes suffisent pour demarrer.
+4 lignes suffisent pour démarrer.
 
-## Options completes
+## Options complètes
 
-| Cle | Type | Defaut | Description |
+| Clé | Type | Défaut | Description |
 |---|---|---|---|
 | `project` | string | (requis) | Nom du projet |
-| `provider` | string | `claude-code` | Provider par defaut |
+| `provider` | string | `claude-code` | Provider par défaut |
 | `mode` | enum | `standard` | flash, standard, enterprise |
 | `lang` | string | `fr` | Langue des artefacts |
 | `providers` | object | (built-in) | Config par provider |
-| `routing` | object | prefer | Strategie de routage |
+| `routing` | object | prefer | Stratégie de routage |
 | `budget` | object | (built-in) | Budget tokens |
-| `hooks` | object | {} | Hooks d'evenements |
-| `rules` | array | [] | Liste des fichiers de regles |
+| `hooks` | object | {} | Hooks d'événements |
+| `rules` | array | [] | Liste des fichiers de règles |
 | `pipeline` | object | (voir ci-dessous) | Configuration du pipeline inter-agents |
 
 ### Pipeline
@@ -49,7 +49,7 @@ pipeline:
   maxOutputCharsPerAgent: 8000  # Troncature des outputs agents (defaut: 8000)
 ```
 
-Cette option controle la quantite de texte d'un agent precedent qui est injectee dans le prompt du suivant. Avec un LLM a grand contexte (200k+), vous pouvez augmenter cette valeur. Reduisez-la si vous atteignez les limites de tokens.
+Cette option contrôle la quantité de texte d'un agent précédent qui est injectée dans le prompt du suivant. Avec un LLM à grand contexte (200k+), vous pouvez augmenter cette valeur. Réduisez-la si vous atteignez les limites de tokens.
 
 ## Configuration entreprise
 
@@ -79,6 +79,6 @@ $ aiden config show
 { "project": "mon-projet", "mode": "flash", ... }
 ```
 
-## Prochaine etape
+## Prochaine étape
 
-Apprenez a gerer les [regles et templates](/guides/rules-and-templates).
+Apprenez à gérer les [règles et templates](/guides/rules-and-templates).

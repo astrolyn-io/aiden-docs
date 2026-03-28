@@ -1,0 +1,304 @@
+# Claude Code
+
+> **Ce que vous allez apprendre**
+> - Installer Claude Code CLI
+> - Configurer l'authentification (OAuth et API key)
+> - Utiliser Claude Code comme provider AIDEN
+> - Les slash commands AIDEN dans Claude Code
+> - Troubleshooting des erreurs courantes
+
+## Prérequis
+
+- Node.js 20+
+- Compte Anthropic (plan gratuit, Claude Max, Team ou Enterprise)
+- AIDEN installé (`npm install -g @anthropic-ai/aiden` ou depuis les sources)
+
+## Installation
+
+Claude Code est disponible sur npm comme package global :
+
+```bash
+$ npm install -g @anthropic-ai/claude-code
+$ claude --version
+```
+
+Vérifiez que l'installation est correcte — la commande `claude` doit être accessible dans votre PATH.
+
+## Authentification
+
+### Méthode 1 : OAuth (recommandée)
+
+La méthode la plus simple. Lancez `claude` sans argument et suivez le flux d'authentification :
+
+```bash
+$ claude
+# Ouvre le navigateur pour le login OAuth Anthropic
+# Sélectionnez votre compte et autorisez l'accès
+```
+
+Les credentials OAuth sont stockés localement et renouvelés automatiquement. Aucune API key n'est nécessaire avec cette méthode.
+
+### Méthode 2 : API key
+
+Si vous préférez une configuration non-interactive (CI/CD, serveurs) :
+
+```bash
+$ export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Ajoutez cette ligne à votre `~/.bashrc` ou `~/.zshrc` pour la rendre permanente.
+
+Vérifiez que l'authentification fonctionne :
+
+```bash
+$ claude -p "Dis bonjour en une phrase"
+# Bonjour ! Je suis Claude, comment puis-je vous aider ?
+```
+
+## Configuration AIDEN
+
+Ajoutez Claude Code dans `.aiden/aiden.config.yaml` :
+
+```yaml
+provider: claude-code
+
+providers:
+  claude-code:
+    enabled: true
+    command: claude
+    model: claude-sonnet-4-6
+    maxTokens: 100000
+    costPer1k: 0.003
+```
+
+Pour l'utiliser comme provider principal avec d'autres providers en fallback :
+
+```yaml
+provider: claude-code
+
+routing:
+  strategy: prefer
+  fallback: [claude-code, gemini, opencode]
+
+providers:
+  claude-code:
+    enabled: true
+    command: claude
+    model: claude-sonnet-4-6
+    maxTokens: 100000
+    costPer1k: 0.003
+  gemini:
+    enabled: true
+    command: gemini
+    model: gemini-2.5-pro
+    maxTokens: 1000000
+    costPer1k: 0.001
+```
+
+## Premier usage
+
+Initialisez votre projet AIDEN, puis lancez votre premier workflow :
+
+```bash
+$ aiden init
+# Scanne le projet, détecte la stack, crée .aiden/memory/context.yaml
+
+$ aiden flash "Fix le bug #123 dans le module d'authentification"
+```
+
+Exemple de sortie :
+
+```
+[AIDEN] Mode: flash  Provider: claude-code
+[Lead]  Analyse de la demande...
+[Dev]   Implémentation en cours (claude-code)...
+        Files changed: src/auth/token-validator.ts, tests/unit/auth.test.ts
+[AIDEN] Workflow terminé en 42s  •  Tokens: 3 847
+```
+
+## Slash commands (mode intégré)
+
+AIDEN fonctionne en deux modes complémentaires qui partagent le même répertoire `.aiden/` :
+
+- **CLI mode** : `aiden flash "..."` — AIDEN orchestre en Node.js, appelle `claude` comme subprocess
+- **Slash mode** : `/aiden-flash ...` dans Claude Code — Claude lit les prompts `.claude/commands/` directement, sans installation Node.js requise
+
+Le slash mode est idéal pour les équipes qui n'ont pas encore installé AIDEN en CLI, ou pour un usage ponctuel dans l'interface Claude Code.
+
+### Commandes disponibles
+
+| Commande | Description |
+|---|---|
+| `/aiden-init` | Initialise le projet AIDEN dans le répertoire courant |
+| `/aiden-flash` | Workflow rapide : Lead → Dev (2 agents) |
+| `/aiden-standard` | Workflow complet : Lead → Analyst → Planner → Dev → QA |
+| `/aiden-enterprise` | Workflow enterprise avec approbation humaine entre chaque phase |
+| `/aiden-status` | Affiche le statut des features en cours |
+| `/aiden-resume` | Reprend un workflow interrompu |
+
+### Exemple en slash mode
+
+Dans l'interface Claude Code, tapez :
+
+```
+/aiden-flash Ajoute un endpoint REST GET /users/:id avec validation et tests
+```
+
+Claude lit le fichier `.claude/commands/aiden-flash.md`, charge le contexte `.aiden/memory/context.yaml`, et exécute le workflow guidé directement dans la conversation.
+
+## Forces et cas d'usage
+
+Claude Code excelle dans les tâches à forte valeur analytique :
+
+| Force | Détail |
+|---|---|
+| Analyse et review | Meilleur provider pour Analyst, Planner, QA, DocOps |
+| Long contexte | Fenêtre de 200k tokens — traite des codebases entières |
+| Raisonnement | Idéal pour les architectures complexes et les migrations |
+| Sécurité | Review OWASP, détection de vulnérabilités |
+
+En mode `auto`, AIDEN route automatiquement vers Claude Code pour les tâches analytiques :
+
+```yaml
+routing:
+  strategy: auto
+```
+
+| Agent | Provider auto-routé |
+|---|---|
+| Analyst | claude-code |
+| Planner | claude-code |
+| QA | claude-code |
+| DocOps | claude-code |
+| Dev | gemini (par défaut) |
+
+Le modèle par défaut est **claude-sonnet-4-6** — bon équilibre vitesse/qualité pour la majorité des workflows.
+
+## Options avancées
+
+### Changer de modèle
+
+Selon vos besoins, vous pouvez ajuster le modèle dans la config :
+
+```yaml
+providers:
+  claude-code:
+    enabled: true
+    command: claude
+    # Puissance maximale — architecture complexe, migrations critiques
+    model: claude-opus-4-5
+    maxTokens: 200000
+    costPer1k: 0.015
+
+  claude-code-fast:
+    enabled: true
+    command: claude
+    # Rapidité — quick fix, génération boilerplate
+    model: claude-haiku-4-5
+    maxTokens: 48000
+    costPer1k: 0.00025
+```
+
+### Via proxy API (LiteLLM, Cloudflare AI Gateway)
+
+Si votre organisation utilise un proxy LLM, configurez `baseUrl` pour ne pas passer par le subprocess CLI :
+
+```yaml
+providers:
+  claude-via-proxy:
+    enabled: true
+    baseUrl: http://localhost:4000/v1
+    apiKey: sk-ant-...
+    model: claude-sonnet-4-6
+    maxTokens: 100000
+    costPer1k: 0.003
+    command: ""
+```
+
+Quand `baseUrl` est défini, AIDEN utilise l'adapter HTTP (`fetch()`) au lieu du subprocess `claude`. Compatible avec LiteLLM, Cloudflare AI Gateway, et tout endpoint OpenAI-compatible.
+
+### Vérifier le statut du provider
+
+```bash
+$ aiden provider status
+Provider status:
+  claude-code: configured ✓
+  gemini: not configured
+  opencode: not configured
+  copilot: not configured
+```
+
+## Troubleshooting
+
+### `claude: command not found`
+
+Le package n'est pas dans le PATH. Solutions :
+
+```bash
+# Vérifiez que npm global bin est dans le PATH
+$ npm bin -g
+# Ajoutez la sortie à votre PATH dans ~/.bashrc ou ~/.zshrc
+
+# Ou réinstallez avec npx
+$ npx @anthropic-ai/claude-code --version
+```
+
+### `Error: Authentication required`
+
+```bash
+# Relancez le flux OAuth
+$ claude
+
+# Ou vérifiez que la variable d'environnement est bien définie
+$ echo $ANTHROPIC_API_KEY
+# Doit afficher sk-ant-...
+```
+
+### Timeout sur les workflows longs
+
+Le timeout par défaut est 120 secondes par appel provider. Si vos prompts sont complexes :
+
+```yaml
+providers:
+  claude-code:
+    enabled: true
+    command: claude
+    model: claude-sonnet-4-6
+    maxTokens: 100000
+    timeout: 240000   # 240 secondes (en ms)
+    costPer1k: 0.003
+```
+
+### `ProviderError: exit code 1`
+
+Claude Code a retourné une erreur non nulle. Causes fréquentes :
+
+- **Quota dépassé** : vérifiez votre usage sur console.anthropic.com
+- **Modèle indisponible** : essayez `claude-haiku-4-5` en fallback
+- **Prompt trop long** : réduisez `maxOutputCharsPerAgent` dans la config
+
+```yaml
+agents:
+  maxOutputCharsPerAgent: 4000   # défaut: 8000
+```
+
+### Le filtrage sécurité redacte trop de contenu
+
+Si AIDEN redacte à tort des données non sensibles, ajustez les règles du sanitizer :
+
+```yaml
+sanitize: true
+sanitizeRules:
+  - pattern: "MY_CUSTOM_SECRET_\\w+"
+    replacement: "[REDACTED_CUSTOM]"
+```
+
+Pour désactiver complètement le filtrage (usage local uniquement, déconseillé en production) :
+
+```yaml
+sanitize: false
+```
+
+## Prochaine étape
+
+Explorez le [routage multi-provider](/guides/providers) pour tirer parti de plusieurs providers selon les tâches, ou consultez les [modes de workflow](/guides/modes) pour choisir flash, standard ou enterprise.

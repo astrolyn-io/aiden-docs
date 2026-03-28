@@ -9,7 +9,7 @@ const config: Config = {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
-        cta: '8px',
+        aiden: '8px',
       },
     },
   },

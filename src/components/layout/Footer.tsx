@@ -49,7 +49,7 @@ export function Footer() {
         )}
       </div>
       <p className="mt-8 mb-4 text-xs text-center" style={{ color: 'var(--aiden-text-muted)' }}>
-        AIDEN - AI-Driven Engineering v0.7.0
+        AIDEN — AI-Driven Engineering v0.7.0
       </p>
     </footer>
   );

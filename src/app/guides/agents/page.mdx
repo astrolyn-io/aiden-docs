@@ -1,7 +1,7 @@
 # Agents
 
 > **Ce que vous allez apprendre**
-> - Les 6 agents AIDEN et leurs roles
+> - Les 6 agents AIDEN et leurs rôles
 > - Quels agents sont actifs par mode
 > - Invoquer un agent manuellement
 
@@ -13,23 +13,23 @@ Toujours actif. Analyse la demande, choisit le mode, orchestre les agents, appli
 
 ### Analyst
 
-Actif en standard et enterprise. Scanne le code, pose 3-5 questions, cree le brief, estime la complexite.
+Actif en standard et enterprise. Scanne le code, pose 3-5 questions, crée le brief, estime la complexité.
 
 ### Planner
 
-Actif en standard et enterprise. Cree la spec allegee (1-2 pages), decompose en stories, ecrit les ADR si necessaire.
+Actif en standard et enterprise. Crée la spec allégée (1-2 pages), décompose en stories, écrit les ADR si nécessaire.
 
 ### Dev
 
-Toujours actif. Implemente le code, ecrit les tests, fait un self-review. Guardrails : rappel objectif toutes les 5 etapes, max 10 fichiers, circuit breaker.
+Toujours actif. Implémente le code, écrit les tests, fait un self-review. Guardrails : rappel objectif toutes les 5 étapes, max 10 fichiers, circuit breaker.
 
 ### QA
 
-Actif en standard et enterprise. Review du code, verification des criteres d'acceptation, scan securite OWASP basique, rapport qualite.
+Actif en standard et enterprise. Review du code, vérification des critères d'acceptation, scan sécurité OWASP basique, rapport qualité.
 
 ### DocOps
 
-Actif en enterprise uniquement. Genere la documentation, changelog, verifie la conformite, cree les runbooks.
+Actif en enterprise uniquement. Génère la documentation, changelog, vérifie la conformité, crée les runbooks.
 
 ## Activation par mode
 
@@ -44,10 +44,10 @@ Actif en enterprise uniquement. Genere la documentation, changelog, verifie la c
 
 ## Comment les agents communiquent (Pipeline)
 
-Les agents ne travaillent pas en isolation. Chaque agent recoit un `PipelineContext` contenant :
+Les agents ne travaillent pas en isolation. Chaque agent reçoit un `PipelineContext` contenant :
 - La **feature request** originale
-- Les **outputs de tous les agents precedents** (tronques a 8000 chars par agent, configurable)
-- Le **contexte projet** reel (tech stack, architecture, CI — detectes par `aiden init`)
+- Les **outputs de tous les agents précédents** (tronqués à 8000 chars par agent, configurable)
+- Le **contexte projet** réel (tech stack, architecture, CI — détectés par `aiden init`)
 
 Flux concret en mode standard :
 
@@ -61,11 +61,11 @@ Dev recoit [ANALYST]: + [PLANNER]: → implemente selon les stories
 QA recoit [ANALYST]: + [PLANNER]: + [DEV]: → review le code du Dev
 ```
 
-### Outputs structures
+### Outputs structurés
 
-Chaque agent retourne des donnees typees dans `output.structured` :
+Chaque agent retourne des données typées dans `output.structured` :
 
-| Agent | Champs structures |
+| Agent | Champs structurés |
 |-------|------------------|
 | Analyst | `complexity` (1-5), `risks` (string[]), `questions` (string[]) |
 | Planner | `stories` (array of id/title/description), `estimatedTokens` (number) |
@@ -75,9 +75,9 @@ Chaque agent retourne des donnees typees dans `output.structured` :
 
 L'orchestrateur utilise ces champs pour les quality gates et le feedback loop.
 
-### Verification croisee QA ↔ Planner
+### Vérification croisée QA ↔ Planner
 
-Le QA ne fait pas une review generique. Il extrait les stories et criteres d'acceptation de l'output du Planner (`structured.stories`) et les inclut explicitement dans sa review :
+Le QA ne fait pas une review générique. Il extrait les stories et critères d'acceptation de l'output du Planner (`structured.stories`) et les inclut explicitement dans sa review :
 
 ```
 --- ACCEPTANCE CRITERIA TO VERIFY ---
@@ -88,13 +88,13 @@ Story: Setup Database
 For each criterion: PASS or FAIL with reason.
 ```
 
-Le QA retourne `structured.criteriaResults` avec le resultat de chaque critere, permettant un suivi precis de la couverture fonctionnelle.
+Le QA retourne `structured.criteriaResults` avec le résultat de chaque critère, permettant un suivi précis de la couverture fonctionnelle.
 
 ### Routage multi-provider par agent
 
-Chaque agent recoit le provider optimal pour sa tache via le router :
+Chaque agent reçoit le provider optimal pour sa tâche via le router :
 
-| Agent | TaskType | Provider par defaut (auto) |
+| Agent | TaskType | Provider par défaut (auto) |
 |-------|----------|---------------------------|
 | Analyst | analysis | claude-code |
 | Planner | planning | claude-code |
@@ -102,20 +102,20 @@ Chaque agent recoit le provider optimal pour sa tache via le router :
 | QA | code_review | claude-code |
 | DocOps | documentation | claude-code |
 
-L'orchestrateur appelle `router.route(taskType)` avant chaque execution. Si le provider prefere est indisponible, le fallback prend le relais.
+L'orchestrateur appelle `router.route(taskType)` avant chaque exécution. Si le provider préféré est indisponible, le fallback prend le relais.
 
 ### Feedback loop QA → Dev
 
-Si le QA echoue (`structured.passed = false`), l'orchestrateur :
+Si le QA échoue (`structured.passed = false`), l'orchestrateur :
 1. Relance le Dev avec le feedback du QA dans `previousOutputs`
 2. Relance le QA sur le nouveau code
-3. Repete max 2 fois. Si toujours en echec, le workflow continue.
+3. Répète max 2 fois. Si toujours en échec, le workflow continue.
 
 ### Quality gates
 
-Apres la phase **discovery** : le gate verifie que l'output de l'Analyst contient du contenu et une complexite detectee. Sinon, la feature est bloquee.
+Après la phase **discovery** : le gate vérifie que l'output de l'Analyst contient du contenu et une complexité détectée. Sinon, la feature est bloquée.
 
-Apres la phase **planning** : le gate verifie que la spec contient du contenu et au moins une story. Sinon, blocage.
+Après la phase **planning** : le gate vérifie que la spec contient du contenu et au moins une story. Sinon, blocage.
 
 ## Invocation manuelle
 
@@ -130,8 +130,8 @@ Invoking agent "analyst" with: "Analyser le module billing"
 $ aiden agent qa "Reviewer les changements du dernier commit"
 ```
 
-> **Astuce** : L'invocation manuelle est utile pour des analyses ponctuelles sans creer de feature.
+> **Astuce** : L'invocation manuelle est utile pour des analyses ponctuelles sans créer de feature.
 
-## Prochaine etape
+## Prochaine étape
 
 Configurez vos [providers IA](/guides/providers).

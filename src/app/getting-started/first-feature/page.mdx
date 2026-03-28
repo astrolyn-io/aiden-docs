@@ -1,30 +1,30 @@
-# Premiere feature en mode standard
+# Première feature en mode standard
 
 > **Ce que vous allez apprendre**
 > - Le workflow standard complet : Analyst, Planner, Dev, QA
-> - Les artefacts generes a chaque phase
-> - Que faire si le QA echoue
+> - Les artefacts générés à chaque phase
+> - Que faire si le QA échoue
 
-## Scenario : ajouter GET /health a une API Express
+## Scénario : ajouter GET /health à une API Express
 
 ```bash
-$ aiden standard "Ajouter un endpoint GET /health avec verification connexion DB"
+$ aiden standard "Ajouter un endpoint GET /health avec vérification connexion DB"
 ```
 
-## Phase 1 — Decouverte (Analyst)
+## Phase 1 — Découverte (Analyst)
 
-L'Analyst scanne le code existant et produit une analyse structuree :
+L'Analyst scanne le code existant et produit une analyse structurée :
 
 ```
 Phase: discovery, Agent: analyst, Provider: claude-code
 ```
 
-Output structure :
-- **Complexite** : 2/5 (endpoint simple avec une verification)
-- **Risques** : dependance DB non mocke dans les tests
-- **Questions** : format de reponse ? verifier la connexion DB ou juste le serveur ?
+Output structuré :
+- **Complexité** : 2/5 (endpoint simple avec une vérification)
+- **Risques** : dépendance DB non mockée dans les tests
+- **Questions** : format de réponse ? vérifier la connexion DB ou juste le serveur ?
 
-Artefact genere : `.aiden/features/ajouter-un-endpoint-get-health/brief.md`
+Artefact généré : `.aiden/features/ajouter-un-endpoint-get-health/brief.md`
 
 ```markdown
 ---
@@ -39,19 +39,19 @@ Endpoint simple retournant le statut du serveur et de la connexion DB.
 Complexite: 2/5. Risques: mock DB pour tests.
 ```
 
-> **Quality gate** : Si l'Analyst ne detecte pas de complexite ou retourne un contenu vide, le workflow est bloque.
+> **Quality gate** : Si l'Analyst ne détecte pas de complexité ou retourne un contenu vide, le workflow est bloqué.
 
 ## Phase 2 — Planification (Planner)
 
-Le Planner recoit le brief de l'Analyst et cree une spec avec des stories :
+Le Planner reçoit le brief de l'Analyst et crée une spec avec des stories :
 
 ```
 Phase: planning, Agent: planner, Provider: claude-code
 ```
 
-Artefacts generes :
-- `spec.md` — specification en 1-2 pages
-- `stories/001-endpoint-health.md` — story avec criteres d'acceptation
+Artefacts générés :
+- `spec.md` — spécification en 1-2 pages
+- `stories/001-endpoint-health.md` — story avec critères d'acceptation
 - `stories/002-tests-health.md` — story pour les tests
 
 Exemple de story :
@@ -66,11 +66,11 @@ Acceptance criteria:
 - Le endpoint est accessible sans authentification
 ```
 
-> **Quality gate** : Si le Planner ne decompose pas en stories, le workflow est bloque.
+> **Quality gate** : Si le Planner ne décompose pas en stories, le workflow est bloqué.
 
-## Phase 3 — Implementation (Dev)
+## Phase 3 — Implémentation (Dev)
 
-Le Dev recoit le brief, la spec et les stories. Il implemente chaque story :
+Le Dev reçoit le brief, la spec et les stories. Il implémente chaque story :
 
 ```
 Phase: implementation, Agent: dev, Provider: gemini
@@ -78,23 +78,23 @@ Phase: implementation, Agent: dev, Provider: gemini
 
 Le Dev :
 1. Lit les stories et le code existant
-2. Implemente le code
-3. Ecrit les tests
+2. Implémente le code
+3. Écrit les tests
 4. Fait un self-review
 
-Output structure : `filesChanged`, `testsGenerated`.
+Output structuré : `filesChanged`, `testsGenerated`.
 
-> **Guardrails** : Si plus de 10 fichiers sont modifies, le circuit breaker intervient. Toutes les 5 etapes, un rappel d'objectif est injecte.
+> **Guardrails** : Si plus de 10 fichiers sont modifiés, le circuit breaker intervient. Toutes les 5 étapes, un rappel d'objectif est injecté.
 
 ## Phase 4 — Validation (QA)
 
-Le QA recoit TOUT le contexte : brief, spec, stories, code du Dev :
+Le QA reçoit TOUT le contexte : brief, spec, stories, code du Dev :
 
 ```
 Phase: validation, Agent: qa, Provider: claude-code
 ```
 
-Le QA verifie explicitement chaque critere d'acceptation :
+Le QA vérifie explicitement chaque critère d'acceptation :
 
 ```
 --- ACCEPTANCE CRITERIA TO VERIFY ---
@@ -112,17 +112,17 @@ SCORE: 8/10
 PASSED: yes
 ```
 
-Output structure : `passed`, `score`, `issues`, `criteriaResults`.
+Output structuré : `passed`, `score`, `issues`, `criteriaResults`.
 
-### Si le QA echoue
+### Si le QA échoue
 
 Si `passed = false`, l'orchestrateur lance un **feedback loop** :
 
-1. Le Dev recoit le feedback du QA et corrige
+1. Le Dev reçoit le feedback du QA et corrige
 2. Le QA re-review le nouveau code
-3. Maximum 2 retries. Si toujours en echec, le workflow continue avec un warning.
+3. Maximum 2 retries. Si toujours en échec, le workflow continue avec un warning.
 
-## Resultat final
+## Résultat final
 
 ```bash
 $ aiden status ajouter-un-endpoint-get-health
@@ -137,14 +137,14 @@ Artefacts dans `.aiden/features/ajouter-un-endpoint-get-health/` :
 
 ```
 brief.md              # Analyse de l'Analyst
-spec.md               # Specification du Planner
-stories/001-*.md      # Stories avec criteres
+spec.md               # Spécification du Planner
+stories/001-*.md      # Stories avec critères
 stories/002-*.md
 review.md             # Rapport du QA
-change-summary.md     # Resume des changements
+change-summary.md     # Résumé des changements
 ```
 
-Decisions tracees dans `.aiden/memory/decisions.jsonl` :
+Décisions tracées dans `.aiden/memory/decisions.jsonl` :
 
 ```json
 {"ts":"2026-03-27T10:15:00Z","feature":"ajouter-un-endpoint-get-health","agent":"analyst","type":"complexity","value":2}
@@ -155,7 +155,7 @@ Decisions tracees dans `.aiden/memory/decisions.jsonl` :
 
 Pour les projets critiques, le mode enterprise ajoute :
 - **Approbation humaine** entre chaque phase
-- **DocOps** qui genere la documentation et verifie la conformite
+- **DocOps** qui génère la documentation et vérifie la conformité
 - **Quality report** complet
 
 ```bash
@@ -164,6 +164,6 @@ $ aiden enterprise "Migration authentification" --auto-approve
 
 Sans `--auto-approve`, chaque phase demande votre validation avant de continuer.
 
-## Prochaine etape
+## Prochaine étape
 
-Decouvrez les [3 modes de AIDEN](/guides/modes) et quand utiliser chacun.
+Découvrez les [3 modes de AIDEN](/guides/modes) et quand utiliser chacun.

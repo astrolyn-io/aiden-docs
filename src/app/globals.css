@@ -173,7 +173,7 @@
     padding: 1rem;
     overflow-x: auto;
     margin-bottom: 1rem;
-    color: #e2e8f0;
+    color: var(--aiden-terminal-text);
   }
 
   .prose-aiden pre code {

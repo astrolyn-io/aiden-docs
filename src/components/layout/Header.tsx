@@ -18,10 +18,10 @@ export function Header() {
     setIsDark(next);
     if (next) {
       document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('cta-theme', 'dark');
+      localStorage.setItem('aiden-theme', 'dark');
     } else {
       document.documentElement.removeAttribute('data-theme');
-      localStorage.removeItem('cta-theme');
+      localStorage.removeItem('aiden-theme');
     }
   };
 
@@ -92,7 +92,7 @@ export function Header() {
         </button>
 
         <a
-          href="https://github.com/cta-team/cta"
+          href="https://github.com/Anas-ZAHOURI/aiden"
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm no-underline transition-colors"

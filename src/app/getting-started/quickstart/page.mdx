@@ -1,11 +1,11 @@
 # Quickstart
 
 > **Ce que vous allez apprendre**
-> - Creer un projet AIDEN de zero en 5 minutes
-> - Lancer un workflow flash et voir le resultat
+> - Créer un projet AIDEN de zéro en 5 minutes
+> - Lancer un workflow flash et voir le résultat
 > - Comprendre ce que AIDEN a fait
 
-## Etape 1 : Creer un projet
+## Étape 1 : Créer un projet
 
 ```bash
 $ mkdir mon-api && cd mon-api
@@ -13,7 +13,7 @@ $ npm init -y
 $ npm install express
 ```
 
-Creez un fichier `index.js` minimal :
+Créez un fichier `index.js` minimal :
 
 ```js
 const express = require('express');
@@ -22,7 +22,7 @@ app.get('/', (req, res) => res.json({ status: 'ok' }));
 module.exports = app;
 ```
 
-## Etape 2 : Initialiser AIDEN
+## Étape 2 : Initialiser AIDEN
 
 ```bash
 $ aiden init
@@ -34,9 +34,9 @@ AIDEN initialized in .aiden/
   PM:     npm
 ```
 
-AIDEN a detecte que c'est un projet Node.js avec Express.
+AIDEN a détecté que c'est un projet Node.js avec Express.
 
-## Etape 3 : Lancer un flash
+## Étape 3 : Lancer un flash
 
 ```bash
 $ aiden flash "Ajouter un endpoint GET /health retournant {status: healthy}"
@@ -53,7 +53,7 @@ Starting flash workflow for: Ajouter un endpoint GET /health...
   Tokens: 1250 | Duration: 12s
 ```
 
-## Etape 4 : Verifier le resultat
+## Étape 4 : Vérifier le résultat
 
 ```bash
 $ aiden status
@@ -68,11 +68,11 @@ $ ls .aiden/features/ajouter-un-endpoint-get-health/
 change-summary.md
 ```
 
-Le `change-summary.md` contient un resume de ce que le Dev a fait : fichiers modifies, tests crees, decisions prises.
+Le `change-summary.md` contient un résumé de ce que le Dev a fait : fichiers modifiés, tests créés, décisions prises.
 
-## Etape 5 : Verifier le code
+## Étape 5 : Vérifier le code
 
-Le Dev a modifie `index.js` pour ajouter la route et cree un fichier de test. Verifiez :
+Le Dev a modifié `index.js` pour ajouter la route et créé un fichier de test. Vérifiez :
 
 ```bash
 $ cat index.js
@@ -82,7 +82,7 @@ $ ls *.test.* *.spec.*
 # Un fichier de test devrait exister
 ```
 
-## Etape 6 : Voir les metriques
+## Étape 6 : Voir les métriques
 
 ```bash
 $ aiden metrics
@@ -93,24 +93,24 @@ Cost:     $0.004
 
 ## Ce que AIDEN a fait
 
-1. **Detection** : Le Lead a analyse la demande et choisi le mode flash (simple, < 3 fichiers)
-2. **Implementation** : Le Dev a lu le code existant, ajoute la route `/health`, ecrit un test
-3. **Tracabilite** : La decision est logguee dans `.aiden/memory/decisions.jsonl`, le contexte est mis a jour
+1. **Détection** : Le Lead a analysé la demande et choisi le mode flash (simple, < 3 fichiers)
+2. **Implémentation** : Le Dev a lu le code existant, ajouté la route `/health`, écrit un test
+3. **Traçabilité** : La décision est logguée dans `.aiden/memory/decisions.jsonl`, le contexte est mis à jour
 
-## Checklist de reussite
+## Checklist de réussite
 
-- `.aiden/` existe avec la config et la memoire
-- `aiden status` montre la feature completee
-- Un `change-summary.md` a ete genere
+- `.aiden/` existe avec la config et la mémoire
+- `aiden status` montre la feature complétée
+- Un `change-summary.md` a été généré
 - Le code contient la route `/health`
 
-## Si ca ne marche pas
+## Si ça ne marche pas
 
 - **"AIDEN not initialized"** — Lancez `aiden init` d'abord
-- **"No provider available"** — Verifiez que `claude --version` fonctionne
-- **Le provider timeout** — La premiere requete peut etre lente, reessayez
-- **Le code n'est pas ce que vous attendiez** — Essayez `aiden standard` pour plus de controle (analyse + planning + review)
+- **"No provider available"** — Vérifiez que `claude --version` fonctionne
+- **Le provider timeout** — La première requête peut être lente, réessayez
+- **Le code n'est pas ce que vous attendiez** — Essayez `aiden standard` pour plus de contrôle (analyse + planning + review)
 
-## Prochaine etape
+## Prochaine étape
 
-Suivez le tutoriel [Premiere feature](/getting-started/first-feature) pour le mode standard complet avec Analyst, Planner, Dev et QA.
+Suivez le tutoriel [Première feature](/getting-started/first-feature) pour le mode standard complet avec Analyst, Planner, Dev et QA.

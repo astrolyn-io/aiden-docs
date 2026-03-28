@@ -1,25 +1,37 @@
 # Providers
 
 > **Ce que vous allez apprendre**
-> - Les 4 providers CLI natifs + providers API custom
+> - Les providers supportes par AIDEN
+> - Choisir le bon provider pour votre usage
 > - Le routage intelligent entre providers
-> - Configurer un proxy LLM (LiteLLM, AI Gateway)
 > - Le filtrage securite des prompts
 > - Gerer le budget tokens
 
 ## Providers supportes
 
-AIDEN supporte 4 providers CLI nativement et permet de brancher n'importe quel provider API compatible OpenAI :
+AIDEN supporte 4 providers CLI nativement et permet de brancher n'importe quel LLM via API :
 
-| Provider | Commande | Type | Forces |
-|---|---|---|---|
-| Claude Code | `claude` | CLI | Analyse, review, long contexte |
-| Gemini CLI | `gemini` | CLI | Generation code, multi-fichier |
-| OpenCode | `opencode` | CLI | Open source, multi-provider via config |
-| GitHub Copilot | `gh copilot` | CLI | Completion, quick fix |
-| Custom API | `fetch()` | HTTP | N'importe quel endpoint OpenAI-compatible |
+| Provider | Type | Forces | Context | Cout |
+|---|---|---|---|---|
+| [Claude Code](/guides/providers/claude-code) | CLI | Analyse, review, long contexte | 200k | $$$ |
+| [Gemini CLI](/guides/providers/gemini) | CLI | Generation code, multi-fichier | 1M | $ |
+| [OpenCode](/guides/providers/opencode) | CLI | Open source, multi-backend | Variable | Variable |
+| [GitHub Copilot](/guides/providers/copilot) | CLI | Quick fix, completion | 50k | Gratuit |
+| [API custom](/guides/providers/custom-api) | HTTP | N'importe quel LLM | Variable | Variable |
 
-## Configuration
+## Quel provider choisir ?
+
+**Vous debutez ?** Commencez avec [Claude Code](/guides/providers/claude-code) — c'est le provider par defaut, le plus polyvalent.
+
+**Vous voulez optimiser les couts ?** Combinez Claude Code (analyse) + [Gemini](/guides/providers/gemini) (generation) avec le routage `auto`.
+
+**Vous avez des contraintes de securite ?** Utilisez [OpenCode](/guides/providers/opencode) + Ollama pour un pipeline 100% local.
+
+**Vous avez deja GitHub Copilot ?** Ajoutez-le comme [fallback gratuit](/guides/providers/copilot) dans votre config multi-provider.
+
+**Vous avez un proxy LLM interne ?** Configurez un [provider API custom](/guides/providers/custom-api) (LiteLLM, Azure, OpenAI).
+
+## Configuration rapide
 
 Dans `.aiden/aiden.config.yaml` :
 
@@ -38,48 +50,9 @@ providers:
     model: gemini-2.5-pro
     maxTokens: 1000000
     costPer1k: 0.001
-  opencode:
-    enabled: true
-    command: opencode
-    model: opencode
-    maxTokens: 200000
-    costPer1k: 0.002
-  copilot:
-    enabled: true
-    command: gh
-    model: copilot
-    maxTokens: 50000
-    costPer1k: 0
 ```
 
-## Provider API custom (proxy LLM)
-
-AIDEN peut se connecter a n'importe quel endpoint compatible OpenAI via l'adapter API. Cela permet de brancher un proxy LLM (LiteLLM, Cloudflare AI Gateway) ou une API directe.
-
-```yaml
-providers:
-  litellm:
-    enabled: true
-    baseUrl: http://localhost:4000/v1
-    model: claude-sonnet-4-6
-    maxTokens: 100000
-    costPer1k: 0.003
-    command: ""
-  openai-direct:
-    enabled: true
-    baseUrl: https://api.openai.com/v1
-    apiKey: sk-...
-    model: gpt-4o
-    maxTokens: 128000
-    costPer1k: 0.005
-    command: ""
-```
-
-Quand `baseUrl` est defini, AIDEN utilise l'adapter HTTP (`fetch()`) au lieu du subprocess CLI. Cela fonctionne avec :
-- **LiteLLM** : proxy open source unifiant 100+ APIs
-- **Cloudflare AI Gateway** : gateway manage avec caching et analytics
-- **API directes** : OpenAI, Anthropic (via proxy), Google AI
-- **Modeles locaux** : Ollama, vLLM, tout endpoint OpenAI-compatible
+> **Information** : Consultez le guide de chaque provider pour les instructions d'installation et d'authentification.
 
 ## Routage
 
@@ -108,11 +81,6 @@ En mode `auto`, chaque agent recoit le provider optimal :
 
 ```bash
 $ aiden provider status
-Provider status:
-  claude-code: configured
-  gemini: configured
-  opencode: configured
-  copilot: configured
 ```
 
 ## Budget tokens
@@ -146,24 +114,10 @@ Le filtrage est actif par defaut. Pour le desactiver (usage local uniquement) :
 sanitize: false
 ```
 
-## Provider factory dynamique
+## Guides detailles
 
-AIDEN instancie les providers automatiquement depuis la config. Pas besoin de modifier le code pour ajouter un provider :
-
-- **Nom connu** (claude-code, gemini, copilot, opencode) → adapter CLI specifique
-- **`baseUrl` defini** → adapter API HTTP (fetch)
-- **Disabled** → ignore
-
-## Communication avec les providers
-
-**CLI adapters** envoient les prompts via **stdin pipe** (pas comme argument shell). Cela permet des prompts de taille illimitee.
-
-**API adapters** utilisent `POST /chat/completions` avec le format OpenAI standard.
-
-- **Timeout** : 120 secondes par defaut
-- **Format review** : SCORE/PASSED/ISSUES avec fallback heuristique
-- **Disponibilite** : CLI verifie `--version`, API verifie `GET /models`
-
-## Prochaine etape
-
-Approfondissez la [configuration](/guides/configuration).
+- [Claude Code](/guides/providers/claude-code) — Installation, authentification, slash commands
+- [Gemini CLI](/guides/providers/gemini) — Installation, auth Google, API directe
+- [OpenCode](/guides/providers/opencode) — Setup multi-backend, LLM local
+- [GitHub Copilot](/guides/providers/copilot) — GitHub CLI, limitations
+- [Provider API custom](/guides/providers/custom-api) — LiteLLM, Ollama, Azure, proxy entreprise

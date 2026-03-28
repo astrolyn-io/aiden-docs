@@ -1,34 +1,34 @@
 # Installation
 
 > **Ce que vous allez apprendre**
-> - Installer AIDEN et ses prerequis
+> - Installer AIDEN et ses prérequis
 > - Initialiser un projet avec `aiden init`
-> - Verifier que tout fonctionne
+> - Vérifier que tout fonctionne
 
-## Prerequis
+## Prérequis
 
-- **Node.js 20+** — verifiez avec `node --version`
+- **Node.js 20+** — vérifiez avec `node --version`
 - **pnpm** — installez avec `npm install -g pnpm`
 - Au moins un provider IA : Claude Code, Gemini CLI, OpenCode ou GitHub Copilot (ou un proxy API type LiteLLM)
 
 ## Installer AIDEN
 
 ```bash
-pnpm add -g @cta/cli
+$ pnpm add -g @aiden/cli
 ```
 
-Verifiez :
+Vérifiez :
 
 ```bash
-$ cta --version
+$ aiden --version
 0.7.0
 ```
 
-> **Astuce** : Si `command not found`, ajoutez le dossier global pnpm a votre PATH : `export PATH="$(pnpm store path)/../../.pnpm:$PATH"`
+> **Astuce** : Si `command not found`, ajoutez le dossier global pnpm à votre PATH : `export PATH="$(pnpm store path)/../../.pnpm:$PATH"`
 
 ## Initialiser un projet
 
-Dans le repertoire de votre projet :
+Dans le répertoire de votre projet :
 
 ```bash
 $ aiden init
@@ -42,7 +42,7 @@ AIDEN initialized in .aiden/
   PM:     pnpm
 ```
 
-AIDEN scanne automatiquement votre projet et detecte :
+AIDEN scanne automatiquement votre projet et détecte :
 - **Tech stack** : Node.js, TypeScript, React, Express, NestJS, Vue, Angular, Python, Go, Rust...
 - **Architecture** : Docker, Docker Compose, Kubernetes
 - **CI/CD** : GitHub Actions, GitLab CI, Jenkins, CircleCI
@@ -50,22 +50,22 @@ AIDEN scanne automatiquement votre projet et detecte :
 - **Databases** : PostgreSQL, MySQL, Redis, MongoDB (depuis les deps et docker-compose)
 - **Monorepo** : Turborepo, Nx, Lerna, pnpm workspaces
 
-Ces informations sont injectees dans le contexte de chaque agent pour des resultats plus pertinents.
+Ces informations sont injectées dans le contexte de chaque agent pour des résultats plus pertinents.
 
-Structure creee :
+Structure créée :
 
 ```
 .aiden/
   aiden.config.yaml    # Configuration projet
-  memory/            # Contexte, decisions, metriques
-  rules/             # Regles entreprise
-  templates/         # Templates personnalises
+  memory/            # Contexte, décisions, métriques
+  rules/             # Règles entreprise
+  templates/         # Templates personnalisés
   features/          # Features en cours
 ```
 
 ## Configurer le provider
 
-Par defaut, AIDEN utilise Claude Code. Pour changer :
+Par défaut, AIDEN utilise Claude Code. Pour changer :
 
 ```bash
 $ aiden config set provider gemini
@@ -74,7 +74,7 @@ Set provider = gemini
 
 Providers disponibles : `claude-code`, `gemini`, `copilot`.
 
-Verifiez que votre provider est accessible :
+Vérifiez que votre provider est accessible :
 
 ```bash
 $ aiden provider status
@@ -98,23 +98,23 @@ Le `--dry-run` montre ce qui serait fait sans appeler le provider.
 
 Si vous utilisez Claude Code, AIDEN est aussi disponible en slash commands sans installer le CLI :
 
-- `/cta-init` — initialiser AIDEN
-- `/cta-flash` — mode rapide
-- `/cta-standard` — mode complet
-- `/cta-enterprise` — mode enterprise
+- `/aiden-init` — initialiser AIDEN
+- `/aiden-flash` — mode rapide
+- `/aiden-standard` — mode complet
+- `/aiden-enterprise` — mode enterprise
 
-Les deux modes (CLI et slash) ecrivent dans les memes fichiers `.aiden/`.
+Les deux modes (CLI et slash) écrivent dans les mêmes fichiers `.aiden/`.
 
 ## Troubleshooting
 
-**`command not found: cta`** — Assurez-vous que le dossier global pnpm est dans votre PATH.
+**`command not found: aiden`** — Assurez-vous que le dossier global pnpm est dans votre PATH.
 
-**`AIDEN not initialized`** — Lancez `aiden init` dans le repertoire du projet.
+**`AIDEN not initialized`** — Lancez `aiden init` dans le répertoire du projet.
 
 **`No provider available`** — Installez Claude Code (`npm install -g @anthropic-ai/claude-code`) ou un autre provider.
 
-**Timeout sur le provider** — Le timeout par defaut est 120s. Si votre LLM est lent, augmentez-le dans `.aiden/aiden.config.yaml`.
+**Timeout sur le provider** — Le timeout par défaut est 120s. Si votre LLM est lent, augmentez-le dans `.aiden/aiden.config.yaml`.
 
-## Prochaine etape
+## Prochaine étape
 
-Passez au [Quickstart](/getting-started/quickstart) pour un scenario complet en 5 minutes.
+Passez au [Quickstart](/getting-started/quickstart) pour un scénario complet en 5 minutes.

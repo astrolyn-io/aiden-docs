@@ -26,7 +26,13 @@ export const navigation: NavSection[] = [
     items: [
       { title: 'Modes', href: '/guides/modes' },
       { title: 'Agents', href: '/guides/agents' },
-      { title: 'Providers', href: '/guides/providers' },
+      { title: 'Providers', href: '/guides/providers', children: [
+        { title: 'Claude Code', href: '/guides/providers/claude-code' },
+        { title: 'Gemini CLI', href: '/guides/providers/gemini' },
+        { title: 'OpenCode', href: '/guides/providers/opencode' },
+        { title: 'GitHub Copilot', href: '/guides/providers/copilot' },
+        { title: 'API custom', href: '/guides/providers/custom-api' },
+      ] },
       { title: 'Configuration', href: '/guides/configuration' },
       { title: 'Regles & Templates', href: '/guides/rules-and-templates' },
       { title: 'Skills', href: '/guides/skills' },

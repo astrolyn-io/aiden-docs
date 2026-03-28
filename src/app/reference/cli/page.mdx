@@ -1,4 +1,4 @@
-# Reference CLI
+# Référence CLI
 
 > **Ce que vous allez apprendre**
 > - Toutes les commandes AIDEN (workflow, providers, skills, retex)
@@ -15,7 +15,7 @@ Initialise AIDEN dans le projet courant.
 aiden init [--enterprise]
 ```
 
-- `--enterprise` : inclut les templates et regles enterprise
+- `--enterprise` : inclut les templates et règles enterprise
 
 ### `aiden flash <description>`
 
@@ -42,8 +42,8 @@ aiden enterprise "Migration auth" [--dry-run] [--provider <name>] [--auto-approv
 ```
 
 Options :
-- `--dry-run` : affiche ce qui serait fait sans executer
-- `--provider <name>` : force un provider specifique
+- `--dry-run` : affiche ce qui serait fait sans exécuter
+- `--provider <name>` : force un provider spécifique
 - `--auto-approve` : bypasse les gates d'approbation humaine (utile en CI/CD)
 
 ### `aiden status [feature-slug]`
@@ -52,12 +52,12 @@ Affiche le statut des features.
 
 ```bash
 aiden status                    # Toutes les features
-aiden status export-csv         # Une feature specifique
+aiden status export-csv         # Une feature spécifique
 ```
 
 ### `aiden resume <feature-slug>`
 
-Reprend une feature en pause ou bloquee.
+Reprend une feature en pause ou bloquée.
 
 ```bash
 aiden resume export-csv
@@ -65,7 +65,7 @@ aiden resume export-csv
 
 ### `aiden abort <feature-slug>`
 
-Abandonne une feature (sauvegarde l'etat avant suppression).
+Abandonne une feature (sauvegarde l'état avant suppression).
 
 ```bash
 aiden abort export-csv
@@ -77,24 +77,24 @@ Invoque un agent directement.
 
 ```bash
 aiden agent analyst "Analyser le module billing"
-aiden agent qa "Reviewer les changements recents"
+aiden agent qa "Reviewer les changements récents"
 ```
 
 Agents : `analyst`, `planner`, `dev`, `qa`, `docops`.
 
 ### `aiden provider`
 
-Gere les providers IA.
+Gère les providers IA.
 
 ```bash
-aiden provider status           # Etat des providers
+aiden provider status           # État des providers
 aiden provider switch gemini    # Changer de provider
-aiden provider cost             # Rapport de couts
+aiden provider cost             # Rapport de coûts
 ```
 
 ### `aiden metrics`
 
-Affiche les metriques d'utilisation.
+Affiche les métriques d'utilisation.
 
 ```bash
 aiden metrics                   # Affichage texte
@@ -103,7 +103,7 @@ aiden metrics --export csv      # Export CSV
 
 ### `aiden config`
 
-Gere la configuration.
+Gère la configuration.
 
 ```bash
 aiden config show               # Afficher
@@ -112,7 +112,7 @@ aiden config set mode flash     # Modifier
 
 ### `aiden rules`
 
-Gere les regles d'entreprise.
+Gère les règles d'entreprise.
 
 ```bash
 aiden rules list                # Lister
@@ -122,22 +122,22 @@ aiden rules remove security     # Supprimer
 
 ### `aiden skills`
 
-Gere les skills d'extensibilite.
+Gère les skills d'extensibilité.
 
 ```bash
-aiden skills list                # Lister les skills installes
-aiden skills init my-skill       # Creer un nouveau skill
+aiden skills list                # Lister les skills installés
+aiden skills init my-skill       # Créer un nouveau skill
 aiden skills add /path/to/skill  # Installer depuis un dossier
 aiden skills remove my-skill     # Supprimer un skill
 aiden skills enable my-skill     # Activer un skill
-aiden skills disable my-skill    # Desactiver un skill
+aiden skills disable my-skill    # Désactiver un skill
 ```
 
-Les skills sont des packages declaratifs (YAML + Markdown) dans `.aiden/skills/` qui injectent instructions, regles et hooks dans le pipeline. Voir le [guide skills](/guides/skills) pour plus de details.
+Les skills sont des packages déclaratifs (YAML + Markdown) dans `.aiden/skills/` qui injectent instructions, règles et hooks dans le pipeline. Voir le [guide skills](/guides/skills) pour plus de détails.
 
 ### `aiden retex`
 
-Gere les retours d'experience (lessons learned).
+Gère les retours d'expérience (lessons learned).
 
 ```bash
 aiden retex list                                    # Lister tous les retex
@@ -148,11 +148,11 @@ aiden retex search <tag>                             # Chercher par tag
 aiden retex remove <id>                              # Supprimer un retex
 ```
 
-Les retex sont stockes dans `.aiden/retex/` en Markdown. Les retex pertinents sont injectes dans les prompts agents sous `--- Lessons Learned ---`.
+Les retex sont stockés dans `.aiden/retex/` en Markdown. Les retex pertinents sont injectés dans les prompts agents sous `--- Lessons Learned ---`.
 
 ### `aiden template`
 
-Gere les templates.
+Gère les templates.
 
 ```bash
 aiden template list             # Lister
@@ -163,20 +163,20 @@ aiden template customize spec   # Personnaliser
 
 AIDEN est aussi disponible en slash commands dans Claude Code :
 
-| Slash command | Equivalent CLI |
+| Slash command | Équivalent CLI |
 |---|---|
-| `/cta-help` | — |
-| `/cta-init` | `aiden init` |
-| `/cta-flash <desc>` | `aiden flash "<desc>"` |
-| `/cta-standard <desc>` | `aiden standard "<desc>"` |
-| `/cta-enterprise <desc>` | `aiden enterprise "<desc>"` |
-| `/cta-status` | `aiden status` |
-| `/cta-resume <slug>` | `aiden resume <slug>` |
-| `/cta-agent <nom> <prompt>` | `aiden agent <nom> "<prompt>"` |
-| `/cta-rules` | `aiden rules list` |
+| `/aiden-help` | — |
+| `/aiden-init` | `aiden init` |
+| `/aiden-flash <desc>` | `aiden flash "<desc>"` |
+| `/aiden-standard <desc>` | `aiden standard "<desc>"` |
+| `/aiden-enterprise <desc>` | `aiden enterprise "<desc>"` |
+| `/aiden-status` | `aiden status` |
+| `/aiden-resume <slug>` | `aiden resume <slug>` |
+| `/aiden-agent <nom> <prompt>` | `aiden agent <nom> "<prompt>"` |
+| `/aiden-rules` | `aiden rules list` |
 
-Les deux modes ecrivent dans les memes fichiers `.aiden/` et sont interchangeables.
+Les deux modes écrivent dans les mêmes fichiers `.aiden/` et sont interchangeables.
 
-## Prochaine etape
+## Prochaine étape
 
-Consultez la [reference configuration](/reference/config).
+Consultez la [référence configuration](/reference/config).

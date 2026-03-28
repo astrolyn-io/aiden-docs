@@ -2,39 +2,39 @@
 
 > **Ce que vous allez apprendre**
 > - La terminologie AIDEN
-> - Les acronymes et concepts cles
+> - Les acronymes et concepts clés
 
 ## A
 
-**ADR** — Architecture Decision Record. Document qui trace une decision architecturale significative.
+**ADR** — Architecture Decision Record. Document qui trace une décision architecturale significative.
 
-**Agent** — Composant IA specialise dans un role (Lead, Analyst, Planner, Dev, QA, DocOps).
+**Agent** — Composant IA spécialisé dans un rôle (Lead, Analyst, Planner, Dev, QA, DocOps).
 
-**Artefact** — Fichier Markdown avec frontmatter YAML genere par un agent (brief, spec, story, review, etc.).
+**Artefact** — Fichier Markdown avec frontmatter YAML généré par un agent (brief, spec, story, review, etc.).
 
 ## B
 
-**Brief** — Document de decouverte cree par l'Analyst. Resume la demande et le contexte.
+**Brief** — Document de découverte créé par l'Analyst. Résume la demande et le contexte.
 
-**Bus de contexte** — Memoire partagee entre tous les agents (`.aiden/memory/context.yaml`).
+**Bus de contexte** — Mémoire partagée entre tous les agents (`.aiden/memory/context.yaml`).
 
 ## C
 
-**Circuit breaker** — Mecanisme qui arrete un agent apres N echecs consecutifs et escalade a l'humain.
+**Circuit breaker** — Mécanisme qui arrête un agent après N échecs consécutifs et escalade à l'humain.
 
-**AIDEN** — Core Team AI. Le framework lui-meme.
+**AIDEN** — AI-Driven Engineering. Le framework lui-même.
 
 ## D
 
-**Decisions log** — Fichier JSONL append-only qui trace toutes les decisions des agents.
+**Decisions log** — Fichier JSONL append-only qui trace toutes les décisions des agents.
 
 ## E
 
-**Enterprise** — Mode le plus complet avec documentation, conformite et approbation humaine.
+**Enterprise** — Mode le plus complet avec documentation, conformité et approbation humaine.
 
 ## F
 
-**Feature** — Unite de travail dans AIDEN. Chaque feature a son propre cycle de vie et dossier d'artefacts.
+**Feature** — Unité de travail dans AIDEN. Chaque feature a son propre cycle de vie et dossier d'artefacts.
 
 **Flash** — Mode le plus rapide. Lead + Dev uniquement, pas de spec ni review.
 
@@ -44,7 +44,7 @@
 
 ## M
 
-**Mode** — Niveau de complexite du workflow : flash, standard ou enterprise.
+**Mode** — Niveau de complexité du workflow : flash, standard ou enterprise.
 
 ## O
 
@@ -52,30 +52,30 @@
 
 ## P
 
-**Provider** — Service IA externe (Claude Code, Gemini, OpenCode, Copilot ou API custom) utilise par les agents.
+**Provider** — Service IA externe (Claude Code, Gemini, OpenCode, Copilot ou API custom) utilisé par les agents.
 
 ## Q
 
-**Quality gate** — Verification automatique entre deux phases du workflow.
+**Quality gate** — Vérification automatique entre deux phases du workflow.
 
 ## R
 
-**Retex** — Retour d'experience structure (lessons learned). Stocke dans `.aiden/retex/` avec contexte, lecon et recommandation. Injecte dans les prompts agents.
+**Retex** — Retour d'expérience structuré (lessons learned). Stocké dans `.aiden/retex/` avec contexte, leçon et recommandation. Injecté dans les prompts agents.
 
-**Routage** — Selection automatique du provider optimal selon la tache.
+**Routage** — Sélection automatique du provider optimal selon la tâche.
 
 ## S
 
-**Sanitizer** — Mecanisme de filtrage qui masque les donnees sensibles (tokens, cles API, mots de passe, connection strings) dans les prompts avant envoi aux providers.
+**Sanitizer** — Mécanisme de filtrage qui masque les données sensibles (tokens, clés API, mots de passe, connection strings) dans les prompts avant envoi aux providers.
 
-**Skill** — Package declaratif (YAML + Markdown) dans `.aiden/skills/` qui injecte instructions, regles et hooks dans le pipeline AIDEN. Mecanisme d'extensibilite principal pour les entreprises.
+**Skill** — Package déclaratif (YAML + Markdown) dans `.aiden/skills/` qui injecte instructions, règles et hooks dans le pipeline AIDEN. Mécanisme d'extensibilité principal pour les entreprises.
 
-**Spec** — Specification technique allegee creee par le Planner.
+**Spec** — Spécification technique allégée créée par le Planner.
 
-**Standard** — Mode intermediaire avec analyse, planification et review.
+**Standard** — Mode intermédiaire avec analyse, planification et review.
 
-**Story** — User story decomposee par le Planner avec criteres d'acceptation.
+**Story** — User story décomposée par le Planner avec critères d'acceptation.
 
 ## T
 
-**Token budget** — Limite de tokens par feature et par mois pour controler les couts.
+**Token budget** — Limite de tokens par feature et par mois pour contrôler les coûts.

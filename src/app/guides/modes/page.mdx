@@ -7,40 +7,40 @@
 
 ## Comparaison
 
-| Fonctionnalite | Flash | Standard | Enterprise |
+| Fonctionnalité | Flash | Standard | Enterprise |
 |---|---|---|---|
 | Temps | < 30 min | 2h - 1 jour | 1 jour - 1 semaine |
 | Agents | Lead, Dev | +Analyst, Planner, QA | +DocOps |
 | Brief | Non | Oui | Oui |
 | Spec | Non | Oui | Oui + ADR |
-| Review | Non | Oui | Oui + rapport qualite |
+| Review | Non | Oui | Oui + rapport qualité |
 | Approbation humaine | Non | Non | Oui |
 
 ## Mode Flash
 
-Pour les changements simples : bug fix, petite feature, refactoring cible.
+Pour les changements simples : bug fix, petite feature, refactoring ciblé.
 
 ```bash
 $ aiden flash "Fix le bug #123"
 ```
 
 Quand l'utiliser :
-- Moins de 3 fichiers impactes
+- Moins de 3 fichiers impactés
 - Pas de nouvelle API
-- Complexite faible (1-2/5)
+- Complexité faible (1-2/5)
 
 ## Mode Standard
 
-Pour les features moyennes necessitant planification.
+Pour les features moyennes nécessitant planification.
 
 ```bash
 $ aiden standard "Nouvelle API users"
 ```
 
 Quand l'utiliser :
-- 3 a 15 fichiers impactes
-- Nouvelle API ou integration
-- Complexite moyenne (3-4/5)
+- 3 à 15 fichiers impactés
+- Nouvelle API ou intégration
+- Complexité moyenne (3-4/5)
 
 ## Mode Enterprise
 
@@ -53,11 +53,11 @@ $ aiden enterprise "Migration authentification"
 Quand l'utiliser :
 - Plus de 15 fichiers
 - Nouvelle architecture
-- Compliance requise (RGPD, securite)
+- Compliance requise (RGPD, sécurité)
 
 ### Approbation humaine
 
-En mode enterprise, **chaque phase requiert une approbation humaine** avant de passer a la suivante. A la fin de chaque phase, le CLI affiche :
+En mode enterprise, **chaque phase requiert une approbation humaine** avant de passer à la suivante. À la fin de chaque phase, le CLI affiche :
 
 ```
 [APPROVAL] Phase "discovery" for "migration-auth" completed.
@@ -66,7 +66,7 @@ En mode enterprise, **chaque phase requiert une approbation humaine** avant de p
   Approve? (y/n):
 ```
 
-Si vous repondez `n`, le workflow est avorte avec le statut `aborted`.
+Si vous répondez `n`, le workflow est avorté avec le statut `aborted`.
 
 Pour bypasser les approbations (par exemple en CI/CD) :
 
@@ -74,35 +74,35 @@ Pour bypasser les approbations (par exemple en CI/CD) :
 $ aiden enterprise "Migration auth" --auto-approve
 ```
 
-> **Attention** : `--auto-approve` desactive toute validation humaine. A utiliser uniquement dans les pipelines automatises.
+> **Attention** : `--auto-approve` désactive toute validation humaine. À utiliser uniquement dans les pipelines automatisés.
 
-## Detection automatique du mode
+## Détection automatique du mode
 
-Le Lead analyse la description de la feature avec des heuristiques pour suggerer le mode optimal :
+Le Lead analyse la description de la feature avec des heuristiques pour suggérer le mode optimal :
 
-- `"Fix typo in README"` → **flash** (faible complexite, 1 fichier)
-- `"Add new REST API with OAuth"` → **standard** (nouvelle API, dependance externe)
+- `"Fix typo in README"` → **flash** (faible complexité, 1 fichier)
+- `"Add new REST API with OAuth"` → **standard** (nouvelle API, dépendance externe)
 - `"Migrate monolith to microservices with RGPD compliance"` → **enterprise** (nouvelle architecture, compliance)
 
-La detection prend aussi en compte le contexte projet (nombre de technologies, architecture).
+La détection prend aussi en compte le contexte projet (nombre de technologies, architecture).
 
 ## Passage dynamique avec re-routing
 
-AIDEN peut changer de mode en cours de route **sans perdre le travail** et en executant les phases manquantes :
+AIDEN peut changer de mode en cours de route **sans perdre le travail** et en exécutant les phases manquantes :
 
 ```bash
-# Demarre en flash, bascule en standard si complexite detectee
+# Démarre en flash, bascule en standard si complexité détectée
 $ aiden flash "Export CSV"
-AIDEN Lead > Complexite detectee (5 fichiers). Passer en standard ? [Y/n]
+AIDEN Lead > Complexité détectée (5 fichiers). Passer en standard ? [Y/n]
 ```
 
-Quand vous passez de flash a standard, `switchMode()` :
-1. Identifie les phases deja completees (implementation)
-2. Execute les phases manquantes (discovery, planning)
+Quand vous passez de flash à standard, `switchMode()` :
+1. Identifie les phases déjà complétées (implémentation)
+2. Exécute les phases manquantes (discovery, planning)
 3. Continue le workflow avec les nouveaux artefacts
 
-Le passage de standard a flash est un no-op — les phases flash sont un sous-ensemble de standard.
+Le passage de standard à flash est un no-op — les phases flash sont un sous-ensemble de standard.
 
-## Prochaine etape
+## Prochaine étape
 
-Decouvrez les [agents AIDEN](/guides/agents) et leurs roles.
+Découvrez les [agents AIDEN](/guides/agents) et leurs rôles.
