@@ -1,3 +1,5 @@
+import { getDictionary } from '@/i18n/dictionaries';
+
 export interface NavItem {
   title: string;
   href: string;
@@ -10,64 +12,73 @@ export interface NavSection {
   items: NavItem[];
 }
 
-export const navigation: NavSection[] = [
-  {
-    title: 'Demarrage',
-    icon: 'rocket',
-    items: [
-      { title: 'Installation', href: '/getting-started/installation' },
-      { title: 'Quickstart', href: '/getting-started/quickstart' },
-      { title: 'Premiere feature', href: '/getting-started/first-feature' },
-    ],
-  },
-  {
-    title: 'Guides',
-    icon: 'book',
-    items: [
-      { title: 'Modes', href: '/guides/modes' },
-      { title: 'Agents', href: '/guides/agents' },
-      { title: 'Providers', href: '/guides/providers', children: [
-        { title: 'Claude Code', href: '/guides/providers/claude-code' },
-        { title: 'Gemini CLI', href: '/guides/providers/gemini' },
-        { title: 'OpenCode', href: '/guides/providers/opencode' },
-        { title: 'GitHub Copilot', href: '/guides/providers/copilot' },
-        { title: 'API custom', href: '/guides/providers/custom-api' },
-      ] },
-      { title: 'Configuration', href: '/guides/configuration' },
-      { title: 'Regles & Templates', href: '/guides/rules-and-templates' },
-      { title: 'Skills', href: '/guides/skills' },
-      { title: 'Troubleshooting', href: '/guides/troubleshooting' },
-    ],
-  },
-  {
-    title: 'Reference',
-    icon: 'terminal',
-    items: [
-      { title: 'CLI', href: '/reference/cli' },
-      { title: 'Configuration', href: '/reference/config' },
-      { title: 'Artefacts', href: '/reference/artefacts' },
-      { title: 'Glossaire', href: '/reference/glossary' },
-    ],
-  },
-  {
-    title: 'Tutorial',
-    icon: 'rocket',
-    items: [
-      { title: 'Le terrain de jeu', href: '/tutorial/setup' },
-      { title: 'Mode flash', href: '/tutorial/flash' },
-      { title: 'Mode standard', href: '/tutorial/standard' },
-      { title: 'Mode enterprise', href: '/tutorial/enterprise' },
-      { title: 'Boite a outils', href: '/tutorial/toolbox' },
-    ],
-  },
-  {
-    title: 'Cookbook',
-    icon: 'code',
-    items: [
-      { title: 'Brownfield', href: '/cookbook/brownfield' },
-      { title: 'Equipe', href: '/cookbook/team' },
-      { title: 'CI/CD', href: '/cookbook/ci-cd' },
-      { title: 'Migration BMAD', href: '/cookbook/migration-bmad' },
-    ],
-  },
-];
+export function getNavigation(locale: string): NavSection[] {
+  const dict = getDictionary(locale);
+  const l = `/${locale}`;
+
+  return [
+    {
+      title: dict.nav.getting_started,
+      icon: 'rocket',
+      items: [
+        { title: dict.nav.installation, href: `${l}/getting-started/installation` },
+        { title: dict.nav.quickstart, href: `${l}/getting-started/quickstart` },
+        { title: dict.nav.first_feature, href: `${l}/getting-started/first-feature` },
+      ],
+    },
+    {
+      title: dict.nav.guides,
+      icon: 'book',
+      items: [
+        { title: dict.nav.modes, href: `${l}/guides/modes` },
+        { title: dict.nav.agents, href: `${l}/guides/agents` },
+        {
+          title: dict.nav.providers,
+          href: `${l}/guides/providers`,
+          children: [
+            { title: dict.nav.claude_code, href: `${l}/guides/providers/claude-code` },
+            { title: dict.nav.gemini_cli, href: `${l}/guides/providers/gemini` },
+            { title: dict.nav.opencode, href: `${l}/guides/providers/opencode` },
+            { title: dict.nav.copilot, href: `${l}/guides/providers/copilot` },
+            { title: dict.nav.custom_api, href: `${l}/guides/providers/custom-api` },
+          ],
+        },
+        { title: dict.nav.configuration, href: `${l}/guides/configuration` },
+        { title: dict.nav.rules_templates, href: `${l}/guides/rules-and-templates` },
+        { title: dict.nav.skills, href: `${l}/guides/skills` },
+        { title: dict.nav.troubleshooting, href: `${l}/guides/troubleshooting` },
+      ],
+    },
+    {
+      title: dict.nav.reference,
+      icon: 'terminal',
+      items: [
+        { title: dict.nav.cli, href: `${l}/reference/cli` },
+        { title: dict.nav.config, href: `${l}/reference/config` },
+        { title: dict.nav.artefacts, href: `${l}/reference/artefacts` },
+        { title: dict.nav.glossary, href: `${l}/reference/glossary` },
+      ],
+    },
+    {
+      title: 'Tutorial',
+      icon: 'rocket',
+      items: [
+        { title: locale === 'fr' ? 'Le terrain de jeu' : 'The Playground', href: `${l}/tutorial/setup` },
+        { title: locale === 'fr' ? 'Mode flash' : 'Flash Mode', href: `${l}/tutorial/flash` },
+        { title: locale === 'fr' ? 'Mode standard' : 'Standard Mode', href: `${l}/tutorial/standard` },
+        { title: locale === 'fr' ? 'Mode enterprise' : 'Enterprise Mode', href: `${l}/tutorial/enterprise` },
+        { title: locale === 'fr' ? 'Boite a outils' : 'Toolbox', href: `${l}/tutorial/toolbox` },
+      ],
+    },
+    {
+      title: dict.nav.cookbook,
+      icon: 'code',
+      items: [
+        { title: dict.nav.brownfield, href: `${l}/cookbook/brownfield` },
+        { title: dict.nav.team, href: `${l}/cookbook/team` },
+        { title: dict.nav.ci_cd, href: `${l}/cookbook/ci-cd` },
+        { title: dict.nav.migration_bmad, href: `${l}/cookbook/migration-bmad` },
+      ],
+    },
+  ];
+}

@@ -1,21 +1,31 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { navigation } from '@/lib/navigation';
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { getNavigation } from '@/lib/navigation';
+
+function getLocaleFromPath(pathname: string): string {
+  const match = pathname.match(/^\/(en|fr)(\/|$)/);
+  return match ? match[1] : 'en';
+}
 
 export function SearchModal() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = getLocaleFromPath(pathname);
 
-  const allItems = navigation.flatMap((section) =>
-    section.items.map((item) => ({
-      ...item,
-      section: section.title,
-    })),
-  );
+  const allItems = useMemo(() => {
+    const nav = getNavigation(locale);
+    return nav.flatMap((section) =>
+      section.items.map((item) => ({
+        ...item,
+        section: section.title,
+      })),
+    );
+  }, [locale]);
 
   const filtered = query
     ? allItems.filter(
@@ -60,6 +70,9 @@ export function SearchModal() {
 
   if (!open) return null;
 
+  const placeholder = locale === 'fr' ? 'Rechercher dans la documentation...' : 'Search documentation...';
+  const noResults = locale === 'fr' ? 'Aucun resultat pour' : 'No results for';
+
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh]">
       <div
@@ -83,7 +96,7 @@ export function SearchModal() {
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Rechercher dans la documentation..."
+            placeholder={placeholder}
             className="w-full px-3 py-3.5 text-sm bg-transparent outline-none"
             style={{ color: 'var(--aiden-text-primary)' }}
           />
@@ -117,7 +130,7 @@ export function SearchModal() {
               className="px-4 py-6 text-sm text-center"
               style={{ color: 'var(--aiden-text-muted)' }}
             >
-              Aucun resultat pour &quot;{query}&quot;
+              {noResults} &quot;{query}&quot;
             </p>
           )}
         </div>

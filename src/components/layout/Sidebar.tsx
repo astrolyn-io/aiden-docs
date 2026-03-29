@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { navigation, type NavSection } from '@/lib/navigation';
+import { getNavigation, type NavSection } from '@/lib/navigation';
 import { AidenLogo } from '@/components/ui/AidenLogo';
 
 const sectionIcons: Record<string, string> = {
@@ -13,9 +13,10 @@ const sectionIcons: Record<string, string> = {
   code: '🧑‍🍳',
 };
 
-export function Sidebar() {
+export function Sidebar({ locale }: { locale: string }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigation = getNavigation(locale);
 
   return (
     <>
@@ -41,7 +42,7 @@ export function Sidebar() {
       >
         <div className="p-5">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 mb-8 no-underline">
+          <Link href={`/${locale}`} className="flex items-center gap-2.5 mb-8 no-underline">
             <AidenLogo size={32} />
             <div>
               <span className="font-bold text-sm" style={{ color: 'var(--aiden-text-primary)' }}>

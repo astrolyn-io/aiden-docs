@@ -1,0 +1,189 @@
+# Configuration Reference
+
+The aiden.config.yaml file has an option for nearly everything. Here's the complete schema, annotated with default values.
+
+---
+
+## Full schema
+
+```yaml
+# .aiden/aiden.config.yaml
+project: my-project              # (required) Project name
+provider: claude-code            # Default provider
+mode: standard                   # flash | standard | enterprise
+lang: en                         # Artifact language
+
+providers:                       # Per-provider configuration
+  claude-code:
+    enabled: true
+    command: claude
+    model: claude-sonnet-4-6
+    maxTokens: 100000
+    costPer1k: 0.003
+  gemini:
+    enabled: true
+    command: gemini
+    model: gemini-2.5-pro
+    maxTokens: 1000000
+    costPer1k: 0.001
+  opencode:
+    enabled: true
+    command: opencode
+    model: opencode
+    maxTokens: 200000
+    costPer1k: 0.002
+  copilot:
+    enabled: true
+    command: gh
+    model: copilot
+    maxTokens: 50000
+    costPer1k: 0
+  # Custom API provider (LLM proxy)
+  litellm:
+    enabled: true
+    baseUrl: http://localhost:4000/v1   # OpenAI-compatible endpoint
+    # apiKey: sk-xxx                    # optional
+    model: claude-sonnet-4-6
+    maxTokens: 100000
+    costPer1k: 0.003
+    command: ""                         # no subprocess
+
+routing:                         # Routing strategy
+  strategy: prefer               # auto | prefer | fixed | cost-optimized
+  fallback: [claude-code, gemini, opencode, copilot]
+
+budget:                          # Token budget
+  monthlyLimit: 500000
+  alertAt: 80                    # Percentage
+  perFeature:
+    flash: 5000
+    standard: 20000
+    enterprise: 100000
+
+hooks: {}                        # Event hooks
+rules: []                        # Rule files
+
+pipeline:                        # Inter-agent pipeline configuration
+  maxOutputCharsPerAgent: 8000   # Output truncation (default: 8000)
+
+sanitize: true                   # Sensitive data filtering (default: true)
+```
+
+---
+
+## Option details
+
+### Provider options
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `providers.<name>.enabled` | boolean | — | Enable/disable the provider |
+| `providers.<name>.command` | string | — | CLI command to spawn |
+| `providers.<name>.model` | string | — | Model to use |
+| `providers.<name>.maxTokens` | number | — | Token limit per request |
+| `providers.<name>.costPer1k` | number | — | Cost per 1000 tokens |
+| `providers.<name>.baseUrl` | string | — | OpenAI-compatible API endpoint (activates the HTTP adapter) |
+| `providers.<name>.apiKey` | string | — | API key for Bearer authentication |
+
+When `baseUrl` is set, AIDEN uses the API adapter (`fetch`) instead of the CLI subprocess. The `command` is ignored.
+
+### Pipeline options
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `pipeline.maxOutputCharsPerAgent` | number | 8000 | Max characters per agent output injected into the next agent's prompt. |
+
+### Routing options
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `routing.strategy` | string | `prefer` | Strategy: `fixed`, `prefer`, `auto`, `cost-optimized`. In `auto` mode, each agent receives the optimal provider. |
+| `routing.fallback` | string[] | `[claude-code, gemini, opencode, copilot]` | Fallback chain if the preferred provider is unavailable. |
+
+### Security options
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `sanitize` | boolean | `true` | Enables sensitive data filtering (tokens, API keys, passwords, private keys, connection strings) before sending to providers. |
+
+---
+
+## Project schema (context.yaml)
+
+The `aiden init` scan generates `.aiden/memory/context.yaml` with this schema:
+
+| Key | Type | Description |
+|---|---|---|
+| `project.name` | string | Project name (from directory) |
+| `project.techStack` | string[] | Detected technologies (node, typescript, react, nestjs, prisma, python...) |
+| `project.architecture` | string[] | Infrastructure (docker, docker-compose, kubernetes) |
+| `project.ci` | string[] | CI/CD systems (github-actions, gitlab-ci, jenkins, circleci) |
+| `project.packageManager` | string? | Package manager (pnpm, yarn, npm, bun) |
+| `project.databases` | string[]? | Databases (postgres, mysql, redis, mongodb) |
+| `project.monorepo` | string? | Monorepo tool (turborepo, nx, lerna, pnpm-workspaces) |
+
+This data is injected into every agent's prompt via the `--- Project Context ---` section.
+
+---
+
+## `skill.yaml` schema
+
+Each skill in `.aiden/skills/<name>/` contains a `skill.yaml` file:
+
+```yaml
+name: my-skill                 # (required) Unique identifier
+version: 1.0.0                 # Semver version (default: 1.0.0)
+description: ""                # Human-readable description
+author: platform-team          # Author (optional)
+agents:                        # Target agents (default: all)
+  - dev
+  - qa
+modes:                         # Active modes (default: all)
+  - standard
+  - enterprise
+hooks:                         # Declared hooks
+  on_feature_created:
+    - command: ./hooks/notify.sh
+      onFailure: warn
+config:                        # Custom configuration
+  jira_url: https://company.atlassian.net
+priority: 10                   # Priority (default: 0, higher = first)
+enabled: true                  # Active (default: true)
+```
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `name` | string | (required) | Unique identifier, validated by Zod |
+| `version` | string | `1.0.0` | Semver version |
+| `description` | string | `""` | Description |
+| `author` | string | — | Author |
+| `agents` | AgentRole[] | all | `lead`, `analyst`, `planner`, `dev`, `qa`, `docops` |
+| `modes` | CTAMode[] | all | `flash`, `standard`, `enterprise` |
+| `hooks` | Record | — | Hooks per event (same format as `aiden.config.yaml`) |
+| `config` | Record | — | Free key-value pairs |
+| `priority` | integer | `0` | Descending sort |
+| `enabled` | boolean | `true` | Disable without removing |
+
+See the [skills guide](/en/guides/skills) for full usage.
+
+---
+
+## Override levels
+
+Configuration follows a five-level cascade — each level overrides the previous:
+
+| Level | File | Scope |
+|---|---|---|
+| 1. Defaults | (built-in) | Global |
+| 2. Enterprise | `~/.aiden/enterprise.config.yaml` | All projects |
+| 3. Project | `.aiden/aiden.config.yaml` | This project |
+| 4. Feature | `.aiden/features/<slug>/.override.yaml` | This feature |
+| 5. CLI | `--mode`, `--provider` | This command |
+
+Each level overrides the values from the previous one. Objects are deep-merged, arrays are replaced.
+
+---
+
+## Next step
+
+See the [artifacts reference](/en/reference/artefacts).

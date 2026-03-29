@@ -1,0 +1,232 @@
+# AIDEN en equipe
+
+> Un dev avec AIDEN, c'est bien. Une equipe entiere avec les memes regles, le meme workflow et un onboarding de 30 minutes ? C'est la que ca devient vraiment puissant.
+
+**Ce que vous allez apprendre :**
+- Configurer AIDEN pour une equipe de 5 a 50+ developpeurs
+- Partager les regles, conventions et templates
+- Workflow Git avec AIDEN
+- Onboarding d'un nouveau membre en 30 minutes
+
+## Configuration equipe
+
+### Regles partagees dans Git
+
+Commitez `.aiden/rules/` dans votre repo. Toute l'equipe utilise les memes standards automatiquement.
+
+```
+.aiden/
+  rules/
+    coding-standards.md         # Standards de code communs
+    security-policy.md          # Politique de securite
+    architecture-principles.md  # Principes d'architecture
+    api-guidelines.md           # Standards API REST
+```
+
+Chaque regle est un fichier Markdown injecte automatiquement dans les prompts des agents.
+
+### Config globale (multi-projets)
+
+Pour les regles qui s'appliquent a **tous les projets** de l'organisation, utilisez la config globale :
+
+```yaml
+# ~/.aiden/enterprise.config.yaml (sur chaque poste)
+company: MonEntreprise
+defaults:
+  mode: standard
+  lang: fr
+  provider: claude-code
+
+security:
+  no_secrets_in_artefacts: true
+  scan_dependencies: true
+  require_security_review: true
+
+compliance:
+  enabled: true
+  frameworks: [RGPD, ISO27001]
+  audit_log: true
+
+coding:
+  test_coverage_min: 80
+  max_pr_size: 400
+  commit_convention: conventional
+```
+
+Distribuez ce fichier via le script de provisioning des postes developpeurs.
+
+### Profiles par equipe
+
+Si votre organisation a plusieurs equipes avec des stacks differentes :
+
+```yaml
+# .aiden/aiden.config.yaml
+profiles:
+  backend:
+    rules: [coding-standards.md, api-guidelines.md, database-rules.md]
+    provider: claude-code
+    mode: standard
+
+  frontend:
+    rules: [coding-standards-front.md, accessibility.md, ui-guidelines.md]
+    provider: gemini
+    mode: standard
+
+  data:
+    rules: [coding-standards-python.md, data-pipeline-rules.md]
+    provider: gemini
+    mode: standard
+```
+
+## Workflow Git avec AIDEN
+
+### Workflow recommande
+
+```
+1. Creer une branche       git checkout -b feature/export-csv
+2. Lancer AIDEN              aiden standard "Ajouter export CSV des rapports"
+3. AIDEN genere              code + tests + artefacts dans .aiden/features/
+4. Review humaine          Le reviewer lit review.md + spec.md + le diff
+5. Commiter                git add -A && git commit -m "feat: export CSV"
+6. Push + PR               Les artefacts aident le reviewer
+7. Merge + clean           La feature reste archivee dans .aiden/features/
+```
+
+### Convention de branches
+
+| Type de branche | Mode AIDEN recommande |
+|----------------|---------------------|
+| `fix/<slug>` | `aiden flash` |
+| `feature/<slug>` | `aiden standard` |
+| `refactor/<slug>` | `aiden standard` |
+| `release/<slug>` | `aiden enterprise` |
+| `hotfix/<slug>` | `aiden flash` |
+
+### Que commiter dans Git ?
+
+| Repertoire | Commiter ? | Raison |
+|-----------|------------|--------|
+| `.aiden/aiden.config.yaml` | **Oui** | Configuration partagee |
+| `.aiden/rules/` | **Oui** | Standards d'equipe |
+| `.aiden/templates/` | **Oui** | Templates personnalises |
+| `.aiden/features/` | **Oui** | Artefacts = documentation vivante |
+| `.aiden/memory/context.yaml` | **Optionnel** | Etat courant (utile pour la reprise) |
+| `.aiden/memory/decisions.jsonl` | **Oui** | Audit trail |
+| `.aiden/memory/metrics.jsonl` | **Optionnel** | Metriques (utile pour le suivi) |
+
+### .gitignore recommande
+
+```gitignore
+# AIDEN — garder les artefacts, ignorer les fichiers temporaires
+.aiden/memory/*.lock
+```
+
+## Politique de review avec AIDEN
+
+### Review basee sur les artefacts
+
+Quand un developpeur ouvre une PR apres un `aiden standard`, le reviewer dispose de :
+
+| Artefact | Ce que le reviewer verifie |
+|----------|---------------------------|
+| `brief.md` | L'analyse est-elle correcte ? Les risques identifies ? |
+| `spec.md` | La spec correspond-elle au besoin ? |
+| `stories/*.md` | Les criteres d'acceptation sont-ils complets ? |
+| `review.md` | Le QA a-t-il identifie des problemes ? Tous les criteres PASS ? |
+| `decisions.jsonl` | Les decisions IA sont-elles raisonnables ? |
+
+Le reviewer humain se concentre sur la **coherence metier** et les **choix d'architecture**, pas sur le style ou les tests (deja verifies par le QA).
+
+### Niveaux de review par mode
+
+| Mode | Review requise |
+|------|---------------|
+| Flash | Self-review du dev (le QA est skip) |
+| Standard | review.md du QA + review humaine sur la PR |
+| Enterprise | review.md + review humaine + approbation tech lead |
+
+## Onboarding d'un nouveau membre
+
+### Checklist (30 minutes)
+
+```
+5 min   Installer Node 20+ et pnpm
+2 min   pnpm add -g @astrolyn/aiden
+1 min   Copier ~/.aiden/enterprise.config.yaml (via provisioning)
+2 min   Cloner le repo (les regles sont incluses dans .aiden/rules/)
+1 min   aiden provider status  — verifier le provider
+5 min   aiden flash "Ajouter un log info au demarrage"  — premier flash
+5 min   aiden status + explorer les artefacts generes
+10 min  Lire les artefacts d'une feature existante dans .aiden/features/
+```
+
+### Valeur onboarding des artefacts
+
+Les artefacts AIDEN dans `.aiden/features/` sont des **documents d'onboarding vivants**. Un nouveau membre peut lire :
+
+- Le `brief.md` pour comprendre **pourquoi** une feature existe
+- Le `spec.md` pour comprendre **comment** elle a ete concue
+- Le `review.md` pour comprendre **quels problemes** ont ete identifies
+- Le `decisions.jsonl` pour comprendre **quelles decisions IA** ont ete prises
+
+C'est plus rapide que lire le code et deviner l'intention.
+
+### Capitaliser avec les retex
+
+Les **retex** (retours d'experience) permettent a l'equipe de capitaliser les lecons apprises :
+
+```bash
+# Apres une feature reussie
+$ aiden retex add --title "Migration ORM incrementale" \
+  --context prisma,drizzle,migration \
+  --outcome success \
+  --lesson "Migrer table par table est plus sur qu'un big bang" \
+  --recommendation "Garder les deux ORMs en parallele pendant la migration"
+
+# Apres un echec
+$ aiden retex add --title "Cache Redis sans TTL" \
+  --context redis,cache,bug \
+  --outcome failure \
+  --lesson "Un cache sans TTL a cause un OOM en production" \
+  --recommendation "Toujours definir un TTL sur les cles Redis"
+
+# Consulter les retex pertinents
+$ aiden retex search migration
+```
+
+Les retex pertinents sont automatiquement injectes dans les prompts des agents. L'equipe apprend collectivement de ses experiences.
+
+## Metriques d'equipe
+
+### Suivi d'adoption
+
+```bash
+# Metriques globales
+$ aiden metrics
+
+# Export CSV pour dashboard
+$ aiden metrics --export csv > metriques-equipe-mars.csv
+```
+
+### KPI equipe
+
+| Metrique | Cible | Comment |
+|----------|-------|---------|
+| % devs actifs sur AIDEN | > 70% | metrics.jsonl par agent unique |
+| Features standard vs flash | > 30% standard | decisions.jsonl type=mode_selection |
+| Cout moyen par dev/mois | < $80 | metrics.jsonl agrege |
+| Taux circuit breaker | < 10% | decisions.jsonl type=circuit_breaker |
+
+## Anti-patterns a eviter
+
+| Anti-pattern | Pourquoi c'est un probleme | Solution |
+|-------------|---------------------------|----------|
+| Forcer AIDEN sur toute l'equipe d'un coup | Rejet et frustration | Adopter progressivement : pilote -> equipes -> general |
+| Utiliser enterprise pour tout | Sur-ingenierie, lenteur | Flash pour les fix, standard pour les features, enterprise pour les projets critiques |
+| Ne pas commiter les artefacts | Perte de tracabilite et d'onboarding | Toujours commiter `.aiden/features/` avec le code |
+| Ignorer le review.md | Perdre la valeur du QA automatique | Le reviewer humain doit lire le review.md en premier |
+| Des regles trop strictes au debut | Friction, contournement | Commencer avec des regles legeres, durcir progressivement |
+
+## Prochaine etape
+
+Integrez AIDEN dans vos [pipelines CI/CD](/fr/cookbook/ci-cd) pour automatiser les verifications.

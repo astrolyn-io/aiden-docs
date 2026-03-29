@@ -1,0 +1,133 @@
+# Providers
+
+> AIDEN doesn't lock you in. Claude for analysis, Gemini for code, Copilot as a free backup, Ollama for 100% local — mix and match as you like.
+
+## Quick decision
+
+> **Just getting started?** → Claude Code.
+> **Tight budget?** → Gemini.
+> **Sensitive data?** → OpenCode + Ollama.
+> **Already on Copilot?** → Add it as a fallback.
+
+## Supported providers
+
+AIDEN natively supports 4 CLI providers and lets you plug in any LLM via API:
+
+| Provider | Type | Strengths | Context | Cost |
+|---|---|---|---|---|
+| [Claude Code](/en/guides/providers/claude-code) | CLI | Analysis, review, long context | 200k | $$$ |
+| [Gemini CLI](/en/guides/providers/gemini) | CLI | Code generation, multi-file | 1M | $ |
+| [OpenCode](/en/guides/providers/opencode) | CLI | Open source, multi-backend | Variable | Variable |
+| [GitHub Copilot](/en/guides/providers/copilot) | CLI | Quick fix, completion | 50k | Free |
+| [Custom API](/en/guides/providers/custom-api) | HTTP | Any LLM | Variable | Variable |
+
+## Which provider should you choose?
+
+**Just getting started?** Start with [Claude Code](/en/guides/providers/claude-code) — it's the default provider, the most versatile.
+
+**Want to optimize costs?** Combine Claude Code (analysis) + [Gemini](/en/guides/providers/gemini) (generation) with `auto` routing.
+
+**Have security constraints?** Use [OpenCode](/en/guides/providers/opencode) + Ollama for a 100% local pipeline.
+
+**Already have GitHub Copilot?** Add it as a [free fallback](/en/guides/providers/copilot) in your multi-provider config.
+
+**Have an internal LLM proxy?** Configure a [custom API provider](/en/guides/providers/custom-api) (LiteLLM, Azure, OpenAI).
+
+## Quick configuration
+
+In `.aiden/aiden.config.yaml`:
+
+```yaml
+provider: claude-code
+providers:
+  claude-code:
+    enabled: true
+    command: claude
+    model: claude-sonnet-4-6
+    maxTokens: 100000
+    costPer1k: 0.003
+  gemini:
+    enabled: true
+    command: gemini
+    model: gemini-2.5-pro
+    maxTokens: 1000000
+    costPer1k: 0.001
+```
+
+> **Note**: See each provider's guide for installation and authentication instructions.
+
+## Routing
+
+Intelligent routing is what makes AIDEN's multi-provider setup truly useful. Instead of sending everything to the same LLM, each task goes to the best-suited provider — automatically.
+
+4 strategies available:
+
+- **prefer** (default): uses the preferred provider, falls back if unavailable
+- **auto**: chooses the best provider based on the task
+- **fixed**: one provider, always
+- **cost-optimized**: minimizes costs
+
+```yaml
+routing:
+  strategy: auto
+  fallback: [claude-code, gemini, opencode, copilot]
+```
+
+In `auto` mode, each agent receives the optimal provider:
+
+| Task | Default provider |
+|---|---|
+| Analysis, Planning, Documentation | claude-code |
+| Code generation, Tests | gemini |
+| Quick fix, PR review | copilot |
+
+## Check status
+
+Not sure which provider is active? One command:
+
+```bash
+$ aiden provider status
+```
+
+## Token budget
+
+Tokens add up fast. AIDEN lets you set guardrails per feature and per mode, with an alert before you hit the wall.
+
+```yaml
+budget:
+  monthlyLimit: 500000
+  alertAt: 80
+  perFeature:
+    flash: 5000
+    standard: 20000
+    enterprise: 100000
+```
+
+> **Note**: The alert triggers at 80% of the budget. AIDEN blocks calls if the budget is exceeded.
+
+## Security filtering
+
+Before every provider call, AIDEN scrubs the prompt. Secrets never leave your machine — not even by accident.
+
+AIDEN automatically filters sensitive data before sending it to providers:
+
+- Bearer tokens
+- API keys (`sk-`, `ghp_`, `github_pat_`)
+- Passwords
+- Private keys (PEM)
+- Connection strings (postgres, mongodb, redis)
+- AWS access keys
+
+Filtering is enabled by default. To disable it (local use only):
+
+```yaml
+sanitize: false
+```
+
+## Detailed guides
+
+- [Claude Code](/en/guides/providers/claude-code) — Installation, authentication, slash commands
+- [Gemini CLI](/en/guides/providers/gemini) — Installation, Google auth, direct API
+- [OpenCode](/en/guides/providers/opencode) — Multi-backend setup, local LLM
+- [GitHub Copilot](/en/guides/providers/copilot) — GitHub CLI, limitations
+- [Custom API provider](/en/guides/providers/custom-api) — LiteLLM, Ollama, Azure, enterprise proxy

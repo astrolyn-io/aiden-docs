@@ -1,0 +1,197 @@
+# CLI Reference
+
+The complete reference. Every command, every flag, every option. Ctrl+F and find what you need.
+
+---
+
+## Workflow commands
+
+### `aiden init`
+
+Initializes AIDEN in the current project. Scans the tech stack, detects CI, databases, and package manager.
+
+```bash
+aiden init [--enterprise]
+```
+
+- `--enterprise`: includes enterprise templates and rules
+
+### `aiden flash <description>`
+
+Launches a flash (fast) workflow. Lead + Dev, no spec or review — ideal for urgent fixes.
+
+```bash
+aiden flash "Fix bug #123" [--dry-run] [--provider <name>]
+```
+
+### `aiden standard <description>`
+
+Launches a standard workflow. Analysis, planning, development, and automatic review.
+
+```bash
+aiden standard "New users API" [--dry-run] [--provider <name>]
+```
+
+### `aiden enterprise <description>`
+
+Launches an enterprise workflow with human approval between each phase. Documentation and compliance included.
+
+```bash
+aiden enterprise "Auth migration" [--dry-run] [--provider <name>] [--auto-approve]
+```
+
+Options common to all three modes:
+- `--dry-run`: shows what would be done without executing
+- `--provider <name>`: forces a specific provider
+- `--auto-approve`: bypasses human approval gates (useful in CI/CD)
+
+---
+
+## Tracking commands
+
+### `aiden status [feature-slug]`
+
+Displays feature status — current state, phase, provider used.
+
+```bash
+aiden status                    # All features
+aiden status export-csv         # A specific feature
+```
+
+### `aiden resume <feature-slug>`
+
+Resumes a paused or blocked feature. The orchestrator automatically determines the next step.
+
+```bash
+aiden resume export-csv
+```
+
+### `aiden abort <feature-slug>`
+
+Abandons a feature (saves state before deletion).
+
+```bash
+aiden abort export-csv
+```
+
+---
+
+## Agent and provider commands
+
+### `aiden agent <name> <prompt>`
+
+Invokes an agent directly, outside of a workflow. Useful for one-off analyses or debugging.
+
+```bash
+aiden agent analyst "Analyze the billing module"
+aiden agent qa "Review recent changes"
+```
+
+Agents: `analyst`, `planner`, `dev`, `qa`, `docops`.
+
+### `aiden provider`
+
+Manages AI providers — status, switching, costs.
+
+```bash
+aiden provider status           # Provider status
+aiden provider switch gemini    # Switch provider
+aiden provider cost             # Cost report
+```
+
+---
+
+## Configuration commands
+
+### `aiden metrics`
+
+Displays usage metrics — tokens consumed, costs, number of calls per agent.
+
+```bash
+aiden metrics                   # Text display
+aiden metrics --export csv      # CSV export
+```
+
+### `aiden config`
+
+Manages project configuration.
+
+```bash
+aiden config show               # Display
+aiden config set mode flash     # Modify
+```
+
+### `aiden rules`
+
+Manages enterprise rules injected into agent prompts.
+
+```bash
+aiden rules list                # List
+aiden rules add security.md     # Add
+aiden rules remove security     # Remove
+```
+
+### `aiden skills`
+
+Manages extensibility skills — declarative packages that enrich the pipeline.
+
+```bash
+aiden skills list                # List installed skills
+aiden skills init my-skill       # Create a new skill
+aiden skills add /path/to/skill  # Install from a directory
+aiden skills remove my-skill     # Remove a skill
+aiden skills enable my-skill     # Enable a skill
+aiden skills disable my-skill    # Disable a skill
+```
+
+Skills are declarative packages (YAML + Markdown) in `.aiden/skills/` that inject instructions, rules, and hooks into the pipeline. See the [skills guide](/en/guides/skills) for more details.
+
+### `aiden retex`
+
+Manages experience feedback (lessons learned). Relevant retex entries are automatically injected into agent prompts.
+
+```bash
+aiden retex list                                    # List all retex entries
+aiden retex add --title "..." --context tag1,tag2 \
+  --outcome success --lesson "..." \
+  --recommendation "..."                           # Add a retex entry
+aiden retex search <tag>                             # Search by tag
+aiden retex remove <id>                              # Remove a retex entry
+```
+
+Retex entries are stored in `.aiden/retex/` as Markdown. Relevant entries are injected into agent prompts under `--- Lessons Learned ---`.
+
+### `aiden template`
+
+Manages artifact templates.
+
+```bash
+aiden template list             # List
+aiden template customize spec   # Customize
+```
+
+---
+
+## Slash commands (Claude Code)
+
+AIDEN is also available as slash commands in Claude Code — zero installation, same result:
+
+| Slash command | CLI equivalent |
+|---|---|
+| `/aiden-help` | — |
+| `/aiden-init` | `aiden init` |
+| `/aiden-flash <desc>` | `aiden flash "<desc>"` |
+| `/aiden-standard <desc>` | `aiden standard "<desc>"` |
+| `/aiden-enterprise <desc>` | `aiden enterprise "<desc>"` |
+| `/aiden-status` | `aiden status` |
+| `/aiden-resume <slug>` | `aiden resume <slug>` |
+| `/aiden-agent <name> <prompt>` | `aiden agent <name> "<prompt>"` |
+| `/aiden-rules` | `aiden rules list` |
+
+Both modes write to the same `.aiden/` files and are interchangeable.
+
+---
+
+## Next step
+
+See the [configuration reference](/en/reference/config).

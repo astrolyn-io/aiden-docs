@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export function Header() {
+export function Header({ locale }: { locale: string }) {
   const pathname = usePathname();
-  const breadcrumbs = buildBreadcrumbs(pathname);
+  const router = useRouter();
+  const breadcrumbs = buildBreadcrumbs(pathname, locale);
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -23,6 +24,12 @@ export function Header() {
       document.documentElement.removeAttribute('data-theme');
       localStorage.removeItem('aiden-theme');
     }
+  };
+
+  const switchLocale = () => {
+    const otherLocale = locale === 'en' ? 'fr' : 'en';
+    const newPath = pathname.replace(`/${locale}`, `/${otherLocale}`);
+    router.push(newPath);
   };
 
   return (
@@ -70,6 +77,19 @@ export function Header() {
         </kbd>
 
         <button
+          onClick={switchLocale}
+          className="p-1.5 rounded-md transition-colors cursor-pointer text-xs font-semibold"
+          style={{
+            color: 'var(--aiden-text-muted)',
+            background: 'transparent',
+            border: 'none',
+          }}
+          aria-label="Switch language"
+        >
+          {locale === 'en' ? 'FR' : 'EN'}
+        </button>
+
+        <button
           onClick={toggleTheme}
           className="p-1.5 rounded-md transition-colors cursor-pointer"
           style={{
@@ -105,13 +125,16 @@ export function Header() {
   );
 }
 
-function buildBreadcrumbs(pathname: string): Array<{ label: string; href: string }> {
-  if (pathname === '/') return [{ label: 'AIDEN', href: '/' }];
+function buildBreadcrumbs(pathname: string, locale: string): Array<{ label: string; href: string }> {
+  const crumbs = [{ label: 'AIDEN', href: `/${locale}` }];
 
-  const parts = pathname.split('/').filter(Boolean);
-  const crumbs = [{ label: 'AIDEN', href: '/' }];
+  if (pathname === `/${locale}` || pathname === `/${locale}/`) return crumbs;
 
-  let path = '';
+  // Remove the locale prefix and split
+  const withoutLocale = pathname.replace(`/${locale}`, '');
+  const parts = withoutLocale.split('/').filter(Boolean);
+
+  let path = `/${locale}`;
   for (const part of parts) {
     path += `/${part}`;
     crumbs.push({

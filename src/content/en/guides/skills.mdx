@@ -1,0 +1,237 @@
+# Skills
+
+> A code review rule is nice. A complete package with instructions, rules, hooks, and config that activates in one command? That's a skill.
+
+**What you'll learn:**
+- What an AIDEN skill is and why to use one
+- When to choose a skill over a simple rule
+- How to create, manage, and share your own skills
+- The `skill.yaml` format and all its options
+
+## What is a skill?
+
+A **skill** is a declarative package (YAML + Markdown) that bundles instructions, rules, and hooks injectable into the AIDEN pipeline. It's the primary extensibility mechanism for enterprises.
+
+## When to use a skill vs a simple rule?
+
+Before creating a skill, ask yourself: would a simple rule in `.aiden/rules/` suffice?
+
+| | **Simple rule** (`.aiden/rules/`) | **Skill** (`.aiden/skills/`) |
+|---|---|---|
+| **Use case** | Single, cross-cutting convention | Complete concern (compliance, integration, workflow) |
+| **Agent targeting** | Sent to all agents | Targets specific agents |
+| **Mode filtering** | Always active | Activatable by mode (flash, standard, enterprise) |
+| **Hooks** | No | Yes (on_feature_created, on_phase_end, etc.) |
+| **Configuration** | No | Yes (custom variables, env vars) |
+| **Versioning** | Single file | Versioned package, enable/disable |
+| **Example** | "No `any` in TypeScript" | "GDPR compliance: instructions + rules + notification hooks" |
+
+**In short**: if your need fits in a single Markdown file with no particular targeting, a rule is enough. As soon as you need to target agents, filter by mode, or add hooks, you need a skill.
+
+## Structure of a skill
+
+```
+.aiden/skills/
+  my-skill/
+    skill.yaml            # Manifest: metadata, target agents, hooks
+    instructions.md       # Instructions injected into agent prompts
+    rules/                # Additional rules (optional)
+      security.md
+    hooks/                # Hook scripts (optional)
+      on_feature_created.sh
+```
+
+### `skill.yaml` -- The manifest
+
+```yaml
+name: my-skill                # (required) Unique identifier
+version: 1.0.0                # Skill version
+description: "Description"    # Human-readable description
+author: platform-team          # Author (optional)
+
+# Agents that will receive this skill's instructions
+agents:
+  - dev
+  - qa
+
+# Modes where this skill is active (all if omitted)
+modes:
+  - standard
+  - enterprise
+
+# Hooks declared by this skill
+hooks:
+  on_feature_created:
+    - command: ./hooks/notify.sh
+      onFailure: warn
+  on_feature_completed:
+    - command: ./hooks/close-ticket.sh
+      onFailure: ignore
+
+# Custom configuration (accessible in hooks via env vars)
+config:
+  jira_url: https://mycompany.atlassian.net
+  project_key: PROJ
+
+# Injection priority (higher = injected first)
+priority: 10
+
+# Active or not
+enabled: true
+```
+
+### `instructions.md` -- The instructions
+
+This file's content is injected into each target agent's prompt under the `--- Skills Instructions ---` section.
+
+```markdown
+# My Skill
+
+## For Dev Agent
+- Always use strict types
+- No `any` allowed
+
+## For QA Agent
+- Verify test coverage >= 80%
+```
+
+### `rules/` -- Additional rules
+
+The `.md` files in this folder are merged with the project rules (`.aiden/rules/`) and injected into the `--- Enterprise Rules ---` section of the prompt.
+
+## Full `skill.yaml` schema
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `name` | string | (required) | Unique skill identifier |
+| `version` | string | `1.0.0` | Semver version |
+| `description` | string | `""` | Human-readable description |
+| `author` | string | -- | Author or team |
+| `agents` | AgentRole[] | all agents | Agents that will receive instructions |
+| `modes` | CTAMode[] | all modes | Modes where the skill is active |
+| `hooks` | Record | -- | Hooks per event |
+| `config` | Record | -- | Custom configuration |
+| `priority` | number | `0` | Injection priority (descending) |
+| `enabled` | boolean | `true` | Enable/disable without removing |
+
+### Possible `agents` values
+
+`lead`, `analyst`, `planner`, `dev`, `qa`, `docops`
+
+### Possible `modes` values
+
+`flash`, `standard`, `enterprise`
+
+### Hook events
+
+`on_feature_created`, `on_phase_start`, `on_phase_end`, `on_feature_completed`, `on_feature_blocked`, `on_agent_start`, `on_agent_output`, `on_agent_error`, `on_quality_gate_pass`, `on_quality_gate_fail`
+
+## CLI commands
+
+### Create a new skill
+
+```bash
+$ aiden skills init my-skill
+```
+
+Creates `.aiden/skills/my-skill/` with a template `skill.yaml` and an empty `instructions.md`.
+
+### List installed skills
+
+```bash
+$ aiden skills list
+```
+
+Displays name, version, target agents, and status (enabled/disabled).
+
+### Install an external skill
+
+```bash
+$ aiden skills add /path/to/skill
+```
+
+Copies the skill folder into `.aiden/skills/`.
+
+### Remove a skill
+
+```bash
+$ aiden skills remove my-skill
+```
+
+### Enable/Disable
+
+```bash
+$ aiden skills enable my-skill
+$ aiden skills disable my-skill
+```
+
+Modifies `enabled` in `skill.yaml` without removing the skill.
+
+## Skill examples
+
+AIDEN provides 3 skill templates in `templates/skills/`:
+
+### `code-review-strict`
+
+Enforces strict code review standards for Dev and QA: explicit types, no `any`, mandatory JSDoc, test coverage >= 80%.
+
+```bash
+$ cp -r templates/skills/code-review-strict .aiden/skills/
+```
+
+### `compliance-gdpr`
+
+GDPR compliance checks for code handling personal data. Targets Analyst, Dev, and QA in standard and enterprise modes.
+
+### `jira-sync`
+
+Syncs AIDEN features with Jira. Declares hooks on `on_feature_created` and `on_feature_completed`. Disabled by default (configure with your Jira URL).
+
+## How skills are loaded
+
+1. At workflow start, the orchestrator loads all skills from `.aiden/skills/`
+2. Skills with `enabled: false` are filtered out
+3. Skills are sorted by `priority` (higher = injected first)
+4. For each agent, only skills targeting it (and matching the mode) are injected
+5. Instructions appear in the prompt under `--- Skills Instructions ---`
+6. Skill rules are merged with project rules under `--- Enterprise Rules ---`
+
+## Sharing skills between teams
+
+### Git submodule
+
+```bash
+$ git submodule add https://github.com/org/aiden-skills-common .aiden/skills/common
+```
+
+### Direct copy
+
+```bash
+$ aiden skills add /path/to/shared-skills/compliance-gdpr
+```
+
+### Monorepo
+
+In a monorepo, place shared skills at the root and create symlinks:
+
+```bash
+# Monorepo root
+shared-skills/
+  compliance-gdpr/
+
+# In each package
+.aiden/skills/compliance-gdpr -> ../../../shared-skills/compliance-gdpr
+```
+
+## Best practices
+
+1. **One skill = one concern**: don't mix security and Jira in the same skill
+2. **Short and actionable instructions**: LLMs prefer clear lists of rules
+3. **Target relevant agents**: don't target all agents if only the Dev is concerned
+4. **Use modes**: compliance skills don't need to be active in flash mode
+5. **Priority**: security/compliance skills should have high priority (>= 20)
+6. **Commit your skills**: `.aiden/skills/` should be versioned with the code
+
+## Next step
+
+See the [configuration reference](/en/reference/config) for the full schema, or the [rules and templates](/en/guides/rules-and-templates) guide for standard rules.

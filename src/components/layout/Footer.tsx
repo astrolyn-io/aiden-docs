@@ -2,11 +2,20 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { navigation } from '@/lib/navigation';
+import { getNavigation } from '@/lib/navigation';
+
+function getLocaleFromPath(pathname: string): string {
+  const match = pathname.match(/^\/(en|fr)(\/|$)/);
+  return match ? match[1] : 'en';
+}
 
 export function Footer() {
   const pathname = usePathname();
-  const { prev, next } = getPrevNext(pathname);
+  const locale = getLocaleFromPath(pathname);
+  const { prev, next } = getPrevNext(pathname, locale);
+
+  const prevLabel = locale === 'fr' ? 'Precedent' : 'Previous';
+  const nextLabel = locale === 'fr' ? 'Suivant' : 'Next';
 
   return (
     <footer className="mt-16 pt-8" style={{ borderTop: '1px solid var(--aiden-border)' }}>
@@ -20,9 +29,9 @@ export function Footer() {
               background: 'var(--aiden-bg-card)',
             }}
           >
-            <span style={{ color: 'var(--aiden-text-muted)' }}>←</span>
+            <span style={{ color: 'var(--aiden-text-muted)' }}>&#8592;</span>
             <div>
-              <div className="text-[11px]" style={{ color: 'var(--aiden-text-muted)' }}>Precedent</div>
+              <div className="text-[11px]" style={{ color: 'var(--aiden-text-muted)' }}>{prevLabel}</div>
               <div style={{ color: 'var(--aiden-text-primary)' }}>{prev.title}</div>
             </div>
           </Link>
@@ -39,10 +48,10 @@ export function Footer() {
             }}
           >
             <div>
-              <div className="text-[11px]" style={{ color: 'var(--aiden-text-muted)' }}>Suivant</div>
+              <div className="text-[11px]" style={{ color: 'var(--aiden-text-muted)' }}>{nextLabel}</div>
               <div style={{ color: 'var(--aiden-accent-primary)' }}>{next.title}</div>
             </div>
-            <span style={{ color: 'var(--aiden-accent-primary)' }}>→</span>
+            <span style={{ color: 'var(--aiden-accent-primary)' }}>&#8594;</span>
           </Link>
         ) : (
           <div className="flex-1" />
@@ -55,11 +64,15 @@ export function Footer() {
   );
 }
 
-function getPrevNext(pathname: string): {
+function getPrevNext(
+  pathname: string,
+  locale: string,
+): {
   prev?: { title: string; href: string };
   next?: { title: string; href: string };
 } {
-  const allItems = navigation.flatMap((s) => s.items);
+  const nav = getNavigation(locale);
+  const allItems = nav.flatMap((s) => s.items);
   const idx = allItems.findIndex((item) => item.href === pathname);
   if (idx === -1) return {};
   return {

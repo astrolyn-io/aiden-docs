@@ -1,10 +1,5 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { TableOfContents } from '@/components/layout/TableOfContents';
-import { SearchModal } from '@/components/ui/SearchModal';
 import './globals.css';
 
 const siteUrl = process.env.SITE_URL || 'https://astrolyn.github.io/aiden';
@@ -12,11 +7,11 @@ const siteUrl = process.env.SITE_URL || 'https://astrolyn.github.io/aiden';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'AIDEN — Framework CLI d\'ingenierie IA pour equipes dev',
+    default: 'AIDEN — AI-Driven Engineering CLI Framework',
     template: '%s | AIDEN Docs',
   },
   description:
-    'Orchestrez 6 agents IA specialises (Analyst, Planner, Dev, QA...) via une CLI. 3 modes adaptatifs, multi-provider (Claude, Gemini, Copilot), integration enterprise. Open source.',
+    'Orchestrate 6 specialized AI agents (Analyst, Planner, Dev, QA...) via CLI. 3 adaptive modes, multi-provider (Claude, Gemini, Copilot), enterprise integration. Open source.',
   keywords: [
     'AIDEN',
     'AI development',
@@ -37,17 +32,16 @@ export const metadata: Metadata = {
   creator: 'Astrolyn',
   openGraph: {
     type: 'website',
-    locale: 'fr_FR',
     siteName: 'AIDEN Documentation',
-    title: 'AIDEN — Framework CLI d\'ingenierie IA pour equipes dev',
+    title: 'AIDEN — AI-Driven Engineering CLI Framework',
     description:
-      'Orchestrez 6 agents IA specialises via une CLI. Du bug fix en 30s a l\'architecture enterprise. Open source, multi-provider.',
+      'Orchestrate 6 specialized AI agents via CLI. From bug fix in 30s to enterprise architecture. Open source, multi-provider.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AIDEN — Framework CLI d\'ingenierie IA',
+    title: 'AIDEN — AI-Driven Engineering CLI',
     description:
-      'Orchestrez 6 agents IA specialises via une CLI. Du bug fix en 30s a l\'architecture enterprise.',
+      'Orchestrate 6 specialized AI agents via CLI. From bug fix in 30s to enterprise architecture.',
   },
   robots: {
     index: true,
@@ -66,7 +60,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link
@@ -83,7 +77,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               applicationCategory: 'DeveloperApplication',
               operatingSystem: 'Windows, macOS, Linux',
               description:
-                'Framework CLI open source pour orchestrer des agents IA specialises dans le developpement logiciel en entreprise.',
+                'Open source CLI framework to orchestrate specialized AI agents for enterprise software development.',
               offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
               author: { '@type': 'Organization', name: 'Astrolyn' },
             }),
@@ -100,20 +94,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
       </head>
-      <body>
-        <Sidebar />
-        <SearchModal />
-        <div className="md:ml-64">
-          <Header />
-          <div className="flex">
-            <main className="flex-1 max-w-3xl mx-auto px-6 py-8 prose-aiden">
-              {children}
-              <Footer />
-            </main>
-            <TableOfContents />
-          </div>
-        </div>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
