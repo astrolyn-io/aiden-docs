@@ -1,11 +1,15 @@
+export const metadata = { title: 'Providers IA — Claude, Gemini, Copilot, Ollama et plus', description: 'Connectez AIDEN a Claude Code, Gemini CLI, GitHub Copilot, OpenCode ou n\'importe quel LLM via API. Routage intelligent, budget tokens, filtrage securite.' };
+
 # Providers
 
-> **Ce que vous allez apprendre**
-> - Les providers supportes par AIDEN
-> - Choisir le bon provider pour votre usage
-> - Le routage intelligent entre providers
-> - Le filtrage securite des prompts
-> - Gerer le budget tokens
+> AIDEN ne vous enferme pas. Claude pour l'analyse, Gemini pour le code, Copilot en backup gratuit, Ollama pour le 100% local — mixez comme vous voulez.
+
+## Decision rapide
+
+> **Vous debutez ?** → Claude Code.
+> **Budget serre ?** → Gemini.
+> **Donnees sensibles ?** → OpenCode + Ollama.
+> **Deja Copilot ?** → Ajoutez-le en fallback.
 
 ## Providers supportes
 
@@ -56,6 +60,8 @@ providers:
 
 ## Routage
 
+Le routage intelligent est ce qui rend AIDEN multi-provider vraiment utile. Au lieu de tout envoyer au meme LLM, chaque tache va au provider le plus adapte — automatiquement.
+
 4 strategies disponibles :
 
 - **prefer** (defaut) : utilise le provider prefere, fallback si indisponible
@@ -79,11 +85,15 @@ En mode `auto`, chaque agent recoit le provider optimal :
 
 ## Verifier le statut
 
+Un doute sur quel provider est actif ? Une seule commande :
+
 ```bash
 $ aiden provider status
 ```
 
 ## Budget tokens
+
+Les tokens, ca chiffre vite. AIDEN vous permet de poser des gardes-fous par feature et par mode, avec une alerte avant le mur.
 
 ```yaml
 budget:
@@ -98,6 +108,8 @@ budget:
 > **Information** : L'alerte se declenche a 80% du budget. AIDEN bloque les appels si le budget est depasse.
 
 ## Filtrage securite
+
+Avant chaque appel provider, AIDEN passe le prompt au crible. Les secrets ne sortent jamais de votre machine — meme par accident.
 
 AIDEN filtre automatiquement les donnees sensibles avant de les envoyer aux providers :
 

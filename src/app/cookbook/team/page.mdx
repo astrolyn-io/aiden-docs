@@ -1,31 +1,35 @@
-# AIDEN en équipe
+export const metadata = { title: 'AIDEN en equipe — De 5 a 50 developpeurs', description: 'Deployer AIDEN en equipe : regles partagees Git, workflow Git, onboarding 30 min, metriques adoption, review basee sur les artefacts. Guide complet.' };
 
-> **Ce que vous allez apprendre**
-> - Configurer AIDEN pour une équipe de 5 à 50+ développeurs
-> - Partager les règles, conventions et templates
-> - Workflow Git avec AIDEN
-> - Onboarding d'un nouveau membre en 30 minutes
+# AIDEN en equipe
 
-## Configuration équipe
+> Un dev avec AIDEN, c'est bien. Une equipe entiere avec les memes regles, le meme workflow et un onboarding de 30 minutes ? C'est la que ca devient vraiment puissant.
 
-### Règles partagées dans Git
+**Ce que vous allez apprendre :**
+- Configurer AIDEN pour une equipe de 5 a 50+ developpeurs
+- Partager les regles, conventions et templates
+- Workflow Git avec AIDEN
+- Onboarding d'un nouveau membre en 30 minutes
 
-Commitez `.aiden/rules/` dans votre repo. Toute l'équipe utilise les mêmes standards automatiquement.
+## Configuration equipe
+
+### Regles partagees dans Git
+
+Commitez `.aiden/rules/` dans votre repo. Toute l'equipe utilise les memes standards automatiquement.
 
 ```
 .aiden/
   rules/
     coding-standards.md         # Standards de code communs
-    security-policy.md          # Politique de sécurité
+    security-policy.md          # Politique de securite
     architecture-principles.md  # Principes d'architecture
     api-guidelines.md           # Standards API REST
 ```
 
-Chaque règle est un fichier Markdown injecté automatiquement dans les prompts des agents.
+Chaque regle est un fichier Markdown injecte automatiquement dans les prompts des agents.
 
 ### Config globale (multi-projets)
 
-Pour les règles qui s'appliquent à **tous les projets** de l'organisation, utilisez la config globale :
+Pour les regles qui s'appliquent a **tous les projets** de l'organisation, utilisez la config globale :
 
 ```yaml
 # ~/.aiden/enterprise.config.yaml (sur chaque poste)
@@ -51,11 +55,11 @@ coding:
   commit_convention: conventional
 ```
 
-Distribuez ce fichier via le script de provisioning des postes développeurs.
+Distribuez ce fichier via le script de provisioning des postes developpeurs.
 
-### Profiles par équipe
+### Profiles par equipe
 
-Si votre organisation a plusieurs équipes avec des stacks différentes :
+Si votre organisation a plusieurs equipes avec des stacks differentes :
 
 ```yaml
 # .aiden/aiden.config.yaml
@@ -78,21 +82,21 @@ profiles:
 
 ## Workflow Git avec AIDEN
 
-### Workflow recommandé
+### Workflow recommande
 
 ```
-1. Créer une branche       git checkout -b feature/export-csv
+1. Creer une branche       git checkout -b feature/export-csv
 2. Lancer AIDEN              aiden standard "Ajouter export CSV des rapports"
-3. AIDEN génère              code + tests + artefacts dans .aiden/features/
+3. AIDEN genere              code + tests + artefacts dans .aiden/features/
 4. Review humaine          Le reviewer lit review.md + spec.md + le diff
 5. Commiter                git add -A && git commit -m "feat: export CSV"
 6. Push + PR               Les artefacts aident le reviewer
-7. Merge + clean           La feature reste archivée dans .aiden/features/
+7. Merge + clean           La feature reste archivee dans .aiden/features/
 ```
 
 ### Convention de branches
 
-| Type de branche | Mode AIDEN recommandé |
+| Type de branche | Mode AIDEN recommande |
 |----------------|---------------------|
 | `fix/<slug>` | `aiden flash` |
 | `feature/<slug>` | `aiden standard` |
@@ -102,17 +106,17 @@ profiles:
 
 ### Que commiter dans Git ?
 
-| Répertoire | Commiter ? | Raison |
+| Repertoire | Commiter ? | Raison |
 |-----------|------------|--------|
-| `.aiden/aiden.config.yaml` | **Oui** | Configuration partagée |
-| `.aiden/rules/` | **Oui** | Standards d'équipe |
-| `.aiden/templates/` | **Oui** | Templates personnalisés |
+| `.aiden/aiden.config.yaml` | **Oui** | Configuration partagee |
+| `.aiden/rules/` | **Oui** | Standards d'equipe |
+| `.aiden/templates/` | **Oui** | Templates personnalises |
 | `.aiden/features/` | **Oui** | Artefacts = documentation vivante |
-| `.aiden/memory/context.yaml` | **Optionnel** | État courant (utile pour la reprise) |
+| `.aiden/memory/context.yaml` | **Optionnel** | Etat courant (utile pour la reprise) |
 | `.aiden/memory/decisions.jsonl` | **Oui** | Audit trail |
-| `.aiden/memory/metrics.jsonl` | **Optionnel** | Métriques (utile pour le suivi) |
+| `.aiden/memory/metrics.jsonl` | **Optionnel** | Metriques (utile pour le suivi) |
 
-### .gitignore recommandé
+### .gitignore recommande
 
 ```gitignore
 # AIDEN — garder les artefacts, ignorer les fichiers temporaires
@@ -121,19 +125,19 @@ profiles:
 
 ## Politique de review avec AIDEN
 
-### Review basée sur les artefacts
+### Review basee sur les artefacts
 
-Quand un développeur ouvre une PR après un `aiden standard`, le reviewer dispose de :
+Quand un developpeur ouvre une PR apres un `aiden standard`, le reviewer dispose de :
 
-| Artefact | Ce que le reviewer vérifie |
+| Artefact | Ce que le reviewer verifie |
 |----------|---------------------------|
-| `brief.md` | L'analyse est-elle correcte ? Les risques identifiés ? |
+| `brief.md` | L'analyse est-elle correcte ? Les risques identifies ? |
 | `spec.md` | La spec correspond-elle au besoin ? |
-| `stories/*.md` | Les critères d'acceptation sont-ils complets ? |
-| `review.md` | Le QA a-t-il identifié des problèmes ? Tous les critères PASS ? |
-| `decisions.jsonl` | Les décisions IA sont-elles raisonnables ? |
+| `stories/*.md` | Les criteres d'acceptation sont-ils complets ? |
+| `review.md` | Le QA a-t-il identifie des problemes ? Tous les criteres PASS ? |
+| `decisions.jsonl` | Les decisions IA sont-elles raisonnables ? |
 
-Le reviewer humain se concentre sur la **cohérence métier** et les **choix d'architecture**, pas sur le style ou les tests (déjà vérifiés par le QA).
+Le reviewer humain se concentre sur la **coherence metier** et les **choix d'architecture**, pas sur le style ou les tests (deja verifies par le QA).
 
 ### Niveaux de review par mode
 
@@ -151,10 +155,10 @@ Le reviewer humain se concentre sur la **cohérence métier** et les **choix d'a
 5 min   Installer Node 20+ et pnpm
 2 min   pnpm add -g @astrolyn/aiden
 1 min   Copier ~/.aiden/enterprise.config.yaml (via provisioning)
-2 min   Cloner le repo (les règles sont incluses dans .aiden/rules/)
-1 min   aiden provider status  — vérifier le provider
-5 min   aiden flash "Ajouter un log info au démarrage"  — premier flash
-5 min   aiden status + explorer les artefacts générés
+2 min   Cloner le repo (les regles sont incluses dans .aiden/rules/)
+1 min   aiden provider status  — verifier le provider
+5 min   aiden flash "Ajouter un log info au demarrage"  — premier flash
+5 min   aiden status + explorer les artefacts generes
 10 min  Lire les artefacts d'une feature existante dans .aiden/features/
 ```
 
@@ -163,15 +167,15 @@ Le reviewer humain se concentre sur la **cohérence métier** et les **choix d'a
 Les artefacts AIDEN dans `.aiden/features/` sont des **documents d'onboarding vivants**. Un nouveau membre peut lire :
 
 - Le `brief.md` pour comprendre **pourquoi** une feature existe
-- Le `spec.md` pour comprendre **comment** elle a été conçue
-- Le `review.md` pour comprendre **quels problèmes** ont été identifiés
-- Le `decisions.jsonl` pour comprendre **quelles décisions IA** ont été prises
+- Le `spec.md` pour comprendre **comment** elle a ete concue
+- Le `review.md` pour comprendre **quels problemes** ont ete identifies
+- Le `decisions.jsonl` pour comprendre **quelles decisions IA** ont ete prises
 
 C'est plus rapide que lire le code et deviner l'intention.
 
 ### Capitaliser avec les retex
 
-Les **retex** (retours d'expérience) permettent à l'équipe de capitaliser les leçons apprises :
+Les **retex** (retours d'experience) permettent a l'equipe de capitaliser les lecons apprises :
 
 ```bash
 # Apres une feature reussie
@@ -192,39 +196,39 @@ $ aiden retex add --title "Cache Redis sans TTL" \
 $ aiden retex search migration
 ```
 
-Les retex pertinents sont automatiquement injectés dans les prompts des agents. L'équipe apprend collectivement de ses expériences.
+Les retex pertinents sont automatiquement injectes dans les prompts des agents. L'equipe apprend collectivement de ses experiences.
 
-## Métriques d'équipe
+## Metriques d'equipe
 
 ### Suivi d'adoption
 
 ```bash
-# Métriques globales
+# Metriques globales
 $ aiden metrics
 
 # Export CSV pour dashboard
 $ aiden metrics --export csv > metriques-equipe-mars.csv
 ```
 
-### KPI équipe
+### KPI equipe
 
-| Métrique | Cible | Comment |
+| Metrique | Cible | Comment |
 |----------|-------|---------|
 | % devs actifs sur AIDEN | > 70% | metrics.jsonl par agent unique |
 | Features standard vs flash | > 30% standard | decisions.jsonl type=mode_selection |
-| Coût moyen par dev/mois | < $80 | metrics.jsonl agrégé |
+| Cout moyen par dev/mois | < $80 | metrics.jsonl agrege |
 | Taux circuit breaker | < 10% | decisions.jsonl type=circuit_breaker |
 
-## Anti-patterns à éviter
+## Anti-patterns a eviter
 
-| Anti-pattern | Pourquoi c'est un problème | Solution |
+| Anti-pattern | Pourquoi c'est un probleme | Solution |
 |-------------|---------------------------|----------|
-| Forcer AIDEN sur toute l'équipe d'un coup | Rejet et frustration | Adopter progressivement : pilote → équipes → général |
-| Utiliser enterprise pour tout | Sur-ingénierie, lenteur | Flash pour les fix, standard pour les features, enterprise pour les projets critiques |
-| Ne pas commiter les artefacts | Perte de traçabilité et d'onboarding | Toujours commiter `.aiden/features/` avec le code |
+| Forcer AIDEN sur toute l'equipe d'un coup | Rejet et frustration | Adopter progressivement : pilote -> equipes -> general |
+| Utiliser enterprise pour tout | Sur-ingenierie, lenteur | Flash pour les fix, standard pour les features, enterprise pour les projets critiques |
+| Ne pas commiter les artefacts | Perte de tracabilite et d'onboarding | Toujours commiter `.aiden/features/` avec le code |
 | Ignorer le review.md | Perdre la valeur du QA automatique | Le reviewer humain doit lire le review.md en premier |
-| Des règles trop strictes au début | Friction, contournement | Commencer avec des règles légères, durcir progressivement |
+| Des regles trop strictes au debut | Friction, contournement | Commencer avec des regles legeres, durcir progressivement |
 
-## Prochaine étape
+## Prochaine etape
 
-Intégrez AIDEN dans vos [pipelines CI/CD](/cookbook/ci-cd) pour automatiser les vérifications.
+Integrez AIDEN dans vos [pipelines CI/CD](/cookbook/ci-cd) pour automatiser les verifications.

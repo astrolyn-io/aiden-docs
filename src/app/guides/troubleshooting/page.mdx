@@ -1,73 +1,118 @@
+export const metadata = { title: 'Troubleshooting AIDEN — Solutions rapides aux problemes courants', description: 'Solutions rapides : command not found, no provider available, budget exceeded, circuit breaker, feature bloquee. Debug et logs AIDEN.' };
+
 # Troubleshooting
 
-> **Ce que vous allez apprendre**
-> - Résoudre les problèmes courants
-> - Lire les logs AIDEN
-> - Réinitialiser une feature bloquée
+> Ca ne marche pas ? Pas de panique. 90% des problemes se resolvent en moins d'une minute. Trouvez le votre ci-dessous.
 
-## Problèmes courants
+---
+
+## Problemes courants
 
 ### "command not found: aiden"
 
-Le binaire n'est pas dans le PATH. Vérifiez :
+**Symptome** : Le terminal ne reconnait pas la commande `aiden`.
+
+**Cause** : Le binaire n'est pas dans le PATH.
+
+**Solution** : Verifiez le chemin et ajoutez-le a votre PATH :
 ```bash
 $ pnpm bin -g
 ```
-Ajoutez ce chemin à votre PATH.
+
+---
 
 ### "No AIDEN config found"
 
-Vous n'avez pas initialisé AIDEN. Lancez `aiden init`.
+**Symptome** : AIDEN refuse de demarrer et demande une configuration.
+
+**Cause** : Le projet n'a pas ete initialise.
+
+**Solution** : Lancez `aiden init` a la racine de votre projet.
+
+---
 
 ### "No provider available"
 
-Aucun provider n'est accessible. Vérifiez :
+**Symptome** : AIDEN ne trouve aucun provider pour executer la tache.
+
+**Cause** : Aucun provider CLI n'est installe ou accessible.
+
+**Solution** : Verifiez que le provider est installe et repond :
 ```bash
 $ claude --version   # ou gemini --version
 $ aiden provider status
 ```
 
+---
+
 ### "Budget exceeded"
 
-Le budget tokens de la feature est dépassé. Options :
+**Symptome** : AIDEN bloque l'execution et signale un depassement de budget.
+
+**Cause** : Le budget tokens de la feature est depasse.
+
+**Solution** : Deux options :
 - Augmenter le budget dans `aiden.config.yaml`
 - Passer en mode flash (budget plus petit mais suffisant)
 
-### Circuit breaker déclenché
+---
 
-Un agent a échoué 3 fois. AIDEN arrête et escalade :
+### Circuit breaker declenche
+
+**Symptome** : Le message suivant apparait :
 ```
 AIDEN Lead > Circuit breaker OPEN for dev: escalating to human
 ```
-Solution : vérifiez l'erreur, corrigez le contexte, puis `aiden resume <slug>`.
 
-### Feature bloquée
+**Cause** : Un agent a echoue 3 fois de suite. AIDEN arrete et escalade.
 
+**Solution** : Verifiez l'erreur dans les logs, corrigez le contexte, puis relancez :
+```bash
+$ aiden resume <slug>
+```
+
+---
+
+### Feature bloquee
+
+**Symptome** : La feature apparait comme `blocked` dans le statut :
 ```bash
 $ aiden status
 ma-feature [blocked] (standard) - ...
 ```
 
-Pour débloquer :
+**Cause** : Un quality gate a echoue ou une approbation manque.
+
+**Solution** : Pour debloquer et reprendre :
 ```bash
 $ aiden resume ma-feature
 Resuming feature: ma-feature
 ```
 
-Pour abandonner :
+Pour abandonner definitivement :
 ```bash
 $ aiden abort ma-feature
 Aborting feature: ma-feature
 ```
 
-### Les artefacts ne sont pas générés
+---
 
-Vérifiez que le dossier `.aiden/features/` existe et que le provider répond.
+### Les artefacts ne sont pas generes
 
-## Logs
+**Symptome** : Le workflow termine mais aucun fichier n'apparait.
 
-Les décisions sont dans `.aiden/memory/decisions.jsonl` (JSONL, une ligne par décision).
-Les métriques sont dans `.aiden/memory/metrics.jsonl`.
+**Cause** : Le dossier de sortie n'existe pas ou le provider ne repond pas.
+
+**Solution** : Verifiez que le dossier `.aiden/features/` existe et que `aiden provider status` montre un provider actif.
+
+---
+
+## Logs et debug
+
+Quand les solutions rapides ne suffisent pas, les logs vous disent exactement ce qui s'est passe.
+
+Les decisions sont dans `.aiden/memory/decisions.jsonl` (JSONL, une ligne par decision).
+Les metriques sont dans `.aiden/memory/metrics.jsonl`.
 
 ```bash
 $ aiden metrics
@@ -76,6 +121,6 @@ export-csv: 3000 tokens, $0.0090, 2 operations
 
 > **Danger** : Ne modifiez jamais `decisions.jsonl` manuellement. C'est un log append-only.
 
-## Prochaine étape
+## Prochaine etape
 
-Consultez la [référence CLI](/reference/cli) pour la documentation complète.
+Consultez la [reference CLI](/reference/cli) pour la documentation complete.

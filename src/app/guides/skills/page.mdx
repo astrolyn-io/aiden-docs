@@ -1,21 +1,34 @@
+export const metadata = { title: 'Skills AIDEN — Packages extensibles pour equipes enterprise', description: 'Skills : packages plug-and-play (YAML + Markdown) pour injecter compliance RGPD, sync Jira, code review strict. Creation, partage et gestion.' };
+
 # Skills
 
-> **Ce que vous allez apprendre**
-> - Ce qu'est un skill AIDEN et pourquoi l'utiliser
-> - Comment créer votre propre skill
-> - Le format `skill.yaml` et ses options
-> - Comment partager des skills entre équipes
+> Une regle de code review, c'est bien. Un package complet avec instructions, regles, hooks et config qui s'active en une commande ? C'est un skill.
+
+**Ce que vous allez apprendre :**
+- Ce qu'est un skill AIDEN et pourquoi l'utiliser
+- Quand choisir un skill plutot qu'une simple regle
+- Comment creer, gerer et partager vos propres skills
+- Le format `skill.yaml` et toutes ses options
 
 ## Qu'est-ce qu'un skill ?
 
-Un **skill** est un package déclaratif (YAML + Markdown) qui regroupe des instructions, règles et hooks injectables dans le pipeline AIDEN. C'est le mécanisme d'extensibilité principal pour les entreprises.
+Un **skill** est un package declaratif (YAML + Markdown) qui regroupe des instructions, regles et hooks injectables dans le pipeline AIDEN. C'est le mecanisme d'extensibilite principal pour les entreprises.
 
-Contrairement aux règles simples (`.aiden/rules/`), un skill :
-- **Cible des agents spécifiques** (ex: uniquement Dev et QA)
-- **Filtre par mode** (ex: uniquement en enterprise)
-- **Déclare des hooks** exécutables à chaque étape du workflow
-- **Porte sa propre configuration** accessible dans les hooks
-- **Est versionné et activable/désactivable**
+## Quand utiliser un skill vs une simple regle ?
+
+Avant de creer un skill, posez-vous la question : une simple regle dans `.aiden/rules/` suffit-elle ?
+
+| | **Regle simple** (`.aiden/rules/`) | **Skill** (`.aiden/skills/`) |
+|---|---|---|
+| **Cas d'usage** | Convention unique et transversale | Preoccupation complete (compliance, integration, workflow) |
+| **Ciblage agents** | Envoyee a tous les agents | Cible des agents specifiques |
+| **Filtrage par mode** | Toujours active | Activable par mode (flash, standard, enterprise) |
+| **Hooks** | Non | Oui (on_feature_created, on_phase_end, etc.) |
+| **Configuration** | Non | Oui (variables custom, env vars) |
+| **Versioning** | Fichier seul | Package versionne, activable/desactivable |
+| **Exemple** | "Pas de `any` en TypeScript" | "Compliance RGPD : instructions + regles + hooks de notification" |
+
+**En resume** : si votre besoin tient en un fichier Markdown sans ciblage particulier, une regle suffit. Des que vous avez besoin de cibler des agents, filtrer par mode, ou ajouter des hooks, c'est un skill qu'il vous faut.
 
 ## Structure d'un skill
 
@@ -30,7 +43,7 @@ Contrairement aux règles simples (`.aiden/rules/`), un skill :
       on_feature_created.sh
 ```
 
-### `skill.yaml` — Le manifeste
+### `skill.yaml` -- Le manifeste
 
 ```yaml
 name: mon-skill               # (requis) Identifiant unique
@@ -69,9 +82,9 @@ priority: 10
 enabled: true
 ```
 
-### `instructions.md` — Les instructions
+### `instructions.md` -- Les instructions
 
-Le contenu de ce fichier est injecté dans le prompt de chaque agent cible sous la section `--- Skills Instructions ---`.
+Le contenu de ce fichier est injecte dans le prompt de chaque agent cible sous la section `--- Skills Instructions ---`.
 
 ```markdown
 # Mon Skill
@@ -84,24 +97,24 @@ Le contenu de ce fichier est injecté dans le prompt de chaque agent cible sous 
 - Verifier la couverture de tests >= 80%
 ```
 
-### `rules/` — Règles additionnelles
+### `rules/` -- Regles additionnelles
 
-Les fichiers `.md` dans ce dossier sont mergés avec les règles du projet (`.aiden/rules/`) et injectés dans la section `--- Enterprise Rules ---` du prompt.
+Les fichiers `.md` dans ce dossier sont merges avec les regles du projet (`.aiden/rules/`) et injectes dans la section `--- Enterprise Rules ---` du prompt.
 
-## Schéma complet `skill.yaml`
+## Schema complet `skill.yaml`
 
-| Clé | Type | Défaut | Description |
+| Cle | Type | Defaut | Description |
 |---|---|---|---|
 | `name` | string | (requis) | Identifiant unique du skill |
 | `version` | string | `1.0.0` | Version semver |
 | `description` | string | `""` | Description lisible |
-| `author` | string | — | Auteur ou équipe |
+| `author` | string | -- | Auteur ou equipe |
 | `agents` | AgentRole[] | tous les agents | Agents qui recevront les instructions |
-| `modes` | CTAMode[] | tous les modes | Modes où le skill est actif |
-| `hooks` | Record | — | Hooks par événement |
-| `config` | Record | — | Configuration custom |
-| `priority` | number | `0` | Priorité d'injection (décroissant) |
-| `enabled` | boolean | `true` | Activer/désactiver sans supprimer |
+| `modes` | CTAMode[] | tous les modes | Modes ou le skill est actif |
+| `hooks` | Record | -- | Hooks par evenement |
+| `config` | Record | -- | Configuration custom |
+| `priority` | number | `0` | Priorite d'injection (decroissant) |
+| `enabled` | boolean | `true` | Activer/desactiver sans supprimer |
 
 ### Valeurs `agents` possibles
 
@@ -111,21 +124,21 @@ Les fichiers `.md` dans ce dossier sont mergés avec les règles du projet (`.ai
 
 `flash`, `standard`, `enterprise`
 
-### Événements hooks
+### Evenements hooks
 
 `on_feature_created`, `on_phase_start`, `on_phase_end`, `on_feature_completed`, `on_feature_blocked`, `on_agent_start`, `on_agent_output`, `on_agent_error`, `on_quality_gate_pass`, `on_quality_gate_fail`
 
 ## Commandes CLI
 
-### Créer un nouveau skill
+### Creer un nouveau skill
 
 ```bash
 $ aiden skills init mon-skill
 ```
 
-Crée `.aiden/skills/mon-skill/` avec un `skill.yaml` template et un `instructions.md` vide.
+Cree `.aiden/skills/mon-skill/` avec un `skill.yaml` template et un `instructions.md` vide.
 
-### Lister les skills installés
+### Lister les skills installes
 
 ```bash
 $ aiden skills list
@@ -147,7 +160,7 @@ Copie le dossier skill dans `.aiden/skills/`.
 $ aiden skills remove mon-skill
 ```
 
-### Activer/Désactiver
+### Activer/Desactiver
 
 ```bash
 $ aiden skills enable mon-skill
@@ -170,22 +183,22 @@ $ cp -r templates/skills/code-review-strict .aiden/skills/
 
 ### `compliance-rgpd`
 
-Checks de conformité RGPD pour le code manipulant des données personnelles. Cible Analyst, Dev et QA en modes standard et enterprise.
+Checks de conformite RGPD pour le code manipulant des donnees personnelles. Cible Analyst, Dev et QA en modes standard et enterprise.
 
 ### `jira-sync`
 
-Synchronise les features AIDEN avec Jira. Déclare des hooks sur `on_feature_created` et `on_feature_completed`. Désactivé par défaut (à configurer avec votre URL Jira).
+Synchronise les features AIDEN avec Jira. Declare des hooks sur `on_feature_created` et `on_feature_completed`. Desactive par defaut (a configurer avec votre URL Jira).
 
-## Comment les skills sont chargés
+## Comment les skills sont charges
 
-1. Au démarrage d'un workflow, l'orchestrateur charge tous les skills depuis `.aiden/skills/`
-2. Les skills avec `enabled: false` sont filtrés
-3. Les skills sont triés par `priority` (plus haut = injecté en premier)
-4. Pour chaque agent, seuls les skills qui le ciblent (et correspondent au mode) sont injectés
+1. Au demarrage d'un workflow, l'orchestrateur charge tous les skills depuis `.aiden/skills/`
+2. Les skills avec `enabled: false` sont filtres
+3. Les skills sont tries par `priority` (plus haut = injecte en premier)
+4. Pour chaque agent, seuls les skills qui le ciblent (et correspondent au mode) sont injectes
 5. Les instructions apparaissent dans le prompt sous `--- Skills Instructions ---`
-6. Les rules des skills sont mergées avec celles du projet sous `--- Enterprise Rules ---`
+6. Les rules des skills sont mergees avec celles du projet sous `--- Enterprise Rules ---`
 
-## Partager des skills entre équipes
+## Partager des skills entre equipes
 
 ### Git submodule
 
@@ -201,7 +214,7 @@ $ aiden skills add /path/to/shared-skills/compliance-rgpd
 
 ### Monorepo
 
-Dans un monorepo, placez les skills partagés à la racine et créez des liens symboliques :
+Dans un monorepo, placez les skills partages a la racine et creez des liens symboliques :
 
 ```bash
 # Racine du monorepo
@@ -214,13 +227,13 @@ shared-skills/
 
 ## Bonnes pratiques
 
-1. **Un skill = une préoccupation** : ne mélangez pas sécurité et Jira dans le même skill
-2. **Instructions courtes et actionnables** : les LLMs préfèrent des listes de règles claires
-3. **Ciblez les agents pertinents** : ne ciblez pas tous les agents si seul le Dev est concerné
-4. **Utilisez les modes** : les skills de conformité n'ont pas besoin d'être actifs en mode flash
-5. **Priorité** : les skills de sécurité/conformité devraient avoir une priorité haute (>= 20)
-6. **Committez vos skills** : `.aiden/skills/` doit être versionné avec le code
+1. **Un skill = une preoccupation** : ne melangez pas securite et Jira dans le meme skill
+2. **Instructions courtes et actionnables** : les LLMs preferent des listes de regles claires
+3. **Ciblez les agents pertinents** : ne ciblez pas tous les agents si seul le Dev est concerne
+4. **Utilisez les modes** : les skills de conformite n'ont pas besoin d'etre actifs en mode flash
+5. **Priorite** : les skills de securite/conformite devraient avoir une priorite haute (>= 20)
+6. **Committez vos skills** : `.aiden/skills/` doit etre versionne avec le code
 
-## Prochaine étape
+## Prochaine etape
 
-Consultez la [référence configuration](/reference/config) pour le schéma complet, ou le guide [règles et templates](/guides/rules-and-templates) pour les règles classiques.
+Consultez la [reference configuration](/reference/config) pour le schema complet, ou le guide [regles et templates](/guides/rules-and-templates) pour les regles classiques.

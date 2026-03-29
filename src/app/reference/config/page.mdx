@@ -1,12 +1,12 @@
-# Référence Configuration
+export const metadata = { title: 'Reference Configuration — Schema complet aiden.config.yaml', description: 'Schema exhaustif de aiden.config.yaml : providers CLI et API, routing, budget tokens, pipeline, securite, skills. Avec exemples commentes.' };
 
-> **Ce que vous allez apprendre**
-> - Le schéma complet de `aiden.config.yaml`
-> - Configurer des providers CLI et API custom
-> - Les valeurs par défaut
-> - Quel niveau surcharge quoi
+# Reference Configuration
 
-## Schéma complet
+Le fichier aiden.config.yaml a une option pour presque tout. Voici le schema complet, commente et avec les valeurs par defaut.
+
+---
+
+## Schema complet
 
 ```yaml
 # .aiden/aiden.config.yaml
@@ -71,56 +71,64 @@ pipeline:                        # Configuration du pipeline inter-agents
 sanitize: true                   # Filtrage donnees sensibles (defaut: true)
 ```
 
+---
+
+## Detail des options
+
 ### Options providers
 
-| Clé | Type | Défaut | Description |
+| Cle | Type | Defaut | Description |
 |---|---|---|---|
-| `providers.<name>.enabled` | boolean | — | Activer/désactiver le provider |
-| `providers.<name>.command` | string | — | Commande CLI à spawner |
-| `providers.<name>.model` | string | — | Modèle à utiliser |
-| `providers.<name>.maxTokens` | number | — | Limite de tokens par requête |
-| `providers.<name>.costPer1k` | number | — | Coût par 1000 tokens |
+| `providers.<name>.enabled` | boolean | — | Activer/desactiver le provider |
+| `providers.<name>.command` | string | — | Commande CLI a spawner |
+| `providers.<name>.model` | string | — | Modele a utiliser |
+| `providers.<name>.maxTokens` | number | — | Limite de tokens par requete |
+| `providers.<name>.costPer1k` | number | — | Cout par 1000 tokens |
 | `providers.<name>.baseUrl` | string | — | Endpoint API OpenAI-compatible (active l'adapter HTTP) |
-| `providers.<name>.apiKey` | string | — | Clé API pour l'authentification Bearer |
+| `providers.<name>.apiKey` | string | — | Cle API pour l'authentification Bearer |
 
-Quand `baseUrl` est défini, AIDEN utilise l'adapter API (`fetch`) au lieu du subprocess CLI. Le `command` est ignoré.
+Quand `baseUrl` est defini, AIDEN utilise l'adapter API (`fetch`) au lieu du subprocess CLI. Le `command` est ignore.
 
 ### Options pipeline
 
-| Clé | Type | Défaut | Description |
+| Cle | Type | Defaut | Description |
 |---|---|---|---|
-| `pipeline.maxOutputCharsPerAgent` | number | 8000 | Nombre max de caractères par output d'agent injecté dans le prompt du suivant. |
+| `pipeline.maxOutputCharsPerAgent` | number | 8000 | Nombre max de caracteres par output d'agent injecte dans le prompt du suivant. |
 
 ### Options routing
 
-| Clé | Type | Défaut | Description |
+| Cle | Type | Defaut | Description |
 |---|---|---|---|
-| `routing.strategy` | string | `prefer` | Stratégie : `fixed`, `prefer`, `auto`, `cost-optimized`. En mode `auto`, chaque agent reçoit le provider optimal. |
-| `routing.fallback` | string[] | `[claude-code, gemini, opencode, copilot]` | Chaîne de fallback si le provider préféré est indisponible. |
+| `routing.strategy` | string | `prefer` | Strategie : `fixed`, `prefer`, `auto`, `cost-optimized`. En mode `auto`, chaque agent recoit le provider optimal. |
+| `routing.fallback` | string[] | `[claude-code, gemini, opencode, copilot]` | Chaine de fallback si le provider prefere est indisponible. |
 
-### Options sécurité
+### Options securite
 
-| Clé | Type | Défaut | Description |
+| Cle | Type | Defaut | Description |
 |---|---|---|---|
-| `sanitize` | boolean | `true` | Active le filtrage des données sensibles (tokens, clés API, mots de passe, clés privées, connection strings) avant envoi aux providers. |
+| `sanitize` | boolean | `true` | Active le filtrage des donnees sensibles (tokens, cles API, mots de passe, cles privees, connection strings) avant envoi aux providers. |
 
-### Schéma projet (context.yaml)
+---
 
-Le scan de `aiden init` génère `.aiden/memory/context.yaml` avec ce schéma :
+## Schema projet (context.yaml)
 
-| Clé | Type | Description |
+Le scan de `aiden init` genere `.aiden/memory/context.yaml` avec ce schema :
+
+| Cle | Type | Description |
 |---|---|---|
 | `project.name` | string | Nom du projet (depuis le dossier) |
-| `project.techStack` | string[] | Technologies détectées (node, typescript, react, nestjs, prisma, python...) |
+| `project.techStack` | string[] | Technologies detectees (node, typescript, react, nestjs, prisma, python...) |
 | `project.architecture` | string[] | Infrastructure (docker, docker-compose, kubernetes) |
-| `project.ci` | string[] | Systèmes CI/CD (github-actions, gitlab-ci, jenkins, circleci) |
+| `project.ci` | string[] | Systemes CI/CD (github-actions, gitlab-ci, jenkins, circleci) |
 | `project.packageManager` | string? | Gestionnaire de paquets (pnpm, yarn, npm, bun) |
-| `project.databases` | string[]? | Bases de données (postgres, mysql, redis, mongodb) |
+| `project.databases` | string[]? | Bases de donnees (postgres, mysql, redis, mongodb) |
 | `project.monorepo` | string? | Outil monorepo (turborepo, nx, lerna, pnpm-workspaces) |
 
-Ces données sont injectées dans le prompt de chaque agent via la section `--- Project Context ---`.
+Ces donnees sont injectees dans le prompt de chaque agent via la section `--- Project Context ---`.
 
-## Schéma `skill.yaml`
+---
+
+## Schema `skill.yaml`
 
 Chaque skill dans `.aiden/skills/<name>/` contient un fichier `skill.yaml` :
 
@@ -145,33 +153,39 @@ priority: 10                   # Priorite (defaut: 0, plus haut = premier)
 enabled: true                  # Actif (defaut: true)
 ```
 
-| Clé | Type | Défaut | Description |
+| Cle | Type | Defaut | Description |
 |---|---|---|---|
-| `name` | string | (requis) | Identifiant unique, validé par Zod |
+| `name` | string | (requis) | Identifiant unique, valide par Zod |
 | `version` | string | `1.0.0` | Version semver |
 | `description` | string | `""` | Description |
 | `author` | string | — | Auteur |
 | `agents` | AgentRole[] | tous | `lead`, `analyst`, `planner`, `dev`, `qa`, `docops` |
 | `modes` | CTAMode[] | tous | `flash`, `standard`, `enterprise` |
-| `hooks` | Record | — | Hooks par événement (même format que `aiden.config.yaml`) |
-| `config` | Record | — | Paires clé-valeur libres |
-| `priority` | integer | `0` | Tri décroissant |
-| `enabled` | boolean | `true` | Désactiver sans supprimer |
+| `hooks` | Record | — | Hooks par evenement (meme format que `aiden.config.yaml`) |
+| `config` | Record | — | Paires cle-valeur libres |
+| `priority` | integer | `0` | Tri decroissant |
+| `enabled` | boolean | `true` | Desactiver sans supprimer |
 
-Voir le [guide skills](/guides/skills) pour l'utilisation complète.
+Voir le [guide skills](/guides/skills) pour l'utilisation complete.
+
+---
 
 ## Niveaux de surcharge
 
-| Niveau | Fichier | Portée |
+La configuration suit une cascade a cinq niveaux — chaque niveau ecrase le precedent :
+
+| Niveau | Fichier | Portee |
 |---|---|---|
-| 1. Défauts | (built-in) | Global |
+| 1. Defauts | (built-in) | Global |
 | 2. Enterprise | `~/.aiden/enterprise.config.yaml` | Tous les projets |
 | 3. Projet | `.aiden/aiden.config.yaml` | Ce projet |
 | 4. Feature | `.aiden/features/<slug>/.override.yaml` | Cette feature |
 | 5. CLI | `--mode`, `--provider` | Cette commande |
 
-Chaque niveau écrase les valeurs du précédent. Les objets sont fusionnés en profondeur, les tableaux sont remplacés.
+Chaque niveau ecrase les valeurs du precedent. Les objets sont fusionnes en profondeur, les tableaux sont remplaces.
 
-## Prochaine étape
+---
 
-Consultez la [référence artefacts](/reference/artefacts).
+## Prochaine etape
+
+Consultez la [reference artefacts](/reference/artefacts).

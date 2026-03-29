@@ -1,34 +1,60 @@
+export const metadata = {
+  title: 'Installation AIDEN — Guide complet en 3 etapes',
+  description: 'Installez AIDEN CLI en 3 minutes : Node.js 20+, provider IA (Claude, Gemini, Copilot), et aiden init. Guide avec troubleshooting.',
+};
+
 # Installation
 
-> **Ce que vous allez apprendre**
-> - Installer AIDEN et ses prérequis
-> - Initialiser un projet avec `aiden init`
-> - Vérifier que tout fonctionne
+**Vous ecrivez encore vos specs a la main, vous debuggez seul a 23h, et votre backlog ne desemplit jamais ?** AIDEN change la donne — mais d'abord, il faut l'installer. Bonne nouvelle : c'est l'affaire de 3 commandes.
 
-## Prérequis
+> **TL;DR** — Pour les impatients, voici la version express :
+> ```bash
+> pnpm add -g @astrolyn/aiden   # 1. Installer
+> aiden init                     # 2. Initialiser dans votre projet
+> aiden flash "Hello world" --dry-run  # 3. Verifier que ca marche
+> ```
+> C'est tout. Si vous voulez comprendre chaque etape (et eviter les pieges), lisez la suite.
 
-- **Node.js 20+** — vérifiez avec `node --version`
+---
+
+## Prerequis
+
+Avant d'inviter AIDEN dans votre projet, assurez-vous d'avoir le bon environnement. Pensez-y comme les ingredients avant la recette :
+
+- **Node.js 20+** — verifiez avec `node --version`
 - **pnpm** — installez avec `npm install -g pnpm`
 - Au moins un provider IA : Claude Code, Gemini CLI, OpenCode ou GitHub Copilot (ou un proxy API type LiteLLM)
 
+Le provider, c'est le "cerveau" qu'AIDEN va piloter. Sans provider, AIDEN est un chef d'orchestre sans musiciens — il sait quoi faire, mais personne pour jouer la partition.
+
+Tout est pret ? Parfait, passons a l'installation proprement dite.
+
+---
+
 ## Installer AIDEN
+
+Une seule commande, installation globale :
 
 ```bash
 $ pnpm add -g @astrolyn/aiden
 ```
 
-Vérifiez :
+Verifiez que tout s'est bien passe :
 
 ```bash
 $ aiden --version
 0.7.0
 ```
 
-> **Astuce** : Si `command not found`, ajoutez le dossier global pnpm à votre PATH : `export PATH="$(pnpm store path)/../../.pnpm:$PATH"`
+> **Astuce** : Si `command not found`, ajoutez le dossier global pnpm a votre PATH : `export PATH="$(pnpm store path)/../../.pnpm:$PATH"`
+
+Le binaire est la. Maintenant, il faut presenter AIDEN a votre projet — c'est la qu'`aiden init` entre en jeu.
+
+---
 
 ## Initialiser un projet
 
-Dans le répertoire de votre projet :
+C'est l'etape ou AIDEN "fait connaissance" avec votre codebase. Dans le repertoire de votre projet :
 
 ```bash
 $ aiden init
@@ -42,7 +68,8 @@ AIDEN initialized in .aiden/
   PM:     pnpm
 ```
 
-AIDEN scanne automatiquement votre projet et détecte :
+Qu'est-ce qui se passe sous le capot ? AIDEN scanne automatiquement votre projet et detecte tout ce qu'il peut. C'est un peu comme un nouveau developpeur qui lirait votre `package.json`, votre `Dockerfile` et votre CI config le premier jour — sauf qu'il le fait en quelques secondes :
+
 - **Tech stack** : Node.js, TypeScript, React, Express, NestJS, Vue, Angular, Python, Go, Rust...
 - **Architecture** : Docker, Docker Compose, Kubernetes
 - **CI/CD** : GitHub Actions, GitLab CI, Jenkins, CircleCI
@@ -50,22 +77,26 @@ AIDEN scanne automatiquement votre projet et détecte :
 - **Databases** : PostgreSQL, MySQL, Redis, MongoDB (depuis les deps et docker-compose)
 - **Monorepo** : Turborepo, Nx, Lerna, pnpm workspaces
 
-Ces informations sont injectées dans le contexte de chaque agent pour des résultats plus pertinents.
+Ces informations sont injectees dans le contexte de chaque agent pour des resultats plus pertinents. Plus AIDEN connait votre projet, plus ses suggestions sont adaptees.
 
-Structure créée :
+Voici la structure creee dans votre projet :
 
 ```
 .aiden/
   aiden.config.yaml    # Configuration projet
-  memory/            # Contexte, décisions, métriques
-  rules/             # Règles entreprise
-  templates/         # Templates personnalisés
+  memory/            # Contexte, decisions, metriques
+  rules/             # Regles entreprise
+  templates/         # Templates personnalises
   features/          # Features en cours
 ```
 
+Le projet est initialise — reste a s'assurer qu'AIDEN peut parler a votre IA preferee.
+
+---
+
 ## Configurer le provider
 
-Par défaut, AIDEN utilise Claude Code. Pour changer :
+Par defaut, AIDEN utilise Claude Code. Si vous preferez un autre provider, un simple changement de config suffit :
 
 ```bash
 $ aiden config set provider gemini
@@ -74,7 +105,7 @@ Set provider = gemini
 
 Providers disponibles : `claude-code`, `gemini`, `copilot`.
 
-Vérifiez que votre provider est accessible :
+Pour verifier que votre provider est bien accessible (parce qu'un outil qu'on ne peut pas joindre, ca ne sert pas a grand-chose) :
 
 ```bash
 $ aiden provider status
@@ -84,7 +115,13 @@ Provider status:
   copilot: configured
 ```
 
+Si vous voyez "configured" en face de votre provider, vous etes pret pour le grand moment : le premier test.
+
+---
+
 ## Premier test
+
+Avant de lancer AIDEN sur une vraie feature, faisons un test a blanc. Le flag `--dry-run` simule l'execution sans appeler le provider — pratique pour verifier que tout est bien cable :
 
 ```bash
 $ aiden flash "Ajouter hello.ts" --dry-run
@@ -92,29 +129,37 @@ $ aiden flash "Ajouter hello.ts" --dry-run
 Mode: flash | Agents: lead, dev
 ```
 
-Le `--dry-run` montre ce qui serait fait sans appeler le provider.
+Si vous voyez ce resultat, bravo : AIDEN est installe, initialise, et pret a travailler. Le `--dry-run` montre ce qui serait fait sans appeler le provider.
+
+---
 
 ## Mode slash (Claude Code)
 
-Si vous utilisez Claude Code, AIDEN est aussi disponible en slash commands sans installer le CLI :
+Si vous utilisez deja Claude Code au quotidien, il y a un raccourci encore plus direct : les slash commands. Zero installation supplementaire, zero config — juste des commandes dans votre session Claude :
 
 - `/aiden-init` — initialiser AIDEN
 - `/aiden-flash` — mode rapide
 - `/aiden-standard` — mode complet
 - `/aiden-enterprise` — mode enterprise
 
-Les deux modes (CLI et slash) écrivent dans les mêmes fichiers `.aiden/`.
+Les deux modes (CLI et slash) ecrivent dans les memes fichiers `.aiden/`. Vous pouvez alterner librement entre les deux sans perdre votre contexte.
+
+---
 
 ## Troubleshooting
 
+Tout ne se passe pas toujours comme prevu. Voici les erreurs classiques et comment les resoudre en 30 secondes :
+
 **`command not found: aiden`** — Assurez-vous que le dossier global pnpm est dans votre PATH.
 
-**`AIDEN not initialized`** — Lancez `aiden init` dans le répertoire du projet.
+**`AIDEN not initialized`** — Lancez `aiden init` dans le repertoire du projet.
 
 **`No provider available`** — Installez Claude Code (`npm install -g @anthropic-ai/claude-code`) ou un autre provider.
 
-**Timeout sur le provider** — Le timeout par défaut est 120s. Si votre LLM est lent, augmentez-le dans `.aiden/aiden.config.yaml`.
+**Timeout sur le provider** — Le timeout par defaut est 120s. Si votre LLM est lent, augmentez-le dans `.aiden/aiden.config.yaml`.
 
-## Prochaine étape
+---
 
-Passez au [Quickstart](/getting-started/quickstart) pour un scénario complet en 5 minutes.
+## Prochaine etape
+
+L'installation, c'est fait. Maintenant, passez aux choses serieuses : le [Quickstart](/getting-started/quickstart) vous guide a travers un scenario complet en 5 minutes, de la feature request au code genere.

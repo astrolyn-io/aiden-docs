@@ -1,63 +1,72 @@
-# Modes
+export const metadata = { title: 'Les 3 modes AIDEN — Flash, Standard, Enterprise', description: 'Quel mode choisir ? Flash pour les bug fixes (30s), Standard pour les features (2h), Enterprise pour les projets critiques. Comparaison et passage dynamique.' };
 
-> **Ce que vous allez apprendre**
-> - Les 3 modes : flash, standard, enterprise
-> - Quand utiliser chaque mode
-> - Le passage dynamique entre modes
+# Les 3 modes AIDEN : choisissez votre arme
 
-## Comparaison
+> **TL;DR** — Bug fix → flash. Feature → standard. Migration critique → enterprise. En cas de doute, standard.
 
-| Fonctionnalité | Flash | Standard | Enterprise |
+Imaginez trois outils devant vous. Un **couteau suisse** pour les urgences du quotidien. Un **atelier complet** pour construire quelque chose de solide. Et un **chantier certifie** avec plans, inspections et validations a chaque etape. AIDEN fonctionne exactement comme ca — trois modes adaptes a l'ampleur de votre tache.
+
+Ce guide va vous montrer comment choisir le bon mode, et surtout comment AIDEN peut le faire pour vous.
+
+## D'un coup d'oeil
+
+| Fonctionnalite | Flash | Standard | Enterprise |
 |---|---|---|---|
 | Temps | < 30 min | 2h - 1 jour | 1 jour - 1 semaine |
 | Agents | Lead, Dev | +Analyst, Planner, QA | +DocOps |
 | Brief | Non | Oui | Oui |
 | Spec | Non | Oui | Oui + ADR |
-| Review | Non | Oui | Oui + rapport qualité |
+| Review | Non | Oui | Oui + rapport qualite |
 | Approbation humaine | Non | Non | Oui |
 
-## Mode Flash
+Voyons chaque mode en detail.
 
-Pour les changements simples : bug fix, petite feature, refactoring ciblé.
+## Flash — le couteau suisse
+
+Le mode Flash, c'est la reactivite pure. Vous avez un bug, un petit refactoring, un tweak rapide ? Deux agents (Lead + Dev), zero paperasse, et c'est plie.
 
 ```bash
 $ aiden flash "Fix le bug #123"
 ```
 
-Quand l'utiliser :
-- Moins de 3 fichiers impactés
+C'est le bon choix quand :
+- Moins de 3 fichiers impactes
 - Pas de nouvelle API
-- Complexité faible (1-2/5)
+- Complexite faible (1-2/5)
 
-## Mode Standard
+Pensez-y comme un sprint de 30 minutes : on entre, on corrige, on sort.
 
-Pour les features moyennes nécessitant planification.
+## Standard — l'atelier complet
+
+Maintenant on passe aux choses serieuses. Le mode Standard mobilise cinq agents — analyse, planification, implementation, review — pour produire un resultat structure et teste.
 
 ```bash
 $ aiden standard "Nouvelle API users"
 ```
 
-Quand l'utiliser :
-- 3 à 15 fichiers impactés
-- Nouvelle API ou intégration
-- Complexité moyenne (3-4/5)
+C'est le bon choix quand :
+- 3 a 15 fichiers impactes
+- Nouvelle API ou integration
+- Complexite moyenne (3-4/5)
 
-## Mode Enterprise
+La majorite de vos features passeront par ce mode. C'est le sweet spot entre vitesse et rigueur.
 
-Pour les projets critiques avec compliance.
+## Enterprise — le chantier certifie
+
+Quand le moindre faux pas peut couter cher — migration de donnees, conformite RGPD, refonte d'architecture — le mode Enterprise ajoute DocOps et surtout une **approbation humaine entre chaque phase**.
 
 ```bash
 $ aiden enterprise "Migration authentification"
 ```
 
-Quand l'utiliser :
+C'est le bon choix quand :
 - Plus de 15 fichiers
 - Nouvelle architecture
-- Compliance requise (RGPD, sécurité)
+- Compliance requise (RGPD, securite)
 
-### Approbation humaine
+### Approbation humaine : le filet de securite
 
-En mode enterprise, **chaque phase requiert une approbation humaine** avant de passer à la suivante. À la fin de chaque phase, le CLI affiche :
+En mode Enterprise, **chaque phase requiert une approbation humaine** avant de passer a la suivante. A la fin de chaque phase, le CLI affiche :
 
 ```
 [APPROVAL] Phase "discovery" for "migration-auth" completed.
@@ -66,7 +75,7 @@ En mode enterprise, **chaque phase requiert une approbation humaine** avant de p
   Approve? (y/n):
 ```
 
-Si vous répondez `n`, le workflow est avorté avec le statut `aborted`.
+Si vous repondez `n`, le workflow est avorte avec le statut `aborted`.
 
 Pour bypasser les approbations (par exemple en CI/CD) :
 
@@ -74,35 +83,37 @@ Pour bypasser les approbations (par exemple en CI/CD) :
 $ aiden enterprise "Migration auth" --auto-approve
 ```
 
-> **Attention** : `--auto-approve` désactive toute validation humaine. À utiliser uniquement dans les pipelines automatisés.
+> **Attention** : `--auto-approve` desactive toute validation humaine. A utiliser uniquement dans les pipelines automatises.
 
-## Détection automatique du mode
+## Et si vous ne savez pas quel mode choisir ?
 
-Le Lead analyse la description de la feature avec des heuristiques pour suggérer le mode optimal :
+Bonne nouvelle : vous n'avez pas a choisir. Le Lead analyse la description de votre feature avec des heuristiques et suggere le mode optimal :
 
-- `"Fix typo in README"` → **flash** (faible complexité, 1 fichier)
-- `"Add new REST API with OAuth"` → **standard** (nouvelle API, dépendance externe)
+- `"Fix typo in README"` → **flash** (faible complexite, 1 fichier)
+- `"Add new REST API with OAuth"` → **standard** (nouvelle API, dependance externe)
 - `"Migrate monolith to microservices with RGPD compliance"` → **enterprise** (nouvelle architecture, compliance)
 
-La détection prend aussi en compte le contexte projet (nombre de technologies, architecture).
+La detection prend aussi en compte le contexte projet (nombre de technologies, architecture). En clair, plus votre projet est complexe, plus AIDEN sera prudent.
 
-## Passage dynamique avec re-routing
+## Le passage dynamique : changer de vitesse sans s'arreter
 
-AIDEN peut changer de mode en cours de route **sans perdre le travail** et en exécutant les phases manquantes :
+Voici la ou ca devient vraiment malin. AIDEN peut changer de mode en cours de route **sans perdre le travail** et en executant les phases manquantes :
 
 ```bash
-# Démarre en flash, bascule en standard si complexité détectée
+# Demarre en flash, bascule en standard si complexite detectee
 $ aiden flash "Export CSV"
-AIDEN Lead > Complexité détectée (5 fichiers). Passer en standard ? [Y/n]
+AIDEN Lead > Complexite detectee (5 fichiers). Passer en standard ? [Y/n]
 ```
 
-Quand vous passez de flash à standard, `switchMode()` :
-1. Identifie les phases déjà complétées (implémentation)
-2. Exécute les phases manquantes (discovery, planning)
+Quand vous passez de flash a standard, `switchMode()` :
+1. Identifie les phases deja completees (implementation)
+2. Execute les phases manquantes (discovery, planning)
 3. Continue le workflow avec les nouveaux artefacts
 
-Le passage de standard à flash est un no-op — les phases flash sont un sous-ensemble de standard.
+Le passage de standard a flash est un no-op — les phases flash sont un sous-ensemble de standard.
 
-## Prochaine étape
+C'est un peu comme passer d'un tournevis a une perceuse en plein chantier : on garde le trou deja fait, on change juste d'outil.
 
-Découvrez les [agents AIDEN](/guides/agents) et leurs rôles.
+## La suite
+
+Maintenant que vous savez quand utiliser chaque mode, il est temps de rencontrer ceux qui font le vrai travail. Decouvrez les [agents AIDEN](/guides/agents) — Lead, Analyst, Planner, Dev, QA, DocOps — et comment ils collaborent dans le pipeline.

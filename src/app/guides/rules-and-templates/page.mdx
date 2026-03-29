@@ -1,22 +1,26 @@
-# Règles et Templates
+export const metadata = { title: 'Regles et Templates — Codifiez les conventions de votre equipe', description: 'Regles d\'entreprise en Markdown injectees dans les agents IA. Templates Handlebars personnalisables. Guide avec exemples concrets.' };
 
-> **Ce que vous allez apprendre**
-> - Écrire et ajouter des règles d'entreprise
-> - Personnaliser les templates d'artefacts
-> - Comment les règles sont injectées dans les agents
+# Regles et Templates
 
-## Règles d'entreprise
+> Vos conventions d'equipe existent dans la tete de votre lead dev. Probleme : les agents IA ne lisent pas dans les pensees. Solution : ecrivez-les en Markdown, AIDEN les injecte automatiquement.
 
-Les règles sont des fichiers `.md` dans `.aiden/rules/`. Elles sont automatiquement injectées dans le contexte de chaque agent.
+**Ce que vous allez apprendre :**
+- Ecrire et ajouter des regles d'entreprise
+- Personnaliser les templates d'artefacts
+- Comment les regles transforment concretement les prompts des agents
 
-### Ajouter une règle
+## Regles d'entreprise
+
+Les regles sont des fichiers `.md` dans `.aiden/rules/`. Elles sont automatiquement injectees dans le contexte de chaque agent. Pas d'API a configurer, pas de plugin a installer : du Markdown, c'est tout.
+
+### Ajouter une regle
 
 ```bash
 $ aiden rules add coding-standards.md
 Rule added: coding-standards.md
 ```
 
-### Exemple de règle
+### Exemple de regle
 
 ```markdown
 # Standards de code
@@ -35,7 +39,7 @@ Rule added: coding-standards.md
 - PR : max 400 lignes
 ```
 
-### Lister les règles
+### Lister les regles
 
 ```bash
 $ aiden rules list
@@ -43,17 +47,25 @@ $ aiden rules list
   security-policy (.aiden/rules/security-policy.md)
 ```
 
-## Injection des règles
+## Injection des regles : avant / apres
 
-Les règles sont filtrées par agent :
-- **Dev** reçoit : coding-standards, security-policy
-- **QA** reçoit : coding-standards, security-policy
-- **Planner** reçoit : coding-standards, architecture-principles
-- Les règles custom sont toujours envoyées à tous les agents
+Sans regles, un agent Dev recoit un prompt generique. Il produit du code qui fonctionne, mais qui ne respecte pas forcement vos conventions. Avec des regles, le prompt de l'agent contient explicitement vos standards, et le code genere les respecte des la premiere iteration.
+
+**Sans regles** : l'agent Dev genere du code valide, mais utilise `any`, oublie les interfaces publiques, et cree des commits sans convention.
+
+**Avec `coding-standards.md`** : l'agent Dev recoit vos standards dans son prompt sous `--- Enterprise Rules ---`. Il produit du TypeScript strict, avec des interfaces, et des commits conventionnels.
+
+Les regles sont filtrees par agent pour eviter le bruit :
+- **Dev** recoit : coding-standards, security-policy
+- **QA** recoit : coding-standards, security-policy
+- **Planner** recoit : coding-standards, architecture-principles
+- Les regles custom sont toujours envoyees a tous les agents
+
+La difference est immediate : au lieu d'esperer que l'IA devine vos conventions, vous les lui donnez noir sur blanc.
 
 ## Templates
 
-AIDEN fournit 7 templates par défaut (brief, spec, story, review, change-summary, architecture-decision, quality-report).
+AIDEN fournit 7 templates par defaut (brief, spec, story, review, change-summary, architecture-decision, quality-report).
 
 ### Personnaliser un template
 
@@ -62,8 +74,10 @@ $ aiden template customize spec
 Template "spec" copied to .aiden/templates/ for customization.
 ```
 
-Le template copié utilise Handlebars. Variables disponibles : `feature_name`, `provider`, `mode`, `date`, etc.
+Le template copie utilise Handlebars. Variables disponibles : `feature_name`, `provider`, `mode`, `date`, etc.
 
-## Prochaine étape
+Vous voulez que chaque spec generee contienne une section "Impact RGPD" ? Modifiez le template, et tous les agents qui produisent des specs l'incluront automatiquement.
+
+## Prochaine etape
 
 Consultez le guide de [troubleshooting](/guides/troubleshooting).

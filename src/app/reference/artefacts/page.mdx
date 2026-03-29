@@ -1,13 +1,14 @@
-# Référence Artefacts
+export const metadata = { title: 'Artefacts AIDEN — Les 7 types de fichiers generes', description: 'Brief, spec, stories, review, change-summary, ADR, quality report. Format Markdown avec frontmatter YAML. Generes automatiquement par les agents.' };
 
-> **Ce que vous allez apprendre**
-> - Les 7 types d'artefacts AIDEN
-> - Le format frontmatter YAML
-> - Un exemple réel de chaque artefact
+# Reference Artefacts
+
+Chaque agent laisse une trace. Voici les 7 types d'artefacts que vous trouverez dans .aiden/features/ — et ce qu'ils contiennent.
+
+---
 
 ## Format commun
 
-Chaque artefact est un fichier Markdown avec frontmatter YAML :
+Chaque artefact est un fichier Markdown avec frontmatter YAML. Ce format uniforme permet le suivi, le versionnage et l'injection automatique dans les prompts :
 
 ```yaml
 ---
@@ -25,40 +26,46 @@ mode: standard
 
 Statuts possibles : `draft`, `review`, `approved`, `implemented`.
 
+---
+
 ## Les 7 artefacts
 
 ### brief.md
 
-Généré par l'**Analyst**. Résume la demande, contexte, objectif, contraintes et risques.
+Genere par l'**Analyst**. Resume la demande, contexte, objectif, contraintes et risques. C'est le point de depart de toute analyse — les agents suivants s'appuient dessus.
 
 ### spec.md
 
-Généré par le **Planner**. Spécification allégée (1-2 pages) avec exigences et critères d'acceptation.
+Genere par le **Planner**. Specification allegee (1-2 pages) avec exigences et criteres d'acceptation. Sert de contrat entre la planification et le developpement.
 
 ### story.md (dans stories/)
 
-Généré par le **Planner**. User stories numérotées (001-*, 002-*) avec critères d'acceptation.
+Genere par le **Planner**. User stories numerotees (001-*, 002-*) avec criteres d'acceptation. Chaque story est une unite de travail independante pour l'agent Dev.
 
 ### review.md
 
-Généré par le **QA**. Résultat du code review avec score, issues et suggestions.
+Genere par le **QA**. Resultat du code review avec score, issues et suggestions. Si le score est insuffisant, le workflow relance automatiquement le Dev avec le feedback.
 
 ### change-summary.md
 
-Généré par le **Dev** (mode flash). Résumé des changements effectués.
+Genere par le **Dev** (mode flash). Resume des changements effectues — fichiers modifies, tests generes, decisions prises.
 
 ### architecture-decision.md
 
-Généré par le **Planner** (mode enterprise). ADR : contexte, décision, alternatives, conséquences.
+Genere par le **Planner** (mode enterprise). ADR : contexte, decision, alternatives, consequences. Trace les choix architecturaux pour reference future.
 
 ### quality-report.md
 
-Généré par le **QA** (mode enterprise). Rapport complet avec métriques, sécurité et recommandations.
+Genere par le **QA** (mode enterprise). Rapport complet avec metriques, securite et recommandations. Inclut la verification explicite de chaque critere d'acceptation.
+
+---
 
 ## Emplacement
 
 Tous les artefacts sont dans `.aiden/features/<feature-slug>/`.
 
-## Prochaine étape
+---
+
+## Prochaine etape
 
 Consultez le [glossaire](/reference/glossary).

@@ -1,13 +1,17 @@
+export const metadata = { title: 'Migration BMAD vers AIDEN — Tableau d\'equivalences', description: 'Migrer de BMAD vers AIDEN : de 12h a 30 min, de 31K a 8K tokens. Equivalences agents, etapes de migration, FAQ.' };
+
 # Migration depuis BMAD
 
-> **Ce que vous allez apprendre**
-> - Les différences entre BMAD et AIDEN
-> - Comment migrer un projet BMAD
-> - Tableau d'équivalences
+> BMAD : 12-16h avant le premier code, \~31K tokens par workflow. AIDEN : 30 min, moins de 8K tokens. Meme philosophie multi-agents, execution radicalement differente.
+
+**Ce que vous allez apprendre :**
+- Les differences entre BMAD et AIDEN
+- Comment migrer un projet BMAD
+- Tableau d'equivalences
 
 ## Pourquoi migrer ?
 
-| Critère | BMAD | AIDEN |
+| Critere | BMAD | AIDEN |
 |---|---|---|
 | Temps avant 1er code | 12-16h | 30 min - 2h |
 | Courbe apprentissage | ~2 mois | 1-3 jours |
@@ -16,7 +20,7 @@
 | Providers IA | 1-2 | 3 natifs |
 | Brownfield | Difficile | Natif |
 
-## Équivalences
+## Equivalences
 
 | BMAD | AIDEN |
 |---|---|
@@ -26,11 +30,11 @@
 | Developer agent | Dev agent |
 | QA agent | QA agent |
 | DevOps agent | DocOps agent |
-| Full PRD (20 pages) | Spec allégée (1-2 pages) |
-| Monolithe documentaire | 1 feature = 1 contexte isolé |
-| Session unique | Bus de contexte partagé |
+| Full PRD (20 pages) | Spec allegee (1-2 pages) |
+| Monolithe documentaire | 1 feature = 1 contexte isole |
+| Session unique | Bus de contexte partage |
 
-## Étapes de migration
+## Etapes de migration
 
 ### 1. Initialiser AIDEN
 
@@ -38,26 +42,26 @@
 $ aiden init
 ```
 
-### 2. Convertir les règles
+### 2. Convertir les regles
 
-Copiez vos règles BMAD dans `.aiden/rules/` au format Markdown.
+Copiez vos regles BMAD dans `.aiden/rules/` au format Markdown.
 
 ### 3. Adapter le workflow
 
-- Les petites features : utilisez flash (pas d'équivalent BMAD)
+- Les petites features : utilisez flash (pas d'equivalent BMAD)
 - Les features moyennes : standard remplace le workflow BMAD complet
 - Les projets critiques : enterprise avec approbation humaine
 
 ### 4. Ignorer les anciens fichiers BMAD
 
-Les fichiers `.bmad/` ne sont plus utilisés. Vous pouvez les archiver.
+Les fichiers `.bmad/` ne sont plus utilises. Vous pouvez les archiver.
 
 > **Attention** : AIDEN ne reprend pas les sessions BMAD en cours. Terminez vos features BMAD avant de migrer.
 
 ## FAQ
 
-**Puis-je utiliser les deux en parallèle ?** Oui, mais pas recommandé. Les deux écrivent dans des dossiers différents.
+**Puis-je utiliser les deux en parallele ?** Oui, mais pas recommande. Les deux ecrivent dans des dossiers differents.
 
 **Mes templates BMAD fonctionnent-ils ?** Non, AIDEN utilise Handlebars. Reconvertissez-les avec `aiden template customize`.
 
-**Le Bus de contexte remplace quoi ?** Il remplace la mémoire isolée de chaque agent BMAD par un contexte partagé.
+**Le Bus de contexte remplace quoi ?** Il remplace la memoire isolee de chaque agent BMAD par un contexte partage.

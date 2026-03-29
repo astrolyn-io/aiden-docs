@@ -1,30 +1,40 @@
-# Première feature en mode standard
+export const metadata = {
+  title: 'Premiere feature standard — 4 agents IA en action',
+  description: 'Tutoriel complet : Analyst analyse le code, Planner cree les specs, Dev implemente, QA review. Le workflow AIDEN standard pas a pas.',
+};
 
-> **Ce que vous allez apprendre**
-> - Le workflow standard complet : Analyst, Planner, Dev, QA
-> - Les artefacts générés à chaque phase
-> - Que faire si le QA échoue
+# Votre premiere feature en mode standard
 
-## Scénario : ajouter GET /health à une API Express
+> Le mode flash, c'etait l'aperitif. Maintenant, on passe aux choses serieuses : **4 agents IA qui collaborent pour livrer une feature complete**. Imaginez une chaine de montage ou chaque poste est tenu par un specialiste — c'est exactement ce qui va se passer sous vos yeux.
+
+Dans ce tutoriel, vous allez suivre en direct le parcours d'une feature a travers les 4 agents du mode standard : **Analyst**, **Planner**, **Dev** et **QA**. Chacun produit des artefacts, chacun est soumis a un checkpoint douanier (quality gate), et le tout s'enchaine comme une chaine de montage bien huilee.
+
+## Le scenario : ajouter GET /health a une API Express
+
+Vous avez une API Express. Vous voulez un endpoint `/health` qui verifie la connexion DB. Une seule commande suffit pour lancer les 4 agents :
 
 ```bash
 $ aiden standard "Ajouter un endpoint GET /health avec vérification connexion DB"
 ```
 
-## Phase 1 — Découverte (Analyst)
+La chaine de montage demarre. Voyons ce qui se passe a chaque poste.
 
-L'Analyst scanne le code existant et produit une analyse structurée :
+---
+
+## Phase 1 — Decouverte : l'Analyst prend le pouls du projet
+
+Premier sur la chaine, l'Analyst. Son role : scanner le code existant, comprendre le terrain, et produire un diagnostic structure. Il ne code rien — il observe et rapporte.
 
 ```
 Phase: discovery, Agent: analyst, Provider: claude-code
 ```
 
-Output structuré :
-- **Complexité** : 2/5 (endpoint simple avec une vérification)
-- **Risques** : dépendance DB non mockée dans les tests
-- **Questions** : format de réponse ? vérifier la connexion DB ou juste le serveur ?
+L'Analyst rend son verdict :
+- **Complexite** : 2/5 (endpoint simple avec une verification)
+- **Risques** : dependance DB non mockee dans les tests
+- **Questions** : format de reponse ? verifier la connexion DB ou juste le serveur ?
 
-Artefact généré : `.aiden/features/ajouter-un-endpoint-get-health/brief.md`
+Il depose son rapport dans `.aiden/features/ajouter-un-endpoint-get-health/brief.md` :
 
 ```markdown
 ---
@@ -39,22 +49,26 @@ Endpoint simple retournant le statut du serveur et de la connexion DB.
 Complexite: 2/5. Risques: mock DB pour tests.
 ```
 
-> **Quality gate** : Si l'Analyst ne détecte pas de complexité ou retourne un contenu vide, le workflow est bloqué.
+> **Checkpoint douanier (quality gate)** : Si l'Analyst ne detecte pas de complexite ou retourne un contenu vide, la chaine s'arrete. Pas question d'envoyer un dossier vide au Planner — le workflow est bloque jusqu'a resolution.
 
-## Phase 2 — Planification (Planner)
+Le brief est valide. Il passe au poste suivant.
 
-Le Planner reçoit le brief de l'Analyst et crée une spec avec des stories :
+---
+
+## Phase 2 — Planification : le Planner dessine le plan de bataille
+
+Le Planner recoit le brief de l'Analyst et le transforme en specification actionnable. Il decompose le travail en stories avec des criteres d'acceptation precis — exactement comme le ferait un tech lead humain.
 
 ```
 Phase: planning, Agent: planner, Provider: claude-code
 ```
 
-Artefacts générés :
-- `spec.md` — spécification en 1-2 pages
-- `stories/001-endpoint-health.md` — story avec critères d'acceptation
+Artefacts generes :
+- `spec.md` — specification en 1-2 pages
+- `stories/001-endpoint-health.md` — story avec criteres d'acceptation
 - `stories/002-tests-health.md` — story pour les tests
 
-Exemple de story :
+Voici a quoi ressemble une story :
 
 ```markdown
 ### Story 1: Endpoint /health
@@ -66,35 +80,43 @@ Acceptance criteria:
 - Le endpoint est accessible sans authentification
 ```
 
-> **Quality gate** : Si le Planner ne décompose pas en stories, le workflow est bloqué.
+> **Checkpoint douanier (quality gate)** : Si le Planner ne decompose pas en stories, le workflow est bloque. Pas de plan, pas d'implementation.
 
-## Phase 3 — Implémentation (Dev)
+Les stories sont pretes, les criteres d'acceptation sont clairs. Le Dev sait exactement quoi construire.
 
-Le Dev reçoit le brief, la spec et les stories. Il implémente chaque story :
+---
+
+## Phase 3 — Implementation : le Dev entre en scene
+
+C'est le moment ou le code est ecrit. Le Dev recoit tout le contexte accumule — brief, spec, stories — et se met au travail. Il ne part pas a l'aveugle : il a la vision complete de ce que les agents precedents ont prepare.
 
 ```
 Phase: implementation, Agent: dev, Provider: gemini
 ```
 
-Le Dev :
+Le Dev suit un processus methodique :
 1. Lit les stories et le code existant
-2. Implémente le code
-3. Écrit les tests
+2. Implemente le code
+3. Ecrit les tests
 4. Fait un self-review
 
-Output structuré : `filesChanged`, `testsGenerated`.
+Output structure : `filesChanged`, `testsGenerated`.
 
-> **Guardrails** : Si plus de 10 fichiers sont modifiés, le circuit breaker intervient. Toutes les 5 étapes, un rappel d'objectif est injecté.
+> **Guardrails** : Si plus de 10 fichiers sont modifies, le circuit breaker intervient — c'est le signal que quelque chose derape. Toutes les 5 etapes, un rappel d'objectif est injecte pour garder le cap. La chaine de montage a ses propres mecanismes de securite.
 
-## Phase 4 — Validation (QA)
+Le code est ecrit, les tests sont la. Mais avant de declarer victoire, il reste le dernier poste — et pas le moindre.
 
-Le QA reçoit TOUT le contexte : brief, spec, stories, code du Dev :
+---
+
+## Phase 4 — Validation : le QA passe tout au crible
+
+Le QA recoit TOUT le contexte : brief, spec, stories, et le code du Dev. Il ne se contente pas d'un coup d'oeil — il verifie explicitement chaque critere d'acceptation, un par un.
 
 ```
 Phase: validation, Agent: qa, Provider: claude-code
 ```
 
-Le QA vérifie explicitement chaque critère d'acceptation :
+Le QA produit un rapport detaille :
 
 ```
 --- ACCEPTANCE CRITERIA TO VERIFY ---
@@ -112,17 +134,23 @@ SCORE: 8/10
 PASSED: yes
 ```
 
-Output structuré : `passed`, `score`, `issues`, `criteriaResults`.
+Output structure : `passed`, `score`, `issues`, `criteriaResults`.
 
-### Si le QA échoue
+### Et si le QA echoue ?
 
-Si `passed = false`, l'orchestrateur lance un **feedback loop** :
+Si `passed = false`, l'orchestrateur ne panique pas. Il lance une **boucle de correction** — comme un pair programming ou le QA pointe les problemes et le Dev corrige en temps reel :
 
-1. Le Dev reçoit le feedback du QA et corrige
+1. Le Dev recoit le feedback du QA et corrige
 2. Le QA re-review le nouveau code
-3. Maximum 2 retries. Si toujours en échec, le workflow continue avec un warning.
+3. Maximum 2 retries. Si toujours en echec, le workflow continue avec un warning.
 
-## Résultat final
+C'est cette boucle de feedback qui fait la difference entre un outil qui genere du code et un framework qui **livre de la qualite**.
+
+---
+
+## Le resultat : une feature livree, tracee, documentee
+
+La chaine de montage a termine son cycle. Voici le resultat :
 
 ```bash
 $ aiden status ajouter-un-endpoint-get-health
@@ -133,7 +161,7 @@ Feature: Ajouter un endpoint GET /health avec verification connexion DB
   Agents: analyst → planner → dev → qa
 ```
 
-Artefacts dans `.aiden/features/ajouter-un-endpoint-get-health/` :
+Tous les artefacts sont ranges dans `.aiden/features/ajouter-un-endpoint-get-health/` :
 
 ```
 brief.md              # Analyse de l'Analyst
@@ -144,18 +172,24 @@ review.md             # Rapport du QA
 change-summary.md     # Résumé des changements
 ```
 
-Décisions tracées dans `.aiden/memory/decisions.jsonl` :
+Chaque decision est tracee dans `.aiden/memory/decisions.jsonl` :
 
 ```json
 {"ts":"2026-03-27T10:15:00Z","feature":"ajouter-un-endpoint-get-health","agent":"analyst","type":"complexity","value":2}
 {"ts":"2026-03-27T10:15:05Z","feature":"ajouter-un-endpoint-get-health","agent":"qa","type":"review","value":"passed"}
 ```
 
-## Passer en enterprise
+Rien n'est perdu. Tout est auditable.
 
-Pour les projets critiques, le mode enterprise ajoute :
-- **Approbation humaine** entre chaque phase
-- **DocOps** qui génère la documentation et vérifie la conformité
+---
+
+## Et apres ? Le mode enterprise
+
+Le mode standard convient a la majorite des features. Mais pour les projets critiques — migration d'authentification, conformite reglementaire, refactoring majeur — il existe un cran au-dessus.
+
+Le mode enterprise ajoute :
+- **Approbation humaine** entre chaque phase (vous validez avant de continuer)
+- **DocOps** qui genere la documentation et verifie la conformite
 - **Quality report** complet
 
 ```bash
@@ -164,6 +198,8 @@ $ aiden enterprise "Migration authentification" --auto-approve
 
 Sans `--auto-approve`, chaque phase demande votre validation avant de continuer.
 
-## Prochaine étape
+## Prochaine etape
 
-Découvrez les [3 modes de AIDEN](/guides/modes) et quand utiliser chacun.
+Vous avez vu flash (1 agent) et standard (4 agents). Mais comment choisir le bon mode pour chaque situation ? Et que se passe-t-il quand AIDEN detecte qu'il faut changer de mode en cours de route ?
+
+Decouvrez les [3 modes de AIDEN](/guides/modes) et leurs strategies de routage.

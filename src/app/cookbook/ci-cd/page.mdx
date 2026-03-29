@@ -1,21 +1,25 @@
-# Intégration CI/CD
+export const metadata = { title: 'AIDEN en CI/CD — GitHub Actions, GitLab CI, metriques', description: 'Integrez AIDEN dans vos pipelines CI/CD : validation des artefacts, metriques automatiques, flash non-interactif, pre-commit hooks, dashboards.' };
 
-> **Ce que vous allez apprendre**
-> - Valider les artefacts AIDEN dans la CI
-> - Automatiser les checks AIDEN dans les pipelines
-> - Intégrer les métriques AIDEN dans vos dashboards
+# Integration CI/CD
+
+> AIDEN tourne sur le poste du dev, pas dans la CI. Mais la CI peut verifier que les artefacts existent, bloquer les PRs sans review, et collecter les metriques. Voici comment.
+
+**Ce que vous allez apprendre :**
+- Valider les artefacts AIDEN dans la CI
+- Automatiser les checks AIDEN dans les pipelines
+- Integrer les metriques AIDEN dans vos dashboards
 
 ## Principe
 
-AIDEN s'exécute **sur le poste du développeur**, pas dans la CI. Mais la CI peut :
-1. **Vérifier** que les artefacts AIDEN existent et sont cohérents
+AIDEN s'execute **sur le poste du developpeur**, pas dans la CI. Mais la CI peut :
+1. **Verifier** que les artefacts AIDEN existent et sont coherents
 2. **Bloquer** les PRs sans artefacts (si votre politique l'exige)
-3. **Collecter** les métriques pour le dashboard d'équipe
-4. **Exécuter** des flash non-interactifs pour les fix automatiques
+3. **Collecter** les metriques pour le dashboard d'equipe
+4. **Executer** des flash non-interactifs pour les fix automatiques
 
 ## GitHub Actions
 
-### Vérifier les artefacts AIDEN sur une PR
+### Verifier les artefacts AIDEN sur une PR
 
 ```yaml
 # .github/workflows/aiden-check.yml
@@ -63,7 +67,7 @@ jobs:
           fi
 ```
 
-### Collecter les métriques AIDEN
+### Collecter les metriques AIDEN
 
 ```yaml
 # .github/workflows/aiden-metrics.yml
@@ -91,11 +95,11 @@ jobs:
             features=$(cat .aiden/memory/metrics.jsonl | \
               python3 -c "import sys,json; print(len(set(json.loads(l)['feature'] for l in sys.stdin)))")
 
-            echo "| Métrique | Valeur |" >> $GITHUB_STEP_SUMMARY
+            echo "| Metrique | Valeur |" >> $GITHUB_STEP_SUMMARY
             echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
             echo "| Features | $features |" >> $GITHUB_STEP_SUMMARY
             echo "| Tokens | $total_tokens |" >> $GITHUB_STEP_SUMMARY
-            echo "| Coût | \$$total_cost |" >> $GITHUB_STEP_SUMMARY
+            echo "| Cout | \$$total_cost |" >> $GITHUB_STEP_SUMMARY
           fi
 ```
 
@@ -128,19 +132,19 @@ aiden-check:
 
 ## Mode non-interactif
 
-Pour les tâches automatisées (fix de lint, updates de deps), AIDEN peut tourner en CI :
+Pour les taches automatisees (fix de lint, updates de deps), AIDEN peut tourner en CI :
 
 ```bash
 $ aiden flash "Fix lint errors" --non-interactive --auto-approve
 ```
 
-Le `--non-interactive` désactive les prompts. Le `--auto-approve` skip les approbations enterprise.
+Le `--non-interactive` desactive les prompts. Le `--auto-approve` skip les approbations enterprise.
 
-**Attention** : réservez le mode non-interactif aux tâches à faible risque (flash uniquement). Les modes standard et enterprise bénéficient de la validation humaine.
+**Attention** : reservez le mode non-interactif aux taches a faible risque (flash uniquement). Les modes standard et enterprise beneficient de la validation humaine.
 
 ## Pre-commit hook
 
-Vérifier que les artefacts sont commités avec le code :
+Verifier que les artefacts sont commites avec le code :
 
 ```bash
 #!/bin/sh
@@ -163,18 +167,18 @@ $ aiden metrics --export csv > aiden-metrics.csv
 # Colonnes: timestamp, feature, agent, provider, tokensUsed, durationMs, cost
 ```
 
-### Métriques clés pour le dashboard
+### Metriques cles pour le dashboard
 
-| Métrique | Source | Calcul |
+| Metrique | Source | Calcul |
 |----------|--------|--------|
 | Features/semaine | metrics.jsonl | Distinct features par semaine |
 | Tokens/mois | metrics.jsonl | Sum tokensUsed par mois |
-| Coût/mois | metrics.jsonl | Sum cost par mois |
-| Provider le plus utilisé | metrics.jsonl | Count par provider |
+| Cout/mois | metrics.jsonl | Sum cost par mois |
+| Provider le plus utilise | metrics.jsonl | Count par provider |
 | Taux circuit breaker | decisions.jsonl | circuit_breaker / total |
 | Taux QA pass | decisions.jsonl | review=passed / total reviews |
 
-## Rapport de coûts
+## Rapport de couts
 
 ```bash
 $ aiden provider cost
@@ -185,6 +189,6 @@ Provider cost report:
   Total:       180000 tokens ($0.255)
 ```
 
-## Prochaine étape
+## Prochaine etape
 
 Si vous venez de BMAD, consultez la [migration BMAD](/cookbook/migration-bmad).
