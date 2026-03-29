@@ -1,0 +1,196 @@
+export const metadata = {
+  title: 'Chapitre 1 — Installer AIDEN et initialiser votre projet',
+  description: 'Installez AIDEN en une commande, initialisez votre projet todo-app, et decouvrez la structure .aiden/ qui pilote tout. Guide pas a pas, zero prerequis.',
+};
+
+# Chapitre 1 — Le terrain de jeu
+
+> Avant de courir, on lace ses chaussures. Ce chapitre vous prend par la main : installation, initialisation, premier tour du proprietaire. Dans 5 minutes, vous serez pret a lancer votre premier agent IA.
+
+Pas de longue introduction philosophique. On va droit au but.
+
+---
+
+## Ce dont vous avez besoin
+
+Trois choses, pas une de plus :
+
+- **Node.js 20+** — si vous lisez ceci, vous l'avez probablement deja
+- **Un provider IA** — Claude Code, Gemini CLI, ou meme un endpoint API custom. Un seul suffit pour commencer
+- **Un terminal** — vous allez beaucoup l'utiliser. Autant l'aimer
+
+<Callout type="tip">
+  Pas de provider installe ? Pas de panique. AIDEN fonctionne aussi avec n'importe quel endpoint compatible OpenAI via l'adaptateur API. Un LiteLLM local, un Ollama, ca marche aussi.
+</Callout>
+
+---
+
+## Installer AIDEN
+
+Une seule commande. Vraiment.
+
+```bash
+$ npm install -g @astrolyn/aiden
+```
+
+Ou avec pnpm si c'est votre truc :
+
+```bash
+$ pnpm add -g @astrolyn/aiden
+```
+
+Verifiez que tout est en place :
+
+```bash
+$ aiden --version
+0.7.0
+```
+
+Vous voyez un numero de version ? Parfait. Passons a la suite.
+
+---
+
+## Creer le projet todo-api
+
+On part de zero. Creez un projet Express + TypeScript basique — c'est notre terrain de jeu pour tout le tutorial.
+
+```bash
+$ mkdir todo-api && cd todo-api
+$ npm init -y
+$ npm install express
+$ npm install -D typescript @types/express @types/node tsx
+$ npx tsc --init
+```
+
+Creez un fichier `src/app.ts` minimal :
+
+```typescript
+import express from 'express';
+
+const app = express();
+app.use(express.json());
+
+app.get('/', (_req, res) => {
+  res.json({ message: 'Todo API is running' });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+export default app;
+```
+
+Rien de spectaculaire. C'est voulu — AIDEN brille sur des projets reels, pas sur des exemples jouets. Ce squelette va grandir avec nous.
+
+---
+
+## Initialiser AIDEN
+
+C'est ici que la magie commence. Une commande qui transforme un projet ordinaire en projet pilote par IA :
+
+```bash
+$ aiden init
+```
+
+AIDEN scanne votre projet et detecte automatiquement :
+- **Tech stack** : node, typescript, express
+- **Package manager** : npm (depuis le lockfile)
+- **Architecture** : pas de Docker pour l'instant, c'est normal
+
+Voila ce qui a ete cree :
+
+```
+todo-api/
+  .aiden/
+    aiden.config.yaml          ← La config de votre projet
+    memory/
+      context.yaml             ← L'etat du projet vu par les agents
+      decisions.jsonl           ← Le journal de bord (vide pour l'instant)
+      metrics.jsonl             ← Les metriques de consommation
+    rules/
+      coding-standards.md       ← Les regles que les agents respectent
+    templates/                  ← Les modeles d'artefacts
+    features/                   ← Un dossier par feature (vide)
+    skills/                     ← Les competences additionnelles (vide)
+```
+
+<Callout type="info">
+  Tout vit dans `.aiden/`. Pas de fichiers eparpilles, pas de config cachee. Si vous supprimez ce dossier, AIDEN repart de zero. Simple et previsible.
+</Callout>
+
+---
+
+## Premier tour du proprietaire
+
+Ouvrez `.aiden/aiden.config.yaml`. C'est le coeur de la configuration :
+
+```yaml
+project: todo-api
+provider: claude-code
+mode: standard
+lang: fr
+```
+
+Quatre lignes. C'est tout ce qu'AIDEN a besoin pour fonctionner. Le reste — budget, routing, regles — a des valeurs par defaut sensibles. On les ajustera plus tard si besoin.
+
+Maintenant, regardez `.aiden/memory/context.yaml` :
+
+```yaml
+project:
+  name: todo-api
+  techStack: [node, typescript, express]
+  architecture: []
+  ci: []
+  packageManager: npm
+activeFeatures: {}
+globalConstraints: []
+```
+
+C'est le **context bus** — la memoire partagee entre tous les agents. Chaque agent qui travaille sur votre projet lit et ecrit ici. C'est ce qui evite que l'Analyst et le Dev se contredisent — ils partagent la meme source de verite.
+
+---
+
+## Verifier que le provider fonctionne
+
+Avant de lancer notre premier workflow, assurons-nous que le provider repond :
+
+```bash
+$ aiden provider status
+Provider status:
+  claude-code: enabled (default)
+  gemini: enabled
+  copilot: enabled
+```
+
+Si votre provider prefere est absent ou desactive, vous pouvez changer :
+
+```bash
+$ aiden provider switch gemini
+Default provider switched to: gemini
+```
+
+<Callout type="warning">
+  Le provider doit etre installe et accessible dans votre terminal. Par exemple, Claude Code necessite la CLI `claude`, Gemini necessite `gemini`. AIDEN les appelle en sous-processus — il ne gere pas leur installation.
+</Callout>
+
+---
+
+## Ce qu'on a fait (et ce qui vient)
+
+En moins de 5 minutes, vous avez :
+
+1. Installe AIDEN globalement
+2. Cree un projet Express + TypeScript
+3. Initialise AIDEN qui a scanne votre stack
+4. Decouvert la structure `.aiden/` — config, memoire, regles
+5. Verifie que votre provider IA est pret
+
+Le terrain de jeu est pret. Les outils sont affutes. Et votre projet attend sa premiere feature.
+
+Dans le [prochain chapitre](/tutorial/flash), on va corriger un probleme avec le mode flash — et vous allez comprendre pourquoi les developpeurs qui l'essaient ne peuvent plus s'en passer.
+
+---
+
+*Temps de lecture : ~4 minutes. Temps d'execution : ~5 minutes.*

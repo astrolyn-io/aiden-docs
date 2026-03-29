@@ -1,0 +1,185 @@
+export const metadata = {
+  title: 'Chapitre 2 — Mode flash : corriger un bug en 2 minutes avec AIDEN',
+  description: 'Decouvrez le mode flash d\'AIDEN : un agent Lead + un agent Dev, zero overhead. Ajoutez un health check a votre API en une seule commande. Rapide, propre, trace.',
+};
+
+# Chapitre 2 — Premier reflexe : le mode flash
+
+> Imaginez un collegue ultra-competent a qui vous dites "ajoute un health check" et qui revient 2 minutes plus tard avec le code, les tests, et un resume de ce qu'il a fait. C'est exactement ca, le mode flash.
+
+Le flash, c'est le mode "pas de chichi". Deux agents seulement : le **Lead** qui comprend ce que vous voulez, et le **Dev** qui l'execute. Pas d'analyse de 3 pages, pas de spec formelle. Juste du code, vite et bien.
+
+---
+
+## Quand utiliser le flash ?
+
+La regle est simple. Si votre tache coche ces cases, c'est un flash :
+
+- Moins de 3 fichiers a toucher
+- Pas de nouvelle architecture a inventer
+- Vous savez deja ce que vous voulez
+- Bug fix, petit endpoint, refactoring localise
+
+Notre todo-api n'a pas de health check. C'est le candidat parfait.
+
+---
+
+## Lancer le flash
+
+Une commande. Pas deux. Pas trois. Une.
+
+```bash
+$ aiden flash "Ajouter un endpoint GET /health qui retourne le status du serveur"
+```
+
+Voici ce qui se passe sous le capot — en temps reel :
+
+```
+Starting flash workflow for: Ajouter un endpoint GET /health...
+Phase: orchestration, Agent: lead, Provider: claude-code
+Phase: implementation, Agent: dev, Provider: claude-code
+Flash workflow completed: ajouter-un-endpoint-get-health
+  Tokens: 1200 | Duration: 8500ms
+```
+
+C'est tout. En moins de 10 secondes, le Lead a compris la demande, le Dev a ecrit le code. Pas de va-et-vient, pas de questions.
+
+---
+
+## Ce que le Dev a produit
+
+Regardons ce qu'il y a dans le code maintenant. Le Dev a ajoute un endpoint dans `src/app.ts` :
+
+```typescript
+app.get('/health', (_req, res) => {
+  res.json({
+    status: 'healthy',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+```
+
+Et un test dans `tests/health.test.ts` :
+
+```typescript
+import request from 'supertest';
+import app from '../src/app';
+
+describe('GET /health', () => {
+  it('returns 200 with status healthy', async () => {
+    const res = await request(app).get('/health');
+    expect(res.status).toBe(200);
+    expect(res.body.status).toBe('healthy');
+    expect(res.body.uptime).toBeGreaterThan(0);
+  });
+});
+```
+
+Propre. Teste. Fonctionnel. Et surtout : **trace**.
+
+---
+
+## Ou sont les traces ?
+
+Chaque flash laisse une empreinte. Regardez dans `.aiden/features/` :
+
+```
+.aiden/features/ajouter-un-endpoint-get-health/
+  change-summary.md    ← Ce qui a change, en 10 lignes max
+```
+
+Le `change-summary.md` ressemble a ca :
+
+```markdown
+---
+type: change-summary
+feature: ajouter-un-endpoint-get-health
+author: dev
+mode: flash
+---
+## Changes
+- Added GET /health endpoint in src/app.ts
+- Created tests/health.test.ts with status check
+
+FILES_CHANGED: src/app.ts, tests/health.test.ts
+TESTS_GENERATED: tests/health.test.ts
+```
+
+Et dans le journal de bord (`.aiden/memory/decisions.jsonl`) :
+
+```json
+{"ts":"2026-03-29T10:00:01Z","feature":"ajouter-un-endpoint-get-health","agent":"lead","type":"mode_detected","value":"flash"}
+{"ts":"2026-03-29T10:00:08Z","feature":"ajouter-un-endpoint-get-health","agent":"dev","type":"implementation","value":"completed"}
+```
+
+Meme en mode rapide, rien n'est perdu. Chaque decision, chaque token consomme est enregistre. Si dans 3 mois quelqu'un demande "qui a ajoute ce endpoint et pourquoi ?", la reponse est la.
+
+---
+
+## Le dry run : regarder sans toucher
+
+Pas sur de vous ? Le dry run montre ce qui se passerait sans rien executer :
+
+```bash
+$ aiden flash "Renommer la route / en /api/v1" --dry-run
+[DRY RUN] Flash workflow: "Renommer la route / en /api/v1"
+Mode: flash | Agents: lead, dev
+```
+
+Utile quand vous hesitez entre flash et standard. Si AIDEN dit "flash", c'est que c'est simple. Si votre instinct dit "hmm, c'est peut-etre plus complexe que ca", ecoutez votre instinct et passez en standard.
+
+---
+
+## Le piege du flash : savoir quand ne pas l'utiliser
+
+Le flash est addictif. Vous allez vouloir tout faire en flash. Resistez a la tentation quand :
+
+- **La feature touche plus de 3 fichiers** — vous avez besoin d'un Analyst qui cartographie l'impact
+- **Il y a des choix d'architecture** — le Planner est fait pour ca
+- **La qualite est critique** — le QA du mode standard attrape des bugs que le Dev tout seul ne voit pas
+
+Le flash est un tournevis, pas un marteau. Excellent pour visser, catastrophique pour enfoncer un clou.
+
+<Callout type="tip">
+  AIDEN peut detecter quand un flash est insuffisant. Si le Lead detecte une complexite elevee, il vous suggerera de passer en standard. Faites-lui confiance — il a lu votre codebase.
+</Callout>
+
+---
+
+## Le budget : ce que ca coute
+
+Regardez vos metriques :
+
+```bash
+$ aiden metrics
+ajouter-un-endpoint-get-health: 1,200 tokens, $0.0036, 1 operations
+```
+
+1 200 tokens. Quelques fractions de centime. Le budget flash est plafonne a **5 000 tokens par feature** — une securite pour eviter les depassements. Si le Dev depasse, le circuit breaker intervient et vous etes prevenu.
+
+Pour comparaison :
+- **Flash** : 5 000 tokens max (~$0.015)
+- **Standard** : 20 000 tokens max (~$0.06)
+- **Enterprise** : 100 000 tokens max (~$0.30)
+
+Des cacahuetes comparees au temps humain economise.
+
+---
+
+## Ce qu'on a appris
+
+Le mode flash, c'est :
+- **2 agents** : Lead + Dev
+- **Zero overhead** : pas d'analyse, pas de spec, pas de review
+- **Tout trace** : change-summary, decisions log, metriques
+- **Budget controle** : 5 000 tokens max, circuit breaker integre
+- **Le bon reflexe** pour les taches simples et bien definies
+
+Notre todo-api a maintenant un health check. Mais on veut plus. On veut un vrai CRUD — creer, lire, modifier, supprimer des taches.
+
+Ca, c'est un travail pour le [mode standard](/tutorial/standard). Et la, vous allez voir 4 agents collaborer comme une equipe senior. C'est impressionnant.
+
+---
+
+*Temps de lecture : ~5 minutes. Tokens consommes par AIDEN : 1 200.*

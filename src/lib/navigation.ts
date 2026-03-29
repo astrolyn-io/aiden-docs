@@ -50,6 +50,17 @@ export const navigation: NavSection[] = [
     ],
   },
   {
+    title: 'Tutorial',
+    icon: 'rocket',
+    items: [
+      { title: 'Le terrain de jeu', href: '/tutorial/setup' },
+      { title: 'Mode flash', href: '/tutorial/flash' },
+      { title: 'Mode standard', href: '/tutorial/standard' },
+      { title: 'Mode enterprise', href: '/tutorial/enterprise' },
+      { title: 'Boite a outils', href: '/tutorial/toolbox' },
+    ],
+  },
+  {
     title: 'Cookbook',
     icon: 'code',
     items: [

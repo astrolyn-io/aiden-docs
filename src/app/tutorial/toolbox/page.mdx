@@ -1,0 +1,338 @@
+export const metadata = {
+  title: 'Chapitre 5 — Outils AIDEN : status, metriques, retex, skills et plus',
+  description: 'Decouvrez les commandes AIDEN du quotidien : suivre vos features, analyser vos couts, apprendre de vos erreurs, etendre les capacites avec des skills. Le guide complet de la boite a outils.',
+};
+
+# Chapitre 5 — La boite a outils du quotidien
+
+> Un bon framework, ce n'est pas juste 3 commandes spectaculaires. C'est aussi les petits outils discrets qu'on utilise 20 fois par jour sans y penser. Ceux qui nous rendent la vie plus facile, tout simplement.
+
+Vous savez lancer flash, standard et enterprise. Felicitations — vous avez 30% d'AIDEN. Les 70% restants, ce sont les outils qu'on decouvre dans ce chapitre. Des outils qui transforment AIDEN d'un "generateur de code" en vrai **compagnon de developpement**.
+
+---
+
+## Suivre vos features : `aiden status`
+
+Vous avez lance 3 features dans ce tutorial. Ou en sont-elles ?
+
+```bash
+$ aiden status
+ajouter-un-endpoint-get-health [completed] (flash) - Ajouter un endpoint GET /health
+implementer-un-crud-complet [completed] (standard) - Implementer un CRUD complet
+ajouter-authentification-jwt [completed] (enterprise) - Ajouter l'authentification JWT
+```
+
+Un coup d'oeil, trois features, leur etat et leur mode. Pour le detail d'une feature specifique :
+
+```bash
+$ aiden status implementer-un-crud-complet
+Feature: Implementer un CRUD complet pour les taches
+  State: completed
+  Mode: standard
+  Tokens: 12400
+```
+
+<Callout type="tip">
+  Dans un vrai projet, certaines features seront `in_progress`, `blocked`, ou `in_review`. Le status vous montre exactement ou vous en etes, a tout moment.
+</Callout>
+
+---
+
+## Quand ca coince : `aiden resume` et `aiden abort`
+
+La vie n'est pas toujours un long fleuve tranquille. Parfois une feature se bloque — un provider qui timeout, un quality gate qui refuse de passer, une decision a prendre.
+
+### Reprendre une feature bloquee
+
+```bash
+$ aiden resume ma-feature-bloquee
+Resuming feature: "ma-feature-bloquee"...
+Feature "ma-feature-bloquee" resumed (state: in_progress)
+Re-running standard workflow from in_progress...
+```
+
+AIDEN debloque la feature et relance le workflow depuis l'etat actuel. Pas besoin de tout recommencer. Les artefacts deja produits (brief, spec, stories) sont conserves.
+
+### Abandonner proprement
+
+Parfois, on change d'avis. Et c'est OK.
+
+```bash
+$ aiden abort ma-feature-abandonnee
+Feature "ma-feature-abandonnee" aborted and state saved to decisions log
+```
+
+AIDEN enregistre l'abandon dans le journal de decisions — meme les echecs sont traces. Ca fait partie de l'historique du projet.
+
+---
+
+## Comprendre vos couts : `aiden metrics` et `aiden provider cost`
+
+Combien coute AIDEN au quotidien ? Pas besoin de deviner.
+
+```bash
+$ aiden metrics
+ajouter-un-endpoint-get-health: 1,200 tokens, $0.0036, 1 operations
+implementer-un-crud-complet: 12,400 tokens, $0.0372, 5 operations
+ajouter-authentification-jwt: 34,200 tokens, $0.1026, 7 operations
+```
+
+Total : 47 800 tokens, environ 14 centimes. Pour un health check, un CRUD complet, et de l'authentification JWT.
+
+Pour un rapport plus structure :
+
+```bash
+$ aiden provider cost
+Cost Report
+────────────────────────────────────────────────────────
+  ajouter-un-endpoint-get-health: 1,200 tokens, $0.0036
+  implementer-un-crud-complet: 12,400 tokens, $0.0372
+  ajouter-authentification-jwt: 34,200 tokens, $0.1026
+────────────────────────────────────────────────────────
+  Total: 47,800 tokens, $0.1434
+```
+
+Et pour exporter en CSV (utile pour les rapports mensuels ou la comptabilite) :
+
+```bash
+$ aiden metrics --export csv
+feature,tokens,cost,duration_ms,entries
+ajouter-un-endpoint-get-health,1200,0.0036,8500,1
+implementer-un-crud-complet,12400,0.0372,45000,5
+ajouter-authentification-jwt,34200,0.1026,120000,7
+```
+
+<Callout type="info">
+  AIDEN plafonne chaque feature : 5 000 tokens en flash, 20 000 en standard, 100 000 en enterprise. Si une feature depasse 80% de son budget, vous recevez une alerte. Pas de mauvaise surprise sur la facture.
+</Callout>
+
+---
+
+## Apprendre de ses erreurs : `aiden retex`
+
+Le retex (retour d'experience), c'est ce qui differencie un outil qu'on utilise d'un outil qui s'ameliore. AIDEN detecte automatiquement les patterns problematiques et les transforme en lecons.
+
+### Retex automatique
+
+Apres chaque feature (en standard et enterprise), AIDEN analyse le workflow :
+
+- Le QA a du retenter 2 fois ? → "Investir plus dans la spec avant d'implementer"
+- Le circuit breaker s'est active ? → "Essayer un autre provider pour ce type de tache"
+- Le mode a ete change en cours de route ? → "Commencer avec le mode superieur pour des features similaires"
+- Le budget a ete depasse ? → "Decouper en features plus petites"
+
+### Gerer les retex
+
+```bash
+$ aiden retex list
+[2026-03-29] Auto-retex: qa-retry on implementer-un-crud-complet
+  Lesson: Feature required 1 QA retry. Initial spec was insufficiently precise.
+  Recommendation: For similar features, invest more in planning phase.
+```
+
+Ajouter un retex manuellement :
+
+```bash
+$ aiden retex add --title "Les endpoints sans validation posent problème" \
+  --context "typescript,express,validation" \
+  --outcome "mixed" \
+  --lesson "Toujours ajouter la validation dans la story du Planner"
+```
+
+Chercher des retex par tag :
+
+```bash
+$ aiden retex search express
+```
+
+Le plus beau : les retex correspondant a votre tech stack sont **injectes dans les prompts des agents**. L'Analyst qui travaille sur votre prochain endpoint Express saura deja qu'il faut insister sur la validation. AIDEN apprend de vos projets.
+
+---
+
+## Les regles : coder vos standards
+
+Les regles d'entreprise, c'est ce qui garantit que chaque agent respecte vos conventions. Elles vivent dans `.aiden/rules/`.
+
+### Voir les regles actives
+
+```bash
+$ aiden rules list
+coding-standards.md — Code style, strict mode, interfaces, JSDoc
+```
+
+### Ajouter une regle
+
+Creez un fichier Markdown avec vos conventions :
+
+```markdown
+# API Guidelines
+
+## Endpoints
+- Toujours retourner du JSON
+- Utiliser les codes HTTP standard (200, 201, 400, 404, 500)
+- Paginer les listes de plus de 50 elements
+
+## Errors
+- Format: { error: string, code: string, details?: object }
+- Logger chaque erreur 500
+```
+
+Puis :
+
+```bash
+$ aiden rules add api-guidelines.md
+Rule "api-guidelines" added to .aiden/rules/
+```
+
+Desormais, le Dev et le QA recevront ces regles dans chaque prompt. Le Dev ecrira du code conforme, le QA verifiera la conformite. Pas besoin de rappeler les conventions a chaque PR — AIDEN s'en charge.
+
+---
+
+## Les skills : etendre les capacites
+
+Les skills sont des "packs de competences" que vous ajoutez aux agents. Conformite RGPD, revue de code stricte, integration Jira — chaque skill injecte des instructions et des regles specifiques.
+
+### Voir les skills disponibles
+
+```bash
+$ aiden skills list
+code-review-strict  — Revue de code approfondie avec metriques
+compliance-rgpd     — Verification de conformite RGPD
+adversarial-review  — Revue contradictoire (devil's advocate)
+jira-sync           — Synchronisation avec Jira
+```
+
+### Activer un skill
+
+```bash
+$ aiden skills enable code-review-strict
+```
+
+Le QA devient plus exigeant. Il ne se contente plus de "ca passe" — il verifie la complexite cyclomatique, la couverture de tests, les patterns de code. Exactement comme un reviewer senior humain.
+
+### Creer un skill custom
+
+Chaque skill est un dossier dans `.aiden/skills/` :
+
+```
+.aiden/skills/mon-skill/
+  skill.yaml        ← Manifeste : nom, agents cibles, modes, priorite
+  instructions.md   ← Instructions injectees dans les prompts
+  rules/            ← Regles additionnelles (optionnel)
+```
+
+Le `skill.yaml` :
+
+```yaml
+name: mon-skill
+version: 1.0.0
+agents: [dev, qa]
+modes: [standard, enterprise]
+enabled: true
+priority: 10
+```
+
+Et `instructions.md` :
+
+```markdown
+## Convention d'equipe
+
+- Toujours utiliser des hooks React custom au lieu de useEffect direct
+- Les composants de plus de 100 lignes doivent etre decomposes
+- Les tests utilisent Testing Library, pas Enzyme
+```
+
+Simple. Puissant. Partageable entre projets.
+
+---
+
+## Les templates : personnaliser les artefacts
+
+Les artefacts generes (brief, spec, stories...) suivent des templates Handlebars. Vous pouvez les personnaliser :
+
+```bash
+$ aiden template list
+Available templates:
+  brief
+  spec
+  story
+  review
+  change-summary
+  architecture-decision
+  quality-report
+  prfaq
+
+$ aiden template customize brief
+Template "brief" copied to .aiden/templates/brief.md.hbs for customization.
+```
+
+Editez `.aiden/templates/brief.md.hbs` pour ajouter vos propres sections — contexte business, equipe impactee, deadline. Chaque brief genere suivra votre modele.
+
+---
+
+## La configuration : tout est ajustable
+
+Voir la config actuelle :
+
+```bash
+$ aiden config show
+{
+  "project": "todo-api",
+  "provider": "claude-code",
+  "mode": "standard",
+  "lang": "fr"
+}
+```
+
+Changer un parametre :
+
+```bash
+$ aiden config set mode flash
+Set mode = flash
+```
+
+Le systeme de config est en cascade :
+
+1. **Defauts AIDEN** → valeurs sensibles de base
+2. **Enterprise global** (`~/.aiden/enterprise.config.yaml`) → regles d'entreprise
+3. **Projet** (`.aiden/aiden.config.yaml`) → specifique a ce repo
+4. **Feature** (`.aiden/features/<slug>/.override.yaml`) → override par feature
+5. **CLI flags** (`--provider gemini`) → priorite maximale
+
+Chaque niveau ecrase le precedent. Les objets sont fusionnes en profondeur, les scalaires sont remplaces.
+
+---
+
+## Recapitulatif : votre todo-api, de A a Z
+
+En 5 chapitres, vous avez :
+
+| Chapitre | Ce qu'on a fait | Mode | Tokens |
+|----------|----------------|------|--------|
+| 1 — Setup | Installe AIDEN, initialise le projet | — | 0 |
+| 2 — Flash | Ajoute GET /health | Flash | 1 200 |
+| 3 — Standard | CRUD complet todos | Standard | 12 400 |
+| 4 — Enterprise | Authentification JWT | Enterprise | 34 200 |
+| 5 — Toolbox | Explore status, metrics, retex, skills | — | 0 |
+
+**Total : 47 800 tokens. Environ 14 centimes.** Pour un health check, un CRUD, de l'auth JWT, des tests, de la doc, et un audit trail complet.
+
+---
+
+## Et maintenant ?
+
+Vous avez les bases. Voici ou aller ensuite :
+
+- **[Les 3 modes en detail](/guides/modes)** — detection automatique, changement de mode en cours de route
+- **[Les 6 agents](/guides/agents)** — personnalites, capacites, elicitation techniques
+- **[Les providers](/guides/providers)** — configurer Claude, Gemini, Copilot, ou votre API custom
+- **[Configuration avancee](/guides/configuration)** — profiles d'equipe, routing, budget
+- **[Brownfield](/cookbook/brownfield)** — integrer AIDEN dans un projet existant (pas un projet neuf)
+
+AIDEN grandit avec votre projet. Plus vous l'utilisez, plus il apprend (via les retex). Plus vous ajoutez de regles et de skills, plus il respecte vos conventions. C'est un compagnon, pas un outil jetable.
+
+Bienvenue dans le developpement assiste par IA — la version pragmatique.
+
+---
+
+*Temps de lecture : ~8 minutes. Temps total du tutorial : ~30 minutes.*

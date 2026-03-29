@@ -1,0 +1,256 @@
+export const metadata = {
+  title: 'Chapitre 4 — Mode enterprise : securite, approbation humaine et documentation automatique',
+  description: 'Ajoutez l\'authentification JWT a votre API avec le mode enterprise d\'AIDEN. Approbation humaine entre chaque phase, agent DocOps, audit trail complet. Le workflow pour les projets critiques.',
+};
+
+# Chapitre 4 — Quand la securite compte : le mode enterprise
+
+> On ne deploie pas un systeme d'authentification comme on ajoute un health check. Quand la securite est en jeu, chaque decision merite un regard humain. Le mode enterprise, c'est exactement ca : la puissance de 6 agents, avec vous aux commandes entre chaque phase.
+
+Notre todo-api a un CRUD complet. Mais sans authentification, c'est une porte ouverte. N'importe qui peut supprimer toutes les taches. On va corriger ca avec du JWT — et on va le faire proprement.
+
+---
+
+## Pourquoi enterprise et pas standard ?
+
+Bonne question. Le standard aurait pu le faire. Mais l'authentification touche a :
+- La **securite** — une erreur peut exposer des donnees
+- **Plusieurs fichiers** — middleware, routes, config, tests
+- Des **choix d'architecture** — ou stocker les secrets ? Comment gerer le refresh token ?
+
+Le mode enterprise ajoute trois garanties que le standard n'a pas :
+1. **Approbation humaine** entre chaque phase — vous validez avant de continuer
+2. **DocOps** — un 6e agent qui genere la doc et verifie la conformite
+3. **Audit trail renforce** — chaque decision est tracee pour les audits
+
+---
+
+## Lancer l'enterprise
+
+```bash
+$ aiden enterprise "Ajouter l'authentification JWT avec login, register, et middleware de protection des routes"
+```
+
+Cette fois, l'execution ne defile pas d'un coup. Elle **s'arrete apres chaque phase** pour demander votre feu vert.
+
+```
+Starting enterprise workflow...
+Phase: discovery, Agent: analyst, Provider: claude-code
+```
+
+L'Analyst travaille. Puis :
+
+```
+[APPROVAL] Phase "discovery" for "ajouter-authentification-jwt" completed.
+  Agent: analyst | Tokens: 890
+  Preview: CRUD complet existant, pas de middleware auth, Express standard...
+  Approve? (y/n):
+```
+
+C'est le moment ou **vous** decidez. Vous pouvez lire le brief complet dans `.aiden/features/ajouter-authentification-jwt/brief.md` avant de repondre. Prenez votre temps. L'enterprise, c'est la qualite, pas la vitesse.
+
+---
+
+## Phase par phase, avec votre accord
+
+### L'Analyst trouve les risques
+
+Il detecte une complexite de **4/5** et identifie des risques concrets :
+- Pas de gestion de secrets (.env)
+- Les routes existantes ne sont pas protegees
+- Pas de hash de mot de passe
+
+Vous lisez. C'est pertinent. `y`.
+
+### Le Planner decompose en stories
+
+Le Planner — qui en enterprise peut se comporter comme un **PM + Architecte** — produit un plan detaille :
+
+```markdown
+### Story 1: Modele User et store
+### Story 2: Endpoints POST /auth/register et POST /auth/login
+### Story 3: Middleware JWT de protection des routes
+### Story 4: Proteger les routes /todos existantes
+### Story 5: Tests d'integration auth
+```
+
+Et un **Architecture Decision Record (ADR)** :
+
+```markdown
+---
+type: architecture-decision
+---
+## Decision: JWT avec bcrypt pour le hashing
+
+### Contexte
+L'API todo necessite une authentification simple mais securisee.
+
+### Decision
+- JWT pour les tokens (jsonwebtoken)
+- bcrypt pour le hashing des mots de passe
+- Secret JWT dans process.env.JWT_SECRET
+- Token expire apres 24h
+
+### Consequences
+- Necessite un .env avec JWT_SECRET
+- Pas de refresh token pour le MVP (a ajouter plus tard)
+```
+
+Un ADR. Dans une todo-app. Ca peut sembler excessif, mais c'est exactement le genre de trace qui sauve des equipes 6 mois plus tard quand quelqu'un demande "pourquoi JWT et pas sessions ?".
+
+Vous validez. `y`.
+
+### Le Dev implemente
+
+Le Dev recoit le plan complet et travaille story par story. Comme en standard, mais avec plus de contexte (ADR, regles enterprise).
+
+Les **regles d'entreprise** sont injectees automatiquement :
+
+```
+--- Enterprise Rules ---
+# Security Policy
+- Never hardcode secrets
+- Always hash passwords with bcrypt (min 10 rounds)
+- Validate all user inputs
+- Use parameterized queries
+```
+
+Le Dev ne peut pas "oublier" les bonnes pratiques — elles font partie de son prompt. Ce n'est pas de la confiance aveugle, c'est du guardrail.
+
+Vous approuvez le code. `y`.
+
+### Le QA verifie la securite
+
+En mode enterprise, le QA va plus loin. En plus des criteres d'acceptation, il fait un **scan securite OWASP** :
+
+```
+--- SECURITY SCAN ---
+  SQL Injection: PASS (no raw queries)
+  XSS: PASS (JSON-only API)
+  Hardcoded Secrets: PASS (uses env vars)
+  Path Traversal: PASS (no file operations)
+  Command Injection: PASS (no shell execution)
+
+SCORE: 9/10
+PASSED: yes
+```
+
+Il verifie aussi que chaque critere d'acceptation est couvert :
+
+```
+Story 3: Middleware JWT
+  ✓ Route sans token retourne 401
+  ✓ Token invalide retourne 401
+  ✓ Token expire retourne 401
+  ✓ Token valide passe au handler suivant
+```
+
+Vous validez. `y`.
+
+### DocOps : le 6e agent entre en jeu
+
+C'est l'agent exclusif au mode enterprise. DocOps genere :
+
+- **Documentation** des nouveaux endpoints (register, login)
+- **Changelog** automatique
+- **Verification de conformite** — les regles sont-elles respectees ?
+
+```markdown
+---
+type: changelog
+---
+## [Unreleased]
+### Added
+- POST /auth/register — User registration with email/password
+- POST /auth/login — User login returning JWT token
+- JWT middleware protecting /todos routes
+- Password hashing with bcrypt (10 rounds)
+- Input validation on auth endpoints
+
+### Security
+- JWT_SECRET required in environment variables
+- Passwords never stored in plain text
+- Token expiration set to 24 hours
+```
+
+Derniere approbation. `y`.
+
+---
+
+## Le mode auto-approve
+
+Attendre entre chaque phase, c'est bien pour apprendre. Mais quand vous faites confiance au processus :
+
+```bash
+$ aiden enterprise "Ma feature" --auto-approve
+```
+
+L'enterprise complet tourne sans interruption. Vous gardez le DocOps, les regles, l'ADR, le scan securite — mais sans les pauses. Le meilleur des deux mondes.
+
+---
+
+## Ce que l'enterprise a produit
+
+```bash
+$ aiden status ajouter-authentification-jwt
+Feature: Ajouter l'authentification JWT
+  State: completed
+  Mode: enterprise
+  Tokens: 34200
+```
+
+Le dossier features est bien rempli :
+
+```
+.aiden/features/ajouter-authentification-jwt/
+  brief.md                    ← Analyse complete
+  spec.md                     ← Spec detaillee
+  architecture-decision.md    ← ADR : pourquoi JWT + bcrypt
+  stories/
+    001-modele-user.md
+    002-endpoints-auth.md
+    003-middleware-jwt.md
+    004-proteger-routes.md
+    005-tests-integration.md
+  review.md                   ← Rapport QA + scan securite
+  quality-report.md           ← Rapport qualite complet
+  change-summary.md           ← Resume des changements
+```
+
+Dix artefacts. Un audit trail complet. De la doc generee. Si un auditeur passe demain, tout est la.
+
+---
+
+## Flash vs Standard vs Enterprise : recapitulatif
+
+Apres 3 chapitres, vous avez vu les 3 modes en action. Voici la synthese :
+
+| | Flash | Standard | Enterprise |
+|---|---|---|---|
+| **Agents** | Lead + Dev | + Analyst, Planner, QA | + DocOps |
+| **Quality gates** | Non | Oui | Oui + approbation humaine |
+| **Artefacts** | change-summary | + brief, spec, stories, review | + ADR, quality-report, docs |
+| **Budget tokens** | 5 000 | 20 000 | 100 000 |
+| **Cas d'usage** | Bug fix, petit endpoint | Feature moyenne | Securite, compliance, archi |
+| **Duree typique** | < 30 secondes | 30s - 2 min | 1 - 5 min |
+
+**La regle d'or** : commencez par flash. Si c'est trop simple pour le flash, passez en standard. Si la securite ou la compliance sont en jeu, passez en enterprise. Et si vous vous trompez, AIDEN peut [changer de mode en cours de route](/guides/modes) sans perdre le travail deja fait.
+
+---
+
+## Ce qu'on a appris
+
+Le mode enterprise, c'est :
+- **6 agents** dont DocOps pour la documentation
+- **Approbation humaine** entre chaque phase (desactivable avec `--auto-approve`)
+- **ADR** pour les decisions d'architecture
+- **Scan securite OWASP** dans le QA
+- **Audit trail complet** — chaque decision tracee
+
+Notre todo-api est maintenant complete : health check, CRUD, authentification JWT. Mais AIDEN, c'est plus que 3 commandes de workflow.
+
+Dans le [dernier chapitre](/tutorial/toolbox), on decouvre les outils du quotidien — ceux qui font d'AIDEN un vrai compagnon de developpement.
+
+---
+
+*Temps de lecture : ~7 minutes. Tokens consommes par AIDEN : 34 200.*

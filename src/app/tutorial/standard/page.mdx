@@ -1,0 +1,309 @@
+export const metadata = {
+  title: 'Chapitre 3 — Mode standard : 4 agents IA construisent votre feature CRUD',
+  description: 'Suivez en direct 4 agents IA (Analyst, Planner, Dev, QA) qui collaborent pour construire un CRUD complet. Quality gates, boucle de feedback, artefacts — le workflow AIDEN standard decortique.',
+};
+
+# Chapitre 3 — Construire pour de vrai : le mode standard
+
+> Le flash, c'etait un sprint. Ici, on court un relais. Quatre coureurs, chacun expert de sa discipline, qui se passent le temoin sans le faire tomber. L'Analyst comprend, le Planner planifie, le Dev construit, le QA valide. Et vous, vous regardez une equipe senior travailler.
+
+Notre todo-api a un health check. Bien. Mais une todo-app sans CRUD, c'est comme une voiture sans roues. Il est temps de construire la vraie feature : **creer, lire, modifier et supprimer des taches**.
+
+C'est trop gros pour un flash. Plusieurs fichiers, un modele de donnees, des validations, des tests d'integration. Le mode standard est fait pour ca.
+
+---
+
+## Lancer le standard
+
+```bash
+$ aiden standard "Implementer un CRUD complet pour les taches (todos) avec validation et tests"
+```
+
+La chaine de montage demarre. Cinq phases, quatre agents. Accrochez-vous.
+
+```
+Starting standard workflow for: Implementer un CRUD complet...
+Phase: orchestration, Agent: lead, Provider: claude-code
+Phase: discovery, Agent: analyst, Provider: claude-code
+Phase: planning, Agent: planner, Provider: claude-code
+Phase: implementation, Agent: dev, Provider: gemini
+Phase: validation, Agent: qa, Provider: claude-code
+Standard workflow completed: implementer-un-crud-complet
+  Tokens: 12400 | Duration: 45000ms
+```
+
+45 secondes. 12 400 tokens. Un CRUD complet avec tests, revue par un QA. Decomposons chaque phase.
+
+---
+
+## Phase 1 — L'Analyst entre en scene
+
+L'Analyst ne code pas. Il **observe**. Il scanne votre codebase, repere les patterns existants, et produit un diagnostic.
+
+Pour notre todo-app, voici ce qu'il trouve :
+
+- **Complexite** : 3/5 — plusieurs endpoints, modele de donnees, validation
+- **Stack detectee** : Express + TypeScript, pas d'ORM, stockage en memoire pour l'instant
+- **Risques** : pas de validation des entrees, pas de gestion d'erreur centralisee
+- **Questions** : stocker en memoire ou en base ? Pagination necessaire ?
+
+Il depose son brief dans `.aiden/features/implementer-un-crud-complet/brief.md` :
+
+```markdown
+---
+type: brief
+feature: implementer-un-crud-complet
+author: analyst
+complexity: 3
+---
+## Analyse
+CRUD complet pour les taches. 4 endpoints (GET, POST, PUT, DELETE).
+Stockage en memoire (pas de DB configuree).
+Validation des entrees necessaire. Gestion d'erreur a centraliser.
+
+COMPLEXITY: 3
+RISKS:
+- Pas de validation existante
+- Pas de gestion d'erreur centralisee
+```
+
+<Callout type="info">
+  **Le quality gate** verifie que l'Analyst a bien fait son travail : contenu non vide, complexite detectee. Si le brief est vide ou incomplet, la chaine s'arrete. Pas question d'envoyer du vide au Planner.
+</Callout>
+
+Le brief passe le controle. L'Analyst passe le temoin.
+
+---
+
+## Phase 2 — Le Planner dessine le plan
+
+Le Planner recoit le brief et le transforme en **spec actionnable**. Pas un document de 50 pages — une spec de 1-2 pages avec des stories claires et des criteres d'acceptation mesurables.
+
+Voici ce qu'il produit :
+
+**`spec.md`** — la vision globale :
+
+```markdown
+---
+type: spec
+feature: implementer-un-crud-complet
+author: planner
+---
+## Architecture
+- Routes dans src/routes/todos.ts
+- Modele Todo (id, title, completed, createdAt)
+- Validation middleware
+- Error handler centralise
+
+## Stories
+4 stories decomposees ci-dessous.
+```
+
+**`stories/001-modele-et-store.md`** :
+```markdown
+### Story 1: Modele Todo et store en memoire
+- Creer interface Todo (id, title, completed, createdAt)
+- Creer TodoStore avec methodes CRUD
+- Tests unitaires du store
+
+Acceptance criteria:
+- Le store gere un tableau en memoire
+- Chaque todo a un id unique (uuid ou incremental)
+- Les methodes create/read/update/delete fonctionnent
+```
+
+**`stories/002-endpoints-crud.md`** :
+```markdown
+### Story 2: Endpoints REST
+- POST /todos — creer une tache
+- GET /todos — lister toutes les taches
+- GET /todos/:id — une tache specifique
+- PUT /todos/:id — modifier une tache
+- DELETE /todos/:id — supprimer une tache
+
+Acceptance criteria:
+- POST retourne 201 avec la tache creee
+- GET retourne 200 avec un tableau
+- PUT retourne 200 avec la tache modifiee
+- DELETE retourne 204
+- ID inexistant retourne 404
+```
+
+**`stories/003-validation.md`** et **`stories/004-tests-integration.md`** completent le tableau.
+
+<Callout type="tip">
+  Le Planner ne devine pas les criteres d'acceptation — il les extrait du brief de l'Analyst et les rend testables. C'est ce qui permet au QA de verifier chaque point a la fin. La chaine fonctionne parce que chaque maillon prepare le suivant.
+</Callout>
+
+Le quality gate verifie : spec non vide, stories decomposees. Tout est bon. Le Dev peut commencer.
+
+---
+
+## Phase 3 — Le Dev construit
+
+Le Dev recoit **tout le contexte** : brief de l'Analyst, spec et stories du Planner, et le code existant. Il ne part pas a l'aveugle. Il sait exactement quoi construire, avec quels criteres.
+
+Il suit les stories une par une :
+
+1. Cree `src/models/todo.ts` — le modele et le store
+2. Cree `src/routes/todos.ts` — les 5 endpoints
+3. Ajoute la validation dans `src/middleware/validate.ts`
+4. Ecrit les tests dans `tests/todos.test.ts`
+5. Fait un self-review avant de passer la main
+
+Le resultat ? Des fichiers propres et structures :
+
+```typescript
+// src/models/todo.ts
+export interface Todo {
+  id: string;
+  title: string;
+  completed: boolean;
+  createdAt: string;
+}
+
+// src/routes/todos.ts
+router.post('/', validate(createTodoSchema), (req, res) => {
+  const todo = store.create(req.body);
+  res.status(201).json(todo);
+});
+
+router.get('/', (_req, res) => {
+  res.json(store.getAll());
+});
+
+// ... PUT, DELETE, GET /:id
+```
+
+### Les guardrails du Dev
+
+Le Dev n'est pas en roue libre. AIDEN surveille :
+
+- **Circuit breaker** : 3 echecs consecutifs → on arrete, on escalade
+- **Alerte fichiers** : plus de 10 fichiers modifies → signal d'alarme
+- **Rappel d'objectif** : toutes les 5 etapes, AIDEN reinjecte l'objectif original pour eviter la derive
+
+```
+OBJECTIVE REMINDER
+Feature: Implementer un CRUD complet pour les taches
+Story: 002-endpoints-crud (2/4)
+Remaining criteria: [PUT retourne 200, DELETE retourne 204, 404 sur ID inexistant]
+Budget remaining: 15,200 / 20,000 tokens
+```
+
+Ce rappel est injecte automatiquement dans le prompt du Dev. Pas de derive, pas de scope creep. Le Dev reste sur les rails.
+
+---
+
+## Phase 4 — Le QA passe tout au crible
+
+Le moment de verite. Le QA recoit TOUT — brief, spec, stories, code du Dev — et verifie **chaque critere d'acceptation**, un par un.
+
+Il ne se contente pas d'un "ca a l'air bien". Il check :
+
+```
+--- ACCEPTANCE CRITERIA TO VERIFY ---
+
+Story 1: Modele Todo et store
+  ✓ Store gere un tableau en memoire
+  ✓ Chaque todo a un id unique
+  ✓ Methodes CRUD fonctionnent
+
+Story 2: Endpoints REST
+  ✓ POST retourne 201
+  ✓ GET retourne 200 avec tableau
+  ✓ PUT retourne 200
+  ✓ DELETE retourne 204
+  ✓ ID inexistant retourne 404
+
+Story 3: Validation
+  ✓ Title vide rejete (400)
+  ✓ Body malformed rejete (400)
+
+SCORE: 9/10
+PASSED: yes
+ISSUES: Minor — consider adding pagination for GET /todos
+```
+
+9/10. Le QA a trouve un point mineur (pagination) mais rien de bloquant. La feature passe.
+
+### Et si le QA refuse ?
+
+C'est la ou AIDEN brille. Si `PASSED: no`, l'orchestrateur ne panique pas. Il lance une **boucle de correction** :
+
+1. Le Dev recoit le feedback precis du QA
+2. Le Dev corrige les points specifiques
+3. Le QA re-verifie
+4. Maximum 2 retries — si c'est toujours en echec apres ca, c'est qu'il y a un vrai probleme
+
+C'est du pair programming automatise. Le QA pointe, le Dev corrige. Pas d'allers-retours par email. Pas de tickets Jira. Juste une boucle de feedback rapide.
+
+---
+
+## Le resultat final
+
+```bash
+$ aiden status implementer-un-crud-complet
+Feature: Implementer un CRUD complet pour les taches
+  State: completed
+  Mode: standard
+  Tokens: 12400
+```
+
+Tout est range dans `.aiden/features/implementer-un-crud-complet/` :
+
+```
+brief.md                  ← Analyse de l'Analyst
+spec.md                   ← Specification du Planner
+stories/
+  001-modele-et-store.md  ← Story 1
+  002-endpoints-crud.md   ← Story 2
+  003-validation.md       ← Story 3
+  004-tests-integration.md ← Story 4
+review.md                 ← Rapport du QA
+change-summary.md         ← Resume des changements
+```
+
+Six artefacts. Un CRUD complet. Des tests. Une review. Le tout en 45 secondes et 12 400 tokens.
+
+---
+
+## Le routing intelligent
+
+Vous avez peut-etre remarque que le Dev utilisait **gemini** alors que les autres agents utilisaient **claude-code**. Ce n'est pas un hasard.
+
+AIDEN route chaque agent vers le provider optimal :
+
+| Agent | Provider | Pourquoi |
+|-------|----------|----------|
+| Analyst | Claude Code | Excellent en analyse et long contexte |
+| Planner | Claude Code | Precis en decomposition et specs |
+| Dev | Gemini | Rapide en generation de code multi-fichiers |
+| QA | Claude Code | Rigoureux en revue de code |
+
+Ce routing est configurable. Si vous preferez tout envoyer au meme provider :
+
+```bash
+$ aiden config set routing.strategy fixed
+```
+
+Mais le mode `auto` est generalement le meilleur choix — il utilise les forces de chaque provider.
+
+---
+
+## Ce qu'on a appris
+
+Le mode standard, c'est :
+- **4 agents** qui collaborent : Analyst → Planner → Dev → QA
+- **Quality gates** entre chaque phase — rien ne passe sans validation
+- **Boucle de feedback** — le QA et le Dev iterent jusqu'a la qualite
+- **Routing intelligent** — chaque agent utilise le meilleur provider
+- **Tout trace** — artefacts, decisions, metriques
+
+Notre todo-api a maintenant un CRUD complet. Mais il manque un element crucial : **la securite**. N'importe qui peut creer et supprimer des taches.
+
+Il nous faut de l'authentification. Et quand la securite est en jeu, on ne se contente pas du standard. On passe en [mode enterprise](/tutorial/enterprise) — avec approbation humaine, documentation, et zero compromis.
+
+---
+
+*Temps de lecture : ~7 minutes. Tokens consommes par AIDEN : 12 400.*
