@@ -117,8 +117,12 @@ aiden metrics --export csv      # Export CSV
 Gere la configuration du projet.
 
 ```bash
-aiden config show               # Afficher
-aiden config set mode flash     # Modifier
+aiden config show                       # Afficher toute la config
+aiden config get <cle>                  # Obtenir une valeur (notation par point)
+aiden config get providers.claude-code  # Exemple : cle imbriquee
+aiden config set <cle> <valeur>         # Definir une valeur (notation par point)
+aiden config set mode flash             # Exemple : changer le mode
+aiden config set routing.strategy auto  # Exemple : cle imbriquee
 ```
 
 ### `aiden rules`

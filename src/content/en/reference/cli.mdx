@@ -117,8 +117,12 @@ aiden metrics --export csv      # CSV export
 Manages project configuration.
 
 ```bash
-aiden config show               # Display
-aiden config set mode flash     # Modify
+aiden config show                       # Display full config
+aiden config get <key>                  # Get a specific value (dot notation)
+aiden config get providers.claude-code  # Example: nested key
+aiden config set <key> <value>          # Set a value (dot notation)
+aiden config set mode flash             # Example: set mode
+aiden config set routing.strategy auto  # Example: nested key
 ```
 
 ### `aiden rules`
