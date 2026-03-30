@@ -113,6 +113,18 @@ Les fichiers `.md` dans ce dossier sont merges avec les regles du projet (`.aide
 | `config` | Record | -- | Configuration custom |
 | `priority` | number | `0` | Priorite d'injection (decroissant) |
 | `enabled` | boolean | `true` | Activer/desactiver sans supprimer |
+| `compatibility` | object | -- | Contraintes de version (voir ci-dessous) |
+
+### Champ `compatibility`
+
+```yaml
+compatibility:
+  aiden: ">=0.9.0"              # Version AIDEN minimum (range semver)
+  skills:                        # Dependances entre skills
+    secret-scan: ">=1.0.0"
+  conflicts:                     # Skills incompatibles
+    - legacy-security-check
+```
 
 ### Valeurs `agents` possibles
 
@@ -128,64 +140,143 @@ Les fichiers `.md` dans ce dossier sont merges avec les regles du projet (`.aide
 
 ## Commandes CLI
 
-### Creer un nouveau skill
+| Commande | Description |
+|---|---|
+| `aiden skills list` | Lister tous les skills installes |
+| `aiden skills init <name>` | Creer un nouveau skill depuis le template |
+| `aiden skills add <path>` | Installer depuis un repertoire local |
+| `aiden skills install <source>` | Installer depuis le registry, GitHub, URL ou local |
+| `aiden skills remove <name>` | Supprimer un skill |
+| `aiden skills enable <name>` | Activer un skill |
+| `aiden skills disable <name>` | Desactiver un skill |
+| `aiden skills search <query>` | Chercher dans le registry |
+| `aiden skills info <name>` | Details d'un skill |
+| `aiden skills outdated` | Lister les skills avec une version plus recente |
+| `aiden skills doctor` | Verifier la compatibilite de tous les skills |
+| `aiden skills pack list` | Lister les packs disponibles |
+| `aiden skills pack install <name>` | Installer tous les skills d'un pack |
+| `aiden skills pack create <name> -s <skills>` | Creer un pack custom |
+| `aiden skills pack remove <name>` | Supprimer un pack custom |
+
+## Marketplace de skills
+
+AIDEN fournit un catalogue de skills officiels sur etagere. Installez uniquement ce dont vous avez besoin, quand vous en avez besoin.
+
+### Rechercher des skills
 
 ```bash
-$ aiden skills init mon-skill
+$ aiden skills search security
+$ aiden skills search --category compliance
+$ aiden skills search --agent qa
 ```
 
-Cree `.aiden/skills/mon-skill/` avec un `skill.yaml` template et un `instructions.md` vide.
-
-### Lister les skills installes
+### Installer un skill
 
 ```bash
-$ aiden skills list
+$ aiden skills install owasp-check           # Depuis le registry (derniere version)
+$ aiden skills install owasp-check@2.1.0     # Version specifique
+$ aiden skills install ./mon-skill-local     # Depuis un chemin local
+$ aiden skills install owasp-check --force   # Ecraser un skill existant
 ```
 
-Affiche nom, version, agents cibles et statut (enabled/disabled).
-
-### Installer un skill externe
+### Verifier les mises a jour
 
 ```bash
-$ aiden skills add /chemin/vers/skill
+$ aiden skills outdated                      # Lister les skills avec version plus recente
+$ aiden skills info owasp-check              # Details d'un skill
 ```
 
-Copie le dossier skill dans `.aiden/skills/`.
-
-### Supprimer un skill
+### Diagnostic de compatibilite
 
 ```bash
-$ aiden skills remove mon-skill
+$ aiden skills doctor
+  ✓ code-review-strict@1.1.0  — compatible
+  ⚠ hipaa-guard@1.0.0          — necessite AIDEN >=1.0.0 (actuel: 0.8.0)
+  ✗ legacy-check@0.3.0         — conflit avec owasp-check
 ```
 
-### Activer/Desactiver
+### Configuration
+
+```yaml
+# aiden.config.yaml
+skills:
+  registryUrl: https://registry.aiden.dev/skills.json  # Registry custom
+  autoUpdate: false
+  trustedAuthors: [aiden-team]
+```
+
+## Skill Packs (bundles)
+
+Installez un ensemble complet de skills en une commande :
 
 ```bash
-$ aiden skills enable mon-skill
-$ aiden skills disable mon-skill
+$ aiden skills pack list                         # Lister les packs
+$ aiden skills pack install backend-essentials   # Installer un pack
+$ aiden skills pack create mon-equipe --skills "code-review-strict,owasp-check,jira-sync"
 ```
 
-Modifie `enabled` dans `skill.yaml` sans supprimer le skill.
+### Packs officiels
 
-## Exemples de skills
+| Pack | Skills | Cas d'usage |
+|---|---|---|
+| `backend-essentials` | code-review-strict, owasp-check, secret-scan, test-coverage-enforcer, api-design-restful | Equipes backend |
+| `frontend-essentials` | code-review-strict, react-best-practices, naming-conventions, dead-code-detector | Equipes frontend |
+| `compliance-full` | compliance-rgpd, hipaa-guard, iso-27001, adr-enforcer, dependency-audit | Industries reglementees |
+| `startup-fast` | code-review-strict, secret-scan, changelog-gen | Startups rapides |
+| `enterprise-standard` | 8 skills couvrant review, securite, compliance, ADR, notifications | Equipes enterprise |
 
-AIDEN fournit 3 templates de skills dans `templates/skills/` :
+Les packs custom sont stockes dans `.aiden/skills/.packs.yaml` et peuvent etre commits pour partage.
 
-### `code-review-strict`
+## Catalogue officiel (19 skills)
 
-Enforce des standards de code review stricts pour Dev et QA : types explicites, pas de `any`, JSDoc obligatoire, couverture de tests >= 80%.
+### Qualite (5 skills)
 
-```bash
-$ cp -r templates/skills/code-review-strict .aiden/skills/
-```
+| Skill | Agents | Modes | Description |
+|---|---|---|---|
+| `code-review-strict` | dev, qa | tous | Review stricte : types explicites, pas de `any`, JSDoc, classes d'erreur |
+| `adversarial-review` | analyst, qa | standard+ | Challenge les decisions, trouve les points de defaillance |
+| `test-coverage-enforcer` | dev, qa | standard+ | Impose un seuil minimum de couverture de tests |
+| `dead-code-detector` | qa | tous | Detecte les exports, imports et code inutilises |
+| `naming-conventions` | dev, qa | tous | Impose des conventions de nommage (style configurable) |
 
-### `compliance-rgpd`
+### Securite (3 skills)
 
-Checks de conformite RGPD pour le code manipulant des donnees personnelles. Cible Analyst, Dev et QA en modes standard et enterprise.
+| Skill | Agents | Modes | Description |
+|---|---|---|---|
+| `owasp-check` | qa | tous | Verification OWASP Top 10 (A01-A10) |
+| `secret-scan` | dev, qa | tous | Detection de secrets hardcodes (cles API, tokens, mots de passe) |
+| `dependency-audit` | analyst, qa | standard+ | Audit des dependances (CVE et licences) |
 
-### `jira-sync`
+### Conformite (3 skills)
 
-Synchronise les features AIDEN avec Jira. Declare des hooks sur `on_feature_created` et `on_feature_completed`. Desactive par defaut (a configurer avec votre URL Jira).
+| Skill | Agents | Modes | Description |
+|---|---|---|---|
+| `compliance-rgpd` | analyst, dev, qa | standard+ | Conformite RGPD/GDPR |
+| `hipaa-guard` | analyst, dev, qa | enterprise | Protection PHI HIPAA et audit logging |
+| `iso-27001` | analyst, qa | enterprise | Controles securite de l'information ISO 27001 |
+
+### Integration (3 skills)
+
+| Skill | Agents | Modes | Description |
+|---|---|---|---|
+| `jira-sync` | lead, planner | standard+ | Sync avec Jira |
+| `linear-sync` | lead, planner | standard+ | Sync avec Linear |
+| `slack-notify` | lead | standard+ | Notifications Slack sur les evenements workflow |
+
+### Framework (3 skills)
+
+| Skill | Agents | Modes | Description |
+|---|---|---|---|
+| `nestjs-patterns` | dev, qa | tous | Bonnes pratiques NestJS (modules, DI, guards) |
+| `react-best-practices` | dev, qa | tous | Patterns React modernes (hooks, composition, a11y) |
+| `api-design-restful` | planner, dev | standard+ | Standards de design API REST (erreurs RFC 7807) |
+
+### Documentation (2 skills)
+
+| Skill | Agents | Modes | Description |
+|---|---|---|---|
+| `adr-enforcer` | planner, docops | enterprise | Exige des ADR pour les decisions d'architecture |
+| `changelog-gen` | docops | standard+ | Genere des entrees Keep a Changelog |
 
 ## Comment les skills sont charges
 
