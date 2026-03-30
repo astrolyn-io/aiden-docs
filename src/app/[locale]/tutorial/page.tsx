@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
+import { locales } from '@/i18n/config';
 import { Card } from '@/components/ui/Card';
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 
 export const metadata: Metadata = {
   title: 'Tutorial — Construire une todo-app avec AIDEN de A a Z',
@@ -16,7 +21,13 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function TutorialPage() {
+export default async function TutorialPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
   return (
     <div>
       <h1>Tutorial : construire une todo-app avec AIDEN</h1>
@@ -32,31 +43,31 @@ export default function TutorialPage() {
 
       <div className="grid gap-4 mt-8">
         <Card
-          href="/tutorial/setup"
+          href={`/${locale}/tutorial/setup`}
           title="Chapitre 1 — Le terrain de jeu"
           description="Installer AIDEN, initialiser le projet, et comprendre ce que vous avez entre les mains. 5 minutes pour etre operationnel."
           icon="🏗️"
         />
         <Card
-          href="/tutorial/flash"
+          href={`/${locale}/tutorial/flash`}
           title="Chapitre 2 — Premier reflexe : le mode flash"
           description="Un bug? Une petite feature? Flash regle ca en 2 minutes. Vous allez voir pourquoi c'est addictif."
           icon="⚡"
         />
         <Card
-          href="/tutorial/standard"
+          href={`/${locale}/tutorial/standard`}
           title="Chapitre 3 — Construire pour de vrai : le mode standard"
           description="4 agents collaborent pour livrer un CRUD complet. Analyst, Planner, Dev, QA — la chaine de montage en action."
           icon="🔧"
         />
         <Card
-          href="/tutorial/enterprise"
+          href={`/${locale}/tutorial/enterprise`}
           title="Chapitre 4 — Quand la securite compte : le mode enterprise"
           description="Authentification JWT avec approbation humaine, DocOps, et audit trail. Pour les projets ou on ne plaisante pas."
           icon="🏢"
         />
         <Card
-          href="/tutorial/toolbox"
+          href={`/${locale}/tutorial/toolbox`}
           title="Chapitre 5 — La boite a outils du quotidien"
           description="Status, metriques, retex, skills, resume, abort — tout ce qui fait d'AIDEN un compagnon de dev, pas juste un generateur de code."
           icon="🧰"

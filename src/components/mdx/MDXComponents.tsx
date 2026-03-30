@@ -7,6 +7,7 @@ import { Card } from '../ui/Card';
 import { StepList } from '../ui/StepList';
 import { ComparisonTable } from '../ui/ComparisonTable';
 import { AgentFlow } from '../ui/AgentFlow';
+import { LocaleLink } from '../ui/LocaleLink';
 import { slugifyHeading } from '@/lib/mdx';
 
 function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
@@ -39,19 +40,7 @@ export const mdxComponents = {
     }
     return <pre {...props} />;
   },
-  a: (props: ComponentPropsWithoutRef<'a'>) => {
-    const isExternal = props.href?.startsWith('http');
-    return (
-      <a
-        {...props}
-        target={isExternal ? '_blank' : undefined}
-        rel={isExternal ? 'noopener noreferrer' : undefined}
-      >
-        {props.children}
-        {isExternal && <span className="text-xs ml-1">↗</span>}
-      </a>
-    );
-  },
+  a: LocaleLink,
   Terminal,
   Callout,
   Badge,
